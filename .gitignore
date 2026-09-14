@@ -1,0 +1,37 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node / Next.js
+node_modules/
+frontend/.next/
+frontend/out/
+frontend/.vercel
+*.tsbuildinfo
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Data — JANGAN push
+data/raw/
+data/chroma_db/
+*.sqlite3
+*.pickle
+
+# Backup noise
+*.bak
+*_bak
+app/main.py.*_bak
+
+# Logs
+*.log
+npm-debug.log*
