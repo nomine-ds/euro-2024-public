@@ -12,6 +12,7 @@ node_modules/
 frontend/.next/
 frontend/out/
 frontend/.vercel
+frontend/coverage/
 *.tsbuildinfo
 
 # Environment & secrets
@@ -35,3 +36,10 @@ app/main.py.*_bak
 # Logs
 *.log
 npm-debug.log*
+
+# Audit capture files
+*-before.txt
+*-after.txt
+lint-*.txt
+ruff-*.txt
+typecheck-*.txt
