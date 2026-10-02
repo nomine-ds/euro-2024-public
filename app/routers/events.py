@@ -8,6 +8,8 @@ Endpoints:
     GET /avg_position           — average pitch position for a player
     GET /debug/{event_uuid}     — debug single event (raw dict)
 """
+import math
+
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional
 
@@ -61,9 +63,6 @@ def avg_position(player_id: int, match_id: int):
         "avg_y": round(sum(ys) / len(ys), 2),
         "samples": len(xs),
     }
-
-
-import math
 
 
 def _json_safe(obj):

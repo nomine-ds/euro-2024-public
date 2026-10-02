@@ -1,20 +1,13 @@
 import json
-import io
-import csv
 import os
 import time
-from typing import Optional
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
 import pandas as pd
 import numpy as np
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
 import ruptures as rpt
 from collections import defaultdict
 from scipy.optimize import linear_sum_assignment
-from pathlib import Path
 import traceback
 
 from app.core.config import DATA_DIR
@@ -1271,7 +1264,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 # Include routers
-
 from app.routers.bot import router as bot_router
 from app.routers.matches import router as matches_router
 from app.routers.events import router as events_router

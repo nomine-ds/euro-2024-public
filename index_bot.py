@@ -7,7 +7,6 @@ Sample rate: 300 events/match (bukan 30).
 import sys
 import pandas as pd
 import math
-from pathlib import Path
 
 print("=" * 60)
 print("🤖 SMART INDEXING - Hudl Bot")
@@ -82,7 +81,7 @@ try:
         print("❌ EVENTS_DF kosong.")
         sys.exit(1)
     print(f"✅ Loaded {len(EVENTS_DF)} events.")
-except Exception as e:
+except Exception:
     import traceback
     traceback.print_exc()
     sys.exit(1)
@@ -207,7 +206,7 @@ try:
     EMBED_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     embedder = TextEmbedding(model_name=EMBED_MODEL)
     print(f"✅ Embedding model loaded: {EMBED_MODEL}")
-except Exception as e:
+except Exception:
     import traceback
     traceback.print_exc()
     sys.exit(1)
@@ -225,8 +224,8 @@ try:
     except Exception:
         print("ℹ️ Tidak ada collection lama.")
     collection = client.get_or_create_collection(name="euro2024_events")
-    print(f"✅ ChromaDB ready (fresh).")
-except Exception as e:
+    print("✅ ChromaDB ready (fresh).")
+except Exception:
     import traceback
     traceback.print_exc()
     sys.exit(1)
@@ -364,9 +363,9 @@ try:
     if actual_count != len(ids):
         print(f"⚠️ MISMATCH! Prepared {len(ids)} tapi ChromaDB {actual_count}")
     else:
-        print(f"   ✅ Jumlah sesuai!")
+        print("   ✅ Jumlah sesuai!")
 
-except Exception as e:
+except Exception:
     import traceback
     traceback.print_exc()
     sys.exit(1)

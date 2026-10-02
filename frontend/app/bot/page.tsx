@@ -45,13 +45,8 @@ export default function BotPage() {
         const errText = await res.text();
         throw new Error(`HTTP ${res.status}: ${errText}`);
       }
-      const data = await res.json();
+      await res.json();
 
-      const botMsg: Message = {
-        role: "bot",
-        content: data.answer || "Sorry, I could not answer that.",
-        context: data.context,
-      };
     } catch (err: any) {
       toast.error(`Failed to send: ${err.message}`);
       setMessages((prev) => [

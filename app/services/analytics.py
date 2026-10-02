@@ -1,6 +1,5 @@
 import json
 import pandas as pd
-from pathlib import Path
 from app.core.config import DATA_DIR
 
 def parse_freezeframe_safely(event_row):

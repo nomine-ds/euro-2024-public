@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 const STORAGE_KEY = "euro2024_seen_onboarding";
 
@@ -66,21 +65,23 @@ const STEPS: Step[] = [
 ];
 
 export default function Onboarding() {
-  const router = useRouter();
   const [show, setShow] = useState(false);
   const [step, setStep] = useState(0);
   const [highlightRect, setHighlightRect] = useState<DOMRect | null>(null);
 
   useEffect(() => {
     // Cek localStorage
-    if (typeof window !== "undefined") {
-      const seen = localStorage.getItem(STORAGE_KEY);
-      if (!seen) {
-        // Tunggu 1 detik biar halaman load dulu
-        const timer = setTimeout(() => setShow(true), 1000);
-        return () => clearTimeout(timer);
-      }
+    if (typeof window === "undefined") {
+      return undefined;
     }
+
+    const seen = localStorage.getItem(STORAGE_KEY);
+    if (!seen) {
+      const timer = setTimeout(() => setShow(true), 1000);
+      return () => clearTimeout(timer);
+    }
+
+    return undefined;
   }, []);
 
   // Highlight target saat step berubah
@@ -115,8 +116,15 @@ export default function Onboarding() {
 
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show, step]);
+
+  const finish = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, "true");
+    }
+    setShow(false);
+    setStep(0);
+  };
 
   const next = () => {
     if (step < STEPS.length - 1) {
@@ -128,14 +136,6 @@ export default function Onboarding() {
 
   const prev = () => {
     if (step > 0) setStep(step - 1);
-  };
-
-  const finish = () => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem(STORAGE_KEY, "true");
-    }
-    setShow(false);
-    setStep(0);
   };
 
   if (!show) return null;

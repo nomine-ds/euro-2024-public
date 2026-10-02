@@ -69,7 +69,7 @@ if __name__ == "__main__":
         if result == 'failed':
             failed_ids.append(mid)
     
-    print(f"\n🎉 SELESAI!")
+    print("\n🎉 SELESAI!")
     print(f"   ✅ Success: {stats['success']}")
     print(f"   ⏭️ Skip: {stats['skip']}")
     print(f"   ⚠️ Not found: {stats['not_found']}")

@@ -1,5 +1,6 @@
 # app/services/rag_bot.py
 import logging
+import traceback
 from typing import List, Dict, Any
 
 import ollama
@@ -7,7 +8,6 @@ import chromadb
 from fastembed import TextEmbedding
 
 logger = logging.getLogger(__name__)
-import traceback
 
 COLLECTION_NAME = "euro2024_events"
 CHROMA_PATH = "./data/chroma_db"

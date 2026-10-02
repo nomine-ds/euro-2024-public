@@ -153,6 +153,7 @@ function BarChartWrapper({
   rawData: any[];
 }) {
   const { ref, width } = useContainerWidth<HTMLDivElement>();
+  void rawData;
 
   return (
     <div

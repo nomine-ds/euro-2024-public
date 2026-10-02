@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { fetchMatchSummary, fetchMatchEvents, fetchPlayers, exportCSV } from "@/lib/api";
 import TacticalView from "@/components/TacticalView";
 import HeatmapView from "@/components/HeatmapView";
-import { useParams } from "next/navigation";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -92,9 +92,9 @@ export default function MatchDetailPage({ params }: PageProps) {
         <div className="max-w-4xl mx-auto">
           <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
             <p className="text-red-800">❌ {error || "Data tidak ditemukan"}</p>
-            <a href="/" className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            <Link href="/" className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
               Kembali ke Beranda
-            </a>
+            </Link>
           </div>
         </div>
       </main>
@@ -110,9 +110,9 @@ export default function MatchDetailPage({ params }: PageProps) {
       <div className="max-w-4xl mx-auto">
         {/* Header dengan Tombol Export */}
         <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
-          <a href="/" className="text-blue-600 hover:underline inline-block">
+          <Link href="/" className="text-blue-600 hover:underline inline-block">
             ← Kembali ke Daftar Pertandingan
-          </a>
+          </Link>
           <button
             onClick={handleExport}
             disabled={exporting}

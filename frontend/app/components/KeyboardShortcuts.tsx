@@ -3,7 +3,7 @@
 
 import { useHotkeys } from "react-hotkeys-hook";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 const SHORTCUTS = [

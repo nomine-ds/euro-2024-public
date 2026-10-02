@@ -70,13 +70,17 @@ export default function Onboarding() {
   const [highlightRect, setHighlightRect] = useState<DOMRect | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const seen = localStorage.getItem(STORAGE_KEY);
-      if (!seen) {
-        const timer = setTimeout(() => setShow(true), 1000);
-        return () => clearTimeout(timer);
-      }
+    if (typeof window === "undefined") {
+      return undefined;
     }
+
+    const seen = localStorage.getItem(STORAGE_KEY);
+    if (!seen) {
+      const timer = setTimeout(() => setShow(true), 1000);
+      return () => clearTimeout(timer);
+    }
+
+    return undefined;
   }, []);
 
   useEffect(() => {

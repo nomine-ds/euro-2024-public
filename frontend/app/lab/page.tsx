@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
 const API_BASE = "http://127.0.0.1:8000";
@@ -314,7 +314,6 @@ interface Notebook {
 // ================================================================
 
 export default function LabPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [pyodide, setPyodide] = useState<any>(null);

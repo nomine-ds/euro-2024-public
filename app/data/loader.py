@@ -2,7 +2,6 @@
 import json
 import time
 import pandas as pd
-from pathlib import Path
 from statsbombpy import sb
 from app.core.config import DATA_DIR, COMPETITION_ID, SEASON_ID
 
