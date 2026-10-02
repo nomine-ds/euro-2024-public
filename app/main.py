@@ -1,6 +1,7 @@
 import json
 import io
 import csv
+import os
 import time
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Query
@@ -1252,10 +1253,15 @@ def _outcome_score(event_row):
 # APP INIT
 # ===================================================================
 
+APP_ENV = os.getenv("APP_ENV", "development").strip().lower()
+
 app = FastAPI(
     title="Euro 2024 Context Zone",
     description="Public API. Data cached locally.",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url=None if APP_ENV == "production" else "/docs",
+    redoc_url=None if APP_ENV == "production" else "/redoc",
+    openapi_url=None if APP_ENV == "production" else "/openapi.json",
 )
 
 app.add_middleware(
