@@ -1,0 +1,45 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\BELAJAR VS\euro-2024
+configfile: pytest.ini
+plugins: anyio-4.15.0, langsmith-0.12.2, typeguard-4.6.0
+collected 20 items
+
+tests\test_smoke.py ....................                                 [100%]
+
+============================== warnings summary ===============================
+venv\Lib\site-packages\starlette\testclient.py:53
+  D:\BELAJAR VS\euro-2024\venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+app\main.py:1488
+  D:\BELAJAR VS\euro-2024\app\main.py:1488: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+venv\Lib\site-packages\fastapi\applications.py:4681
+  D:\BELAJAR VS\euro-2024\venv\Lib\site-packages\fastapi\applications.py:4681: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================ slowest 10 durations =============================
+43.91s setup    tests/test_smoke.py::test_smoke[GET-/-200]
+9.94s call     tests/test_smoke.py::test_smoke[GET-/players-200]
+4.22s call     tests/test_smoke.py::test_smoke[GET-/bot/health-200]
+3.14s call     tests/test_smoke.py::test_smoke[GET-/ghost/3943043-200]
+0.81s call     tests/test_smoke.py::test_smoke[GET-/cognitive/3943043-200]
+0.32s call     tests/test_smoke.py::test_smoke[GET-/player/39565/breakdown-200]
+0.19s call     tests/test_smoke.py::test_smoke[GET-/events/3943043-200]
+0.15s call     tests/test_smoke.py::test_smoke[GET-/players/clustering?n_clusters=4-200]
+0.02s call     tests/test_smoke.py::test_smoke[GET-/-200]
+0.02s call     tests/test_smoke.py::test_smoke[GET-/players/bulk-200]
+================== 20 passed, 3 warnings in 64.90s (0:01:04) ==================

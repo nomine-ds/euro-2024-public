@@ -1,0 +1,26 @@
+def startup_load():
+    global EVENTS_DF, MATCHES_DF, PLAYER_STATS_CACHE, MATCH_STATS_CACHE, TEAM_STATS_CACHE
+
+    print("=" * 50)
+    print("LOADING DATA...")
+    print("=" * 50)
+
+    if not (DATA_DIR / "all_events.json").exists():
+        print("No cache found. Access /load endpoint.")
+        return
+
+    EVENTS_DF, MATCHES_DF = load_or_fetch_all()
+
+    if EVENTS_DF is None or EVENTS_DF.empty:
+        print("Failed to load data.")
+        return
+
+    if 'id' in EVENTS_DF.columns:
+        EVENTS_DF.set_index('id', drop=False, inplace=True)
+
+    print(f"{len(EVENTS_DF)} events loaded.")
+    print("Skipping expensive startup precompute; caches are generated lazily per endpoint.")
+
+    PLAYER_STATS_CACHE = {}
+    MATCH_STATS_CACHE = {}
+    TEAM_STATS_CACHE = {}

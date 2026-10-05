@@ -1,0 +1,9 @@
+{
+  "hits": 3,
+  "misses": 3,
+  "keys": [
+    "match:base",
+    "player:base",
+    "team:base"
+  ]
+}

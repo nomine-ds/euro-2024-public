@@ -1,0 +1,27 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\BELAJAR VS\euro-2024
+configfile: pytest.ini
+plugins: anyio-4.15.0, langsmith-0.12.2, typeguard-4.6.0
+collected 20 items
+
+tests\test_smoke.py ....................                                 [100%]
+
+============================== warnings summary ===============================
+venv\Lib\site-packages\starlette\testclient.py:53
+  D:\BELAJAR VS\euro-2024\venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================ slowest 10 durations =============================
+21.47s call     tests/test_smoke.py::test_smoke[GET-/matches/similar/3943043-200]
+9.93s setup    tests/test_smoke.py::test_smoke[GET-/-200]
+9.88s call     tests/test_smoke.py::test_smoke[GET-/teams-200]
+9.34s call     tests/test_smoke.py::test_smoke[GET-/players/bulk-200]
+6.39s call     tests/test_smoke.py::test_smoke[GET-/players-200]
+3.92s call     tests/test_smoke.py::test_smoke[GET-/ghost/3943043-200]
+3.86s call     tests/test_smoke.py::test_smoke[GET-/bot/health-200]
+0.49s call     tests/test_smoke.py::test_smoke[GET-/events/3943043-200]
+0.30s call     tests/test_smoke.py::test_smoke[GET-/player/39565/breakdown-200]
+0.25s call     tests/test_smoke.py::test_smoke[GET-/cognitive/3943043-200]
+================== 20 passed, 1 warning in 68.04s (0:01:08) ===================
