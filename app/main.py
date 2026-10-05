@@ -1,6 +1,7 @@
 import json
 import os
 import time
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
@@ -10,6 +11,7 @@ from collections import defaultdict
 from scipy.optimize import linear_sum_assignment
 import traceback
 
+from app.cache import shared_cache
 from app.core.config import DATA_DIR
 from app.data.loader import load_or_fetch_all
 
@@ -1248,6 +1250,15 @@ def _outcome_score(event_row):
 
 APP_ENV = os.getenv("APP_ENV", "development").strip().lower()
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    startup_load()
+    try:
+        yield
+    finally:
+        shared_cache.invalidate(all=True)
+
+
 app = FastAPI(
     title="Euro 2024 Context Zone",
     description="Public API. Data cached locally.",
@@ -1255,6 +1266,7 @@ app = FastAPI(
     docs_url=None if APP_ENV == "production" else "/docs",
     redoc_url=None if APP_ENV == "production" else "/redoc",
     openapi_url=None if APP_ENV == "production" else "/openapi.json",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -1481,11 +1493,40 @@ def compute_team_stats(events_df):
     return stats
 
 
+def ensure_player_stats():
+    global PLAYER_STATS_CACHE
+    if PLAYER_STATS_CACHE:
+        return PLAYER_STATS_CACHE
+    if EVENTS_DF is None or EVENTS_DF.empty:
+        return {}
+    PLAYER_STATS_CACHE = compute_player_stats(EVENTS_DF)
+    return PLAYER_STATS_CACHE
+
+
+def ensure_match_stats():
+    global MATCH_STATS_CACHE
+    if MATCH_STATS_CACHE:
+        return MATCH_STATS_CACHE
+    if EVENTS_DF is None or EVENTS_DF.empty:
+        return {}
+    MATCH_STATS_CACHE = compute_match_stats(EVENTS_DF)
+    return MATCH_STATS_CACHE
+
+
+def ensure_team_stats():
+    global TEAM_STATS_CACHE
+    if TEAM_STATS_CACHE:
+        return TEAM_STATS_CACHE
+    if EVENTS_DF is None or EVENTS_DF.empty:
+        return {}
+    TEAM_STATS_CACHE = compute_team_stats(EVENTS_DF)
+    return TEAM_STATS_CACHE
+
+
 # ===================================================================
 # STARTUP
 # ===================================================================
 
-@app.on_event("startup")
 def startup_load():
     global EVENTS_DF, MATCHES_DF, PLAYER_STATS_CACHE, MATCH_STATS_CACHE, TEAM_STATS_CACHE
 
@@ -1507,33 +1548,11 @@ def startup_load():
         EVENTS_DF.set_index('id', drop=False, inplace=True)
 
     print(f"{len(EVENTS_DF)} events loaded.")
+    print("Skipping expensive startup precompute; caches are generated lazily per endpoint.")
 
-    print("Pre-computing player stats...")
-    start = time.time()
-    try:
-        PLAYER_STATS_CACHE = compute_player_stats(EVENTS_DF)
-        print(f"Player stats cached: {len(PLAYER_STATS_CACHE)} players ({time.time() - start:.2f}s)")
-    except Exception:
-        traceback.print_exc()
-        PLAYER_STATS_CACHE = {}
-
-    print("Pre-computing match stats...")
-    start = time.time()
-    try:
-        MATCH_STATS_CACHE = compute_match_stats(EVENTS_DF)
-        print(f"Match stats cached: {len(MATCH_STATS_CACHE)} matches ({time.time() - start:.2f}s)")
-    except Exception:
-        traceback.print_exc()
-        MATCH_STATS_CACHE = {}
-
-    print("Pre-computing team stats...")
-    start = time.time()
-    try:
-        TEAM_STATS_CACHE = compute_team_stats(EVENTS_DF)
-        print(f"Team stats cached: {len(TEAM_STATS_CACHE)} teams ({time.time() - start:.2f}s)")
-    except Exception:
-        traceback.print_exc()
-        TEAM_STATS_CACHE = {}
+    PLAYER_STATS_CACHE = {}
+    MATCH_STATS_CACHE = {}
+    TEAM_STATS_CACHE = {}
 
 
 # ===================================================================

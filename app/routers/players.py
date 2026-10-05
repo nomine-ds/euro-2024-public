@@ -12,6 +12,7 @@ from fastapi import APIRouter, HTTPException, Query
 from typing import Optional
 
 import app.main as main
+from app.cache import shared_cache
 
 router = APIRouter(tags=["players"])
 
@@ -46,10 +47,12 @@ def get_players(match_id: Optional[int] = Query(None), team_id: Optional[int] = 
 
 
 @router.get("/players/bulk")
-def get_players_bulk(match_id: Optional[int] = Query(None)):
-    if not main.PLAYER_STATS_CACHE:
-        raise HTTPException(503, "Cache not ready. Wait for startup.")
-    result = list(main.PLAYER_STATS_CACHE.values())
+async def get_players_bulk(match_id: Optional[int] = Query(None)):
+    if main.EVENTS_DF is None:
+        raise HTTPException(503, "Data not loaded.")
+    cache = await shared_cache.get_or_compute("player:base", lambda: main.compute_player_stats(main.EVENTS_DF))
+    main.PLAYER_STATS_CACHE = cache
+    result = list(cache.values())
     result.sort(key=lambda x: x['goals'], reverse=True)
     return [
         {

@@ -17,17 +17,20 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
 import app.main as main
+from app.cache import shared_cache
 
 router = APIRouter(tags=["analytics"])
 
 
 @router.get("/teams")
-def get_teams_list():
-    if not main.TEAM_STATS_CACHE:
-        raise HTTPException(503, "Cache not ready. Wait for startup.")
+async def get_teams_list():
+    if main.EVENTS_DF is None:
+        raise HTTPException(503, "Data not loaded.")
+    cached = await shared_cache.get_or_compute("team:base", lambda: main.compute_team_stats(main.EVENTS_DF))
+    main.TEAM_STATS_CACHE = cached
     teams = [
         {'team_id': t['team_id'], 'team_name': t['team_name']}
-        for t in main.TEAM_STATS_CACHE.values()
+        for t in cached.values()
     ]
     teams.sort(key=lambda x: x['team_name'])
     return teams
@@ -61,9 +64,11 @@ def compare_teams_endpoint(team_ids: str = Query(...), match_id: int = Query(Non
 
 
 @router.get("/players/compare")
-def compare_players_endpoint(ids: str = Query(..., description="Comma-separated player IDs")):
-    if not main.PLAYER_STATS_CACHE:
-        raise HTTPException(503, "Cache not ready.")
+async def compare_players_endpoint(ids: str = Query(..., description="Comma-separated player IDs")):
+    if main.EVENTS_DF is None:
+        raise HTTPException(503, "Data not loaded.")
+    cache = await shared_cache.get_or_compute("player:base", lambda: main.compute_player_stats(main.EVENTS_DF))
+    main.PLAYER_STATS_CACHE = cache
     try:
         player_ids = [int(x.strip()) for x in ids.split(",") if x.strip()]
     except ValueError:
@@ -122,13 +127,15 @@ def get_match_similarity_endpoint(match_id: int, top_n: int = Query(5, ge=1, le=
 
 
 @router.get("/players/clustering")
-def get_player_clusters(n_clusters: int = Query(4, ge=2, le=10)):
-    if not main.PLAYER_STATS_CACHE:
-        raise HTTPException(503, "Cache not ready. Wait for startup.")
+async def get_player_clusters(n_clusters: int = Query(4, ge=2, le=10)):
+    if main.EVENTS_DF is None:
+        raise HTTPException(503, "Data not loaded.")
+    cache = await shared_cache.get_or_compute("player:base", lambda: main.compute_player_stats(main.EVENTS_DF))
+    main.PLAYER_STATS_CACHE = cache
 
     try:
         players = [
-            p for p in main.PLAYER_STATS_CACHE.values()
+            p for p in cache.values()
             if p['shots'] + p['passes'] + p['dribbles'] > 0
         ]
         if len(players) < n_clusters:

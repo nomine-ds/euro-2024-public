@@ -1,0 +1,5 @@
+[project]
+name = "euro-2024"
+version = "0.1.0"
+description = "Euro 2024 tactical analytics API"
+requires-python = ">=3.12,<3.13"
