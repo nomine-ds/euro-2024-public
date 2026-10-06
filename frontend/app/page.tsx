@@ -4,6 +4,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -34,14 +35,14 @@ export default function Home() {
   });
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/")
+    fetch(`${API_BASE}/`)
       .then((res) => res.json())
       .then((data) => {
         setStats((prev) => ({ ...prev, events: data.total_events || 0 }));
       })
       .catch(() => {});
 
-    fetch("http://127.0.0.1:8000/matches/with360")
+    fetch(`${API_BASE}/matches/with360`)
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {

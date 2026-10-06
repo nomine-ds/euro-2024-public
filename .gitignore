@@ -1,5 +1,6 @@
 # Python
 venv/
+.venv/
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -14,6 +15,15 @@ frontend/out/
 frontend/.vercel
 frontend/coverage/
 *.tsbuildinfo
+
+# Python build and coverage output
+build/
+dist/
+*.egg
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
 
 # Environment & secrets
 .env
@@ -36,6 +46,9 @@ app/main.py.*_bak
 # Logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Audit capture files
 *-before.txt
@@ -43,3 +56,7 @@ npm-debug.log*
 lint-*.txt
 ruff-*.txt
 typecheck-*.txt
+
+# OS files
+.DS_Store
+Thumbs.db

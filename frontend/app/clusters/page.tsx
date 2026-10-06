@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { CardGridSkeleton } from "@/components/Skeleton";
-const API_BASE = "http://127.0.0.1:8000";
+import { API_BASE } from "@/lib/api";
 
 interface Player {
   player_id: number;

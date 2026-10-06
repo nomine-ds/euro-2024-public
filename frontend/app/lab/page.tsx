@@ -1,12 +1,11 @@
 // frontend/app/lab/page.tsx
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { Suspense, useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-
-const API_BASE = "http://127.0.0.1:8000";
+import { API_BASE } from "@/lib/api";
 
 // ================================================================
 // 10 TEMPLATE NOTEBOOK
@@ -313,7 +312,7 @@ interface Notebook {
 // KOMPONEN UTAMA
 // ================================================================
 
-export default function LabPage() {
+function LabContent() {
   const searchParams = useSearchParams();
 
   const [pyodide, setPyodide] = useState<any>(null);
@@ -696,5 +695,13 @@ sys.stderr = StringIO()
         </div>
       </div>
     </main>
+  );
+}
+
+export default function LabPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen p-8" role="status">Loading the data lab…</main>}>
+      <LabContent />
+    </Suspense>
   );
 }

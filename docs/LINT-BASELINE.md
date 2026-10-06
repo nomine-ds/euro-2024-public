@@ -25,7 +25,7 @@ Ruff checks `E` and `F` rules. `E402` is ignored because `app/main.py` registers
 
 ESLint retains the Next.js configuration. The following legacy rules are disabled while their existing violations remain outside this behavior-preserving baseline: explicit `any`, unused variables, unescaped JSX entities, exhaustive effect dependencies, state updates in effects, and React immutability diagnostics. The TypeScript compiler remains strict, including unused-local and unused-parameter checks.
 
-This baseline does not certify the disabled rules as safe or resolve functional issues discovered while reviewing lint output. In particular, the bot chat currently constructs no rendered assistant response after receiving an answer; that behavior was not changed as part of C-00 and should be addressed separately.
+This baseline does not certify the disabled rules as safe or resolve functional issues discovered while reviewing lint output.
 
 ## Lint Warning Threshold Debt
 
@@ -33,11 +33,11 @@ This baseline does not certify the disabled rules as safe or resolve functional 
 
 ## Frontend Test Baseline (C-01-pre)
 
-Date: 2026-10-02
+Date: 2026-10-06
 
-- Runner: Vitest 2.1.9, React Testing Library, jsdom.
-- Tests: 5 passing across 3 files.
-- Coverage: lines 0.56%, functions 7.14%, branches 21.05%, statements 0.56%.
-- Targets: lines 30% by Sprint 2 and 60% by Sprint 3.
-- Production UI components and Next.js async Server Components are not covered yet; only the API utility has partial production-code coverage. Next.js documents that Vitest does not support async Server Components.
+- Runner: Vitest 5.0.3, React Testing Library, jsdom.
+- Tests: 7 passing across 4 files.
+- Coverage: lines 1.59%, functions 1.65%, branches 1.09%, statements 1.37%.
+- Targets: lines 30% by Sprint 2 and 60% by Sprint 3. This run remains below both targets.
+- Production UI coverage remains excluded from the numeric report. The chatbot has response/error interaction tests, and Next.js async Server Components are not covered because Vitest does not support them.
 - Network calls in the API tests are mocked with `fetch`; MSW is installed for future request-level tests.

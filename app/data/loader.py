@@ -24,27 +24,27 @@ def fetch_matches():
     path = DATA_DIR / "matches.json"
     
     if path.exists():
-        print("✅ Muat matches dari cache (local).")
+        print("Loaded matches from local cache.")
         try:
             with open(path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             return pd.DataFrame(data)
         except (json.JSONDecodeError, UnicodeDecodeError) as e:
-            print(f"⚠️ File matches.json corrupt atau encoding salah: {e}")
-            print("🔄 Hapus file dan coba download ulang...")
+            print(f"Warning: matches.json is corrupt or has invalid encoding: {e}")
+            print("Removing it before retrying the download.")
             path.unlink()  # hapus file corrupt
             # Lanjut ke download ulang
     
-    print("📡 Ambil matches dari API StatsBomb...")
+    print("Fetching matches from the StatsBomb API...")
     try:
         df = sb.matches(competition_id=COMPETITION_ID, season_id=SEASON_ID)
         clean_data = clean_nan(df.to_dict(orient='records'))
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(clean_data, f, indent=2, ensure_ascii=False)
-        print(f"✅ {len(df)} matches tersimpan.")
+        print(f"Saved {len(df)} matches.")
         return df
     except Exception as e:
-        print(f"❌ Gagal ambil matches: {e}")
+        print(f"Failed to fetch matches: {e}")
         return pd.DataFrame()
 
 def safe_fetch_events(match_id, retry=1):
@@ -55,10 +55,10 @@ def safe_fetch_events(match_id, retry=1):
             return df
         except Exception as e:
             if attempt < retry:
-                print(f"  ⚠️ Match {match_id} error, coba ulang... ({e})")
+                print(f"  Warning: match {match_id} failed; retrying ({e})")
                 time.sleep(2)
             else:
-                print(f"  ❌ Match {match_id} gagal total: {e}")
+                print(f"  Match {match_id} failed after retrying: {e}")
                 return None
 
 def fetch_all_events(force=False):
@@ -66,24 +66,24 @@ def fetch_all_events(force=False):
     
     if all_path.exists() and not force:
         try:
-            print("✅ Muat all_events dari cache.")
+            print("Loaded events from local cache.")
             return pd.read_json(all_path, orient="records")
         except Exception as e:
-            print(f"⚠️ all_events.json corrupt, download ulang... ({e})")
+            print(f"Warning: all_events.json is corrupt; downloading again ({e})")
             all_path.unlink()
     
-    print("🚀 Tarik semua event dari API... (ini butuh beberapa menit)")
+    print("Fetching all events from the API. This may take several minutes.")
     
     matches_df = fetch_matches()
     if matches_df.empty:
-        print("❌ Gagal dapat daftar match.")
+        print("Failed to load the match list.")
         return pd.DataFrame()
     
     all_dfs = []
     total = len(matches_df)
     for i, row in matches_df.iterrows():
         mid = row['match_id']
-        print(f"  [{(i+1)}/{total}] Ambil match {mid}...")
+        print(f"  [{(i+1)}/{total}] Fetching match {mid}...")
         df = safe_fetch_events(mid)
         
         if df is not None and not df.empty:
@@ -97,7 +97,7 @@ def fetch_all_events(force=False):
                 json.dump(clean_data, f, indent=2, ensure_ascii=False)
     
     if not all_dfs:
-        print("❌ Tidak ada data sama sekali!")
+        print("No event data was returned.")
         return pd.DataFrame()
     
     final_df = pd.concat(all_dfs, ignore_index=True)
@@ -105,7 +105,7 @@ def fetch_all_events(force=False):
     with open(all_path, 'w', encoding='utf-8') as f:
         json.dump(clean_final, f, indent=2, ensure_ascii=False)
     
-    print(f"✅ Total {len(final_df)} events berhasil disimpan.")
+    print(f"Saved {len(final_df)} events.")
     return final_df
 
 def load_or_fetch_all():
@@ -115,5 +115,5 @@ def load_or_fetch_all():
 
 
 if __name__ == "__main__":
-    print("🔥 Manual fetch: Memaksa refresh semua data...")
+    print("Manual fetch: refreshing all data...")
     fetch_all_events(force=True)

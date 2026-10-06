@@ -4,8 +4,8 @@
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
-const API_BASE = "http://127.0.0.1:8000";
 const PITCH_W = 120;
 const PITCH_H = 80;
 const SVG_W = 960;

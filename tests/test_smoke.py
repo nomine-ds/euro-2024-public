@@ -9,7 +9,13 @@ Usage:
 """
 import pytest
 from fastapi.testclient import TestClient
+from app.core.config import DATA_DIR
 from app.main import app
+
+pytestmark = pytest.mark.skipif(
+    not (DATA_DIR / "all_events.json").exists(),
+    reason="StatsBomb event cache is required for endpoint smoke tests.",
+)
 
 
 @pytest.fixture(scope="module")
@@ -27,9 +33,7 @@ SMOKE_CASES = [
     ("GET", "/match/3943043/has360", 200),
     # Events / 360
     ("GET", "/events/3943043", 200),
-        # NOTE: returns 404 — endpoint reads EVENTS_DF['freeze_frame'] which
-    # doesn't exist; should read from three-sixty/{match_id}.json.
-    ("GET", "/avg_position?player_id=39565&match_id=3943043", 404),
+        ("GET", "/avg_position?player_id=99174&match_id=3943043", 200),
     # Players
     ("GET", "/players", 200),
     ("GET", "/players/bulk", 200),

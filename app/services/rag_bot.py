@@ -7,10 +7,12 @@ import ollama
 import chromadb
 from fastembed import TextEmbedding
 
+from app.core.config import CHROMA_DB_PATH
+
 logger = logging.getLogger(__name__)
 
 COLLECTION_NAME = "euro2024_events"
-CHROMA_PATH = "./data/chroma_db"
+CHROMA_PATH = str(CHROMA_DB_PATH)
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 LLM_MODEL = "qwen2.5:3b"
 MAX_CONTEXT_CHARS = 3000
@@ -78,16 +80,17 @@ class QueryAnalyzer:
                 stage = val
                 break
 
-        team = None
+        teams = []
         for alias, canonical in self.TEAM_ALIASES.items():
-            if alias in q_lower:
-                team = canonical
-                break
-        if not team:
-            for t in self.TEAMS:
-                if t.lower() in q_lower:
-                    team = t
-                    break
+            if alias in q_lower and canonical not in teams:
+                teams.append(canonical)
+        for candidate in self.TEAMS:
+            if candidate.lower() in q_lower and candidate not in teams:
+                teams.append(candidate)
+
+        team = None
+        if teams:
+            team = teams[0]
 
         event_type = None
         for kw, val in self.EVENT_KEYWORDS.items():
@@ -95,12 +98,17 @@ class QueryAnalyzer:
                 event_type = val
                 break
 
-        return {'stage': stage, 'team': team, 'event_type': event_type}
+        return {
+            'stage': stage,
+            'team': team,
+            'teams': teams,
+            'event_type': event_type,
+        }
 
 
 class LocalEmbedder:
     def __init__(self, model_name: str = EMBEDDING_MODEL):
-        print(f"🔍 Loading embedding model: {model_name}...")
+        print(f"Loading embedding model: {model_name}...")
         self.model = TextEmbedding(model_name=model_name)
         self.dim = 384
 
@@ -136,6 +144,39 @@ class VectorStore:
             return {'$and': conditions}
         return None
 
+    def _build_goal_where(self, analysis: Dict) -> Any:
+        conditions = []
+        if analysis['stage']:
+            conditions.append({'stage': {'$eq': analysis['stage']}})
+
+        teams = analysis['teams']
+        if len(teams) == 2:
+            first_team, second_team = teams
+            conditions.append({
+                '$or': [
+                    {
+                        '$and': [
+                            {'home_team': {'$eq': first_team}},
+                            {'away_team': {'$eq': second_team}},
+                        ]
+                    },
+                    {
+                        '$and': [
+                            {'home_team': {'$eq': second_team}},
+                            {'away_team': {'$eq': first_team}},
+                        ]
+                    },
+                ]
+            })
+
+        if analysis['team']:
+            conditions.append({'team': {'$eq': analysis['team']}})
+
+        conditions.append({'event_type': {'$eq': 'Shot'}})
+        if len(conditions) == 1:
+            return conditions[0]
+        return {'$and': conditions}
+
     def _execute_query(self, query: str, limit: int, where: Any) -> Any:
         query_vector = self.embedder.embed([query])[0]
         kwargs = {
@@ -147,24 +188,46 @@ class VectorStore:
             kwargs['where'] = where
 
         try:
-            return self.collection.query(**kwargs)
+            results = self.collection.query(**kwargs)
         except Exception as e:
             logger.error(f"ChromaDB search error: {e}")
             try:
                 kwargs.pop('where', None)
-                return self.collection.query(**kwargs)
+                results = self.collection.query(**kwargs)
             except Exception as e2:
                 logger.error(f"Fallback error: {e2}")
                 return None
 
+        return results
+
     def search(self, query: str, limit: int = TOP_K_RESULTS) -> List[Dict]:
         analysis = self.analyzer.analyze(query)
-        print(f"🔍 Query analysis: {analysis}")
+        print(f"Query analysis: {analysis}")
 
         q_lower = query.lower()
         wants_goal = any(kw in q_lower for kw in [
             'mencetak gol', 'gol', 'goal', 'skor', 'siapa yang cetak'
         ])
+
+        if wants_goal and analysis['event_type'] == 'Shot':
+            if not analysis['team']:
+                return []
+
+            results = self.collection.get(
+                where=self._build_goal_where(analysis),
+                include=['documents', 'metadatas'],
+            )
+            documents = results.get('documents') or []
+            metadatas = results.get('metadatas') or []
+            items = []
+            for i, doc in enumerate(documents):
+                if 'Hasil: Goal' not in doc:
+                    continue
+                meta = metadatas[i] if i < len(metadatas) else {}
+                items.append({'text': doc, **meta})
+                if len(items) >= limit:
+                    break
+            return items
 
         where = self._build_where(analysis)
         fetch_limit = limit * 4 if wants_goal else limit
@@ -179,24 +242,12 @@ class VectorStore:
                 if analysis['event_type'] and meta.get('event_type') != analysis['event_type']:
                     continue
 
-                if wants_goal and analysis['event_type'] == 'Shot':
-                    if 'Hasil: Goal' not in doc:
-                        continue
-
                 items.append({"text": doc, **meta})
 
                 if len(items) >= limit:
                     break
 
-        if not items and wants_goal and analysis['event_type'] == 'Shot':
-            print("⚠️ Tidak ada Goal di filter, fallback ke semua Shot")
-            fallback_results = self._execute_query(query, limit, where)
-            if fallback_results and fallback_results.get("documents"):
-                for i, doc in enumerate(fallback_results["documents"][0]):
-                    meta = fallback_results["metadatas"][0][i] if fallback_results.get("metadatas") else {}
-                    items.append({"text": doc, **meta})
-
-        print(f"✅ Found {len(items)} items (filter stage={analysis['stage']}, team={analysis['team']}, type={analysis['event_type']})")
+        print(f"Found {len(items)} items (stage={analysis['stage']}, team={analysis['team']}, type={analysis['event_type']}).")
         return items
 
 
@@ -238,8 +289,7 @@ JAWABAN (sebutkan SEMUA item yang relevan dari data):"""
     def chat(self, query: str) -> Dict:
         context = self.vector_store.search(query, limit=TOP_K_RESULTS)
         prompt = self._build_prompt(query, context)
-        print(f"📝 Prompt: {len(prompt)} chars, context: {len(context)} items")
-
+        print(f"Prompt: {len(prompt)} chars, context: {len(context)} items.")
         try:
             response = ollama.chat(
                 model=self.llm_model,
@@ -250,7 +300,7 @@ JAWABAN (sebutkan SEMUA item yang relevan dari data):"""
             if not answer:
                 answer = "Maaf, saya tidak bisa menghasilkan jawaban."
         except Exception as e:
-            print(f"❌ OLLAMA ERROR:\n{traceback.format_exc()}")
+            print(f"Ollama error:\n{traceback.format_exc()}")
             answer = f"❌ Error: {str(e)}"
 
         return {
@@ -267,9 +317,9 @@ _bot = None
 def get_bot():
     global _bot
     if _bot is None:
-        print("🤖 Initializing Hudl Bot...")
+        print("Initializing Hudl Bot...")
         embedder = LocalEmbedder()
         vector_store = VectorStore(embedder)
         _bot = HudlBot(vector_store)
-        print(f"✅ Hudl Bot siap. Events: {vector_store.collection.count()}")
+        print(f"Hudl Bot ready. Events: {vector_store.collection.count()}.")
     return _bot

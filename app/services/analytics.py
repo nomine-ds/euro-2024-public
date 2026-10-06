@@ -17,7 +17,7 @@ def parse_freezeframe_safely(event_row):
         try:
             freeze_list = json.loads(freeze_raw)
         except Exception:
-            print(f"⚠️ Gagal parse freeze_frame string: {freeze_raw[:100]}...")
+            print(f"Warning: could not parse freeze-frame data: {freeze_raw[:100]}...")
             return []
     else:
         freeze_list = freeze_raw

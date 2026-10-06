@@ -8,6 +8,9 @@ import sys
 import pandas as pd
 import math
 
+if __name__ != "__main__":
+    raise RuntimeError("Run index_bot.py directly to rebuild the ChromaDB index.")
+
 print("=" * 60)
 print("🤖 SMART INDEXING - Hudl Bot")
 print("=" * 60)
@@ -217,7 +220,9 @@ except Exception:
 print("\n💾 Step 6: Init ChromaDB...")
 try:
     import chromadb
-    client = chromadb.PersistentClient(path="./data/chroma_db")
+    from app.core.config import CHROMA_DB_PATH
+
+    client = chromadb.PersistentClient(path=str(CHROMA_DB_PATH))
     try:
         client.delete_collection("euro2024_events")
         print("🗑️ Collection lama dihapus.")

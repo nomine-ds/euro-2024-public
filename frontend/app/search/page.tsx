@@ -1,11 +1,13 @@
 // frontend/app/search/page.tsx
 import { fetchMatches, fetchPlayers } from "@/lib/api";
+import { connection } from "next/server";
 
 type SearchPageProps = {
   searchParams: Promise<{ q: string }>;
 };
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
+  await connection();
   const { q } = await searchParams;
   const query = q?.toLowerCase().trim() || "";
 

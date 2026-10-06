@@ -1,14 +1,15 @@
 // frontend/app/bot/page.tsx
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { API_BASE } from "@/lib/api";
 
 interface Message {
   role: "user" | "bot";
   content: string;
-  context?: any[];
+  context?: Array<{ text: string }>;
 }
 
 export default function BotPage() {
@@ -16,7 +17,7 @@ export default function BotPage() {
     {
       role: "bot",
       content:
-        "Hi! I am Hudl Bot 🤖. Ask me anything about Euro 2024. Example: 'Who is the top scorer?' atau 'Ceritakan final Euro 2024'.",
+        "Hi! I am Hudl Bot. Ask me about Euro 2024, for example, who scored the most goals or what happened in the final.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -27,31 +28,37 @@ export default function BotPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const sendMessage = async () => {
+  const sendMessage = async (event?: FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
     if (!input.trim() || loading) return;
 
-    const userMsg: Message = { role: "user", content: input };
+    const query = input.trim();
+    const userMsg: Message = { role: "user", content: query };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/bot/chat", {
+      const res = await fetch(`${API_BASE}/bot/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: input }),
+        body: JSON.stringify({ query }),
       });
       if (!res.ok) {
         const errText = await res.text();
         throw new Error(`HTTP ${res.status}: ${errText}`);
       }
-      await res.json();
-
-    } catch (err: any) {
-      toast.error(`Failed to send: ${err.message}`);
+      const result: { answer: string; context?: Message["context"] } = await res.json();
       setMessages((prev) => [
         ...prev,
-        { role: "bot", content: `❌ Error: ${err.message}` },
+        { role: "bot", content: result.answer, context: result.context },
+      ]);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "An unexpected error occurred.";
+      toast.error(`Failed to send: ${message}`);
+      setMessages((prev) => [
+        ...prev,
+        { role: "bot", content: `Failed to get a response: ${message}` },
       ]);
     }
     finally {
@@ -60,27 +67,26 @@ export default function BotPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-8">
-      <div className="max-w-3xl mx-auto">
+    <main className="min-h-screen bg-gray-50 p-4 dark:bg-gray-900 sm:p-8">
+      <div className="mx-auto max-w-3xl">
         <Link href="/" className="text-blue-600 hover:underline inline-block mb-6">
           ← Back to Home
         </Link>
 
         <div className="flex items-center gap-3 mb-6">
-          <span className="text-3xl">🤖</span>
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
               Hudl Bot
             </h1>
-            <p className="text-sm text-gray-500">
-              AI Football Analysis • Powered by Ollama + ChromaDB
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Euro 2024 match data assistant
             </p>
           </div>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
 
-          <div className="h-[500px] overflow-y-auto p-6 space-y-4">
+          <div aria-live="polite" aria-relevant="additions" className="h-[min(60vh,500px)] min-h-64 overflow-y-auto p-4 sm:p-6 space-y-4">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -115,13 +121,9 @@ export default function BotPage() {
             ))}
 
             {loading && (
-              <div className="flex justify-start">
+              <div className="flex justify-start" role="status">
                 <div className="bg-gray-100 dark:bg-gray-700 rounded-2xl px-4 py-3">
-                  <div className="flex gap-1">
-                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
-                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></span>
-                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></span>
-                  </div>
+                  <span className="text-sm text-gray-800 dark:text-gray-100">Searching match data…</span>
                 </div>
               </div>
             )}
@@ -130,24 +132,27 @@ export default function BotPage() {
           </div>
 
 
-          <div className="border-t border-gray-200 dark:border-gray-700 p-4 flex gap-2">
+          <form
+            className="flex flex-col gap-2 border-t border-gray-200 p-4 dark:border-gray-700 sm:flex-row"
+            onSubmit={sendMessage}
+          >
             <input
+              aria-label="Your question"
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               placeholder="Ask anything about Euro 2024..."
-              className="flex-1 px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white"
+              className="min-h-11 min-w-0 flex-1 rounded-xl border border-gray-500 bg-gray-50 px-4 py-2 text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 dark:border-gray-500 dark:bg-gray-900 dark:text-white dark:focus-visible:outline-blue-300"
               disabled={loading}
             />
             <button
-              onClick={sendMessage}
+              type="submit"
               disabled={loading || !input.trim()}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-xl font-medium transition"
+              className="min-h-11 rounded-xl bg-blue-700 px-6 py-2 font-medium text-white transition hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:bg-gray-500"
             >
-              Kirim
+              Send question
             </button>
-          </div>
+          </form>
         </div>
 
 
@@ -160,8 +165,9 @@ export default function BotPage() {
           ].map((q, i) => (
             <button
               key={i}
+              type="button"
               onClick={() => setInput(q)}
-              className="text-xs px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition"
+              className="min-h-11 rounded-full border border-gray-300 bg-white px-3 py-2 text-left text-xs text-gray-800 transition hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus-visible:outline-blue-300"
             >
               {q}
             </button>

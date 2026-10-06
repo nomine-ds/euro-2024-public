@@ -7,15 +7,17 @@ Endpoints:
     GET  /bot/health   — health check + indexed events
     POST /bot/reindex  — rebuild vector store
 """
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from fastapi import APIRouter, Header, HTTPException
+from pydantic import BaseModel, Field
 import traceback
+
+from app.core.admin_auth import require_admin_api_key
 
 router = APIRouter(prefix="", tags=["bot"])
 
 
 class ChatRequest(BaseModel):
-    query: str
+    query: str = Field(min_length=1, max_length=500)
 
 
 @router.post("/bot/chat")
@@ -46,7 +48,8 @@ async def hudl_bot_health():
 
 
 @router.post("/bot/reindex")
-async def hudl_bot_reindex():
+async def hudl_bot_reindex(x_api_key: str | None = Header(default=None, alias="X-API-Key")):
+    require_admin_api_key(x_api_key)
     try:
         import app.services.rag_bot as rag_module
         rag_module._bot = None

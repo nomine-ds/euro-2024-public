@@ -1,7 +1,9 @@
 // frontend/app/matches/with360/page.tsx
 import { fetchMatches } from "@/lib/api";
+import { connection } from "next/server";
 
 export default async function MatchesWith360Page() {
+  await connection();
   const allMatches = await fetchMatches();
   // Filter match yang punya 360 (hardcode dari daftar yang kita tahu)
   const matchIdsWith360 = [

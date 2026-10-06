@@ -1,0 +1,15 @@
+.git
+.env
+.env.*
+!.env.example
+.venv
+venv
+__pycache__
+.pytest_cache
+.ruff_cache
+data/raw
+data/chroma_db
+data/ollama
+frontend/node_modules
+frontend/.next
+frontend/coverage

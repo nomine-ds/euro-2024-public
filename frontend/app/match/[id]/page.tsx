@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 
 interface MatchSummary {
   match_id: number;
@@ -49,8 +50,8 @@ export default function MatchDetailPage() {
     const load = async () => {
       try {
         const [summaryRes, eventsRes] = await Promise.all([
-          fetch(`http://127.0.0.1:8000/match/${matchId}/summary`),
-          fetch(`http://127.0.0.1:8000/events/${matchId}`),
+          fetch(`${API_BASE}/match/${matchId}/summary`),
+          fetch(`${API_BASE}/events/${matchId}`),
         ]);
 
         if (!summaryRes.ok) throw new Error(`Summary HTTP ${summaryRes.status}`);

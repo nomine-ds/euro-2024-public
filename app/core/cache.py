@@ -10,12 +10,12 @@ try:
     redis_client = redis.from_url(REDIS_URL, decode_responses=True)
     redis_client.ping()
     REDIS_AVAILABLE = True
-    print("✅ Redis connected - Caching ENABLED")
+    print("Redis connected; caching enabled.")
 except ImportError:
-    print("⚠️ Redis library not installed. Run: pip install redis")
+    print("Redis library not installed. Run: pip install redis")
     print("   Caching DISABLED (API will run without cache)")
 except Exception as e:
-    print(f"⚠️ Redis connection failed: {e}")
+    print(f"Redis connection failed: {e}")
     print("   Make sure Redis is running: redis-server")
     print("   Caching DISABLED (API will run without cache)")
     print("   For Windows without Redis, you can ignore this warning.")

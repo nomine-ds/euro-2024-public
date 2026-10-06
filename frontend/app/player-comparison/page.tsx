@@ -4,6 +4,7 @@
 import { ChartSkeleton } from "@/components/Skeleton";
 import { useState, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 import {
   RadarChart,
   PolarGrid,
@@ -18,8 +19,6 @@ import {
   Tooltip,
   CartesianGrid,
 } from "recharts";
-
-const API_BASE = "http://127.0.0.1:8000";
 
 interface Player {
   player_id: number;

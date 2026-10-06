@@ -7,25 +7,11 @@ into active tactical analysts. Built with FastAPI + Next.js, featuring
 counterfactual simulation, cognitive pressure analysis, positional density,
 and multivariate change-point detection.
 
-![Status](https://img.shields.io/badge/status-portfolio--ready-green)
 ![Backend](https://img.shields.io/badge/backend-FastAPI-009688)
 ![Frontend](https://img.shields.io/badge/frontend-Next.js%2016-000000)
 ![Data](https://img.shields.io/badge/data-StatsBomb%20360-blueviolet)
-![Tests](https://img.shields.io/badge/tests-20%20passing-brightgreen)
 
 ---
-
-## 📸 Screenshots
-
-> _Add screenshots here after deployment — home, cognitive, tactical, pass network, player comparison_
-
-| Home | Cognitive Mirror | Tactical Timeline |
-|------|------------------|-------------------|
-| _(placeholder)_ | _(placeholder)_ | _(placeholder)_ |
-
-| Pass Network | Player Comparison | Counterfactual |
-|--------------|-------------------|----------------|
-| _(placeholder)_ | _(placeholder)_ | _(placeholder)_ |
 
 ---
 
@@ -85,7 +71,7 @@ and multivariate change-point detection.
 ```text
 euro-2024/
 ├── app/                              # FastAPI backend
-│   ├── main.py                       # App init + router registration (~1540 lines)
+│   ├── main.py                       # App init, lifespan, and router registration
 │   ├── routers/                      # 12 feature routers (28 endpoints)
 │   │   ├── __init__.py
 │   │   ├── bot.py                    # POST /bot/chat, GET /bot/health, POST /bot/reindex
@@ -115,9 +101,7 @@ euro-2024/
 │   └── three-sixty/
 │       └── {match_id}.json
 │
-├── tests/
-│   ├── __init__.py
-│   └── test_smoke.py                 # 20 smoke tests (all endpoints)
+├── tests/                            # Unit tests and data-backed API smoke tests
 │
 ├── frontend/                         # Next.js app
 │   ├── app/
@@ -172,7 +156,7 @@ graph TB
     R12 --> S2[services/rag_bot.py]
     R12 --> S3[(ChromaDB)]
 
-    App -.-> D[data/raw/<br/>51 match JSON<br/>51 three-sixty JSON]
+    App -.-> D[data/raw/<br/>StatsBomb cache files]
 
     style App fill:#009688,color:white
     style R1 fill:#e0f2f1
@@ -183,11 +167,97 @@ graph TB
 
 ---
 
+## Deployment
+
+### Deployment layout
+
+- Vercel serves the Next.js application from the `frontend/` root directory.
+- Railway serves the FastAPI backend from the repository root using `Dockerfile`.
+- Attach a Railway volume at `/app/data`. Set `DATA_DIR=/app/data/raw` and
+  `CHROMA_DB_PATH=/app/data/chroma_db` so downloaded StatsBomb files and the
+  ChromaDB index survive container restarts.
+- Use Upstash Redis for the shared API cache. Set `REDIS_URL` only on the
+  Railway backend. The cache module uses the process-local cache in development
+  and requires Redis when `APP_ENV=production`.
+- Keep the LLM connection server-side. Set `OLLAMA_HOST` in Railway to an
+  Ollama endpoint that has the configured `qwen2.5:3b` model available.
+
+The root `Dockerfile` is used for the Railway backend and local backend runs.
+`docker-compose.yml` is for local development and is not a Vercel deployment
+configuration. Vercel builds the Next.js project directly.
+
+### Environment variables
+
+| Variable | Development | Railway production | Vercel production/preview |
+| --- | --- | --- | --- |
+| `APP_ENV` | `development` | `production` | Not used |
+| `BACKEND_INTERNAL_URL` | Local FastAPI origin | Not used | Railway backend origin, server-only |
+| `NEXT_PUBLIC_API_BASE` | `/api` | Not used | `/api` |
+| `CORS_ORIGINS` | `http://localhost:3000` | Empty; requests use the same-origin proxy | Not used |
+| `CACHE_API_KEY` | Dummy local value from `.env.example` | Strong secret | Not used |
+| `REDIS_URL` | Empty for process-local cache | Upstash Redis TLS URL | Not used |
+| `DATA_DIR` | `data/raw` | `/app/data/raw` | Not used |
+| `CHROMA_DB_PATH` | `data/chroma_db` | `/app/data/chroma_db` | Not used |
+| `OLLAMA_HOST` | Local Ollama endpoint | Reachable Ollama service endpoint | Not used |
+
+Set actual service URLs and secrets in each provider's environment settings.
+Never put `BACKEND_INTERNAL_URL`, `REDIS_URL`, `CACHE_API_KEY`, or LLM
+credentials in a `NEXT_PUBLIC_*` variable. Vercel preview deployments should
+use a staging Railway backend when available; sharing the production backend
+means preview data and operations affect production.
+
+### GitHub to Vercel
+
+1. Push the reviewed deployment branch to GitHub. Connect the repository to a
+   Vercel project and set **Root Directory** to `frontend`. Leave the Next.js
+   framework preset and build settings on auto-detect.
+2. Add `BACKEND_INTERNAL_URL` and `NEXT_PUBLIC_API_BASE=/api` separately for
+   Production, Preview, and Development. Preview should use staging if
+   available. Development uses the local values in `frontend/.env.example`.
+3. Pull request branches receive Preview deployments. Merges or pushes to the
+   repository's configured production branch create Production deployments.
+4. After adding or changing variables, redeploy so the Next.js rewrite is
+   rebuilt with the new backend origin.
+
+No `vercel.json` is required. Vercel detects Next.js from the `frontend`
+project root, and `frontend/next.config.ts` owns the API rewrite and response
+headers.
+
+### Railway backend setup
+
+1. Create a Railway service from the same GitHub repository. Use the repository
+   root as the service root so Railway finds the root `Dockerfile`.
+2. Attach a persistent volume mounted at `/app/data`.
+3. Set the production variables from the table above. Set `CACHE_API_KEY` to a
+   generated secret and `REDIS_URL` to the Upstash TLS connection URL.
+4. Deploy the service, then run `python -m app.data.loader` once in the Railway
+   service shell to populate the volume. This downloads the StatsBomb data and
+   may take several minutes. Stop the API before indexing, back up the mounted
+   `/app/data` volume, then run `python index_bot.py` in the service shell to
+   generate the ChromaDB embeddings. Indexing deletes the existing collection
+   before rebuilding it, so do not run it during normal API startup or while
+   the API is using the collection.
+5. Set the Railway public service origin as Vercel's server-only
+   `BACKEND_INTERNAL_URL`. Do not include a path or credentials.
+
+The backend exposes `/` as its health endpoint. `GET /load` is protected by
+`X-API-Key`; use it only for an intentional data reload. API requests from the
+browser go to the same-origin `/api` route on Vercel, then the Next.js server
+forwards them to Railway. Backend CORS therefore stays restricted instead of
+allowing `*`.
+
+### Local deployment checks
+
+Copy `.env.example` to `.env` and `frontend/.env.example` to
+`frontend/.env.local`. Start FastAPI and Next.js separately. To run Redis
+locally, set `REDIS_URL` to the local Redis service; leave it empty to use the
+process-local cache.
+
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Python 3.11+ (tested on 3.12)
+- Python 3.12
 - Node.js 20+
 - Git
 
@@ -197,32 +267,38 @@ graph TB
 git clone <your-repo-url>
 cd euro-2024
 
-# Backend
-python -m venv venv
-source venv/Scripts/activate   # Windows: .\venv\Scripts\activate
-pip install -r requirements.txt
+# Backend (PowerShell)
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 
 # Frontend
 cd frontend
-npm install
+npm ci
 cd ..
 ```
 
+Create the local environment file and set a private cache administration key:
+
+```powershell
+Copy-Item .env.example .env
+# Edit .env and set CACHE_API_KEY to a unique secret.
+```
+
+The `.env` file is for the backend. The frontend calls `/api`, which Next.js
+proxies to `BACKEND_INTERNAL_URL` (default `http://127.0.0.1:8000`).
+If the backend runs elsewhere, copy `frontend/.env.example` to
+`frontend/.env.local` and change `BACKEND_INTERNAL_URL` there.
+
 ### 2. Load Data
 
-Data is downloaded on first backend startup. Ensure `data/raw/` contains:
-
-- `all_events.json`
-- `matches.json`
-- `three-sixty/{match_id}.json`
-- `match_{match_id}.json`
-
-To force re-download from StatsBomb Open Data, access `GET /load`.
+Start the backend and request `GET /load` once to download StatsBomb Open Data
+into `data/raw/`. This may take several minutes. The cache is local and is not
+committed to Git.
 
 ### 3. Run Backend
 
 ```bash
-source venv/Scripts/activate
 uvicorn app.main:app --reload
 # → http://127.0.0.1:8000
 ```
@@ -242,20 +318,18 @@ npm run dev
 # → http://localhost:3000
 ```
 
-### 5. Environment Variables (optional)
-
-Copy `.env.example` to `.env` and adjust:
+### 5. Run Tests
 
 ```bash
-NEXT_PUBLIC_API_BASE=http://127.0.0.1:8000
+python -m pytest -q
+cd frontend
+npm test
+npm run lint
+npm run typecheck
 ```
 
-### 6. Run Tests (optional)
-
-```bash
-pytest tests/ -v
-# 20 passed
-```
+The data-backed API smoke tests are skipped when `data/raw/all_events.json` is
+not present. Unit tests and frontend checks run without the dataset.
 
 ---
 
@@ -323,8 +397,9 @@ pytest tests/ -v
 | POST | `/bot/chat` | Chat with Hudl Bot |
 | GET | `/bot/health` | Bot status + indexed events |
 | POST | `/bot/reindex` | Rebuild vector store |
+| POST | `/admin/cache/invalidate` | Invalidate cached data (requires `X-API-Key`) |
 
-**Total: 28 endpoints across 12 routers**
+**Total: 29 endpoints across 12 routers**
 
 ---
 
@@ -338,16 +413,36 @@ pytest tests/ -v
 
 ## 🧪 Testing & Code Quality
 
-- **Smoke tests**: 20 endpoints covered by `tests/test_smoke.py`.
+- **Backend tests**: unit tests plus data-backed endpoint smoke tests in `tests/`.
+- **Frontend tests**: Vitest tests for the API client and chatbot response/error flow.
+- **CI**: GitHub Actions runs tests, lint, typecheck, build, and secret scanning.
 - **Audit trail**: See [`AUDIT_REPORT.md`](./AUDIT_REPORT.md) for the full engineering audit log.
-- **Router split**: `main.py` refactored from 2523 → 1543 lines (12 routers).
-- All critical logic (Monte Carlo, cognitive scoring, PELT) verified against StatsBomb domain standards.
+- **Router split**: API functionality is organized across 12 routers.
 
-Run tests:
+Run backend tests:
 
 ```bash
 pytest tests/ -v
 ```
+
+### Run with Docker Compose
+
+Set `CACHE_API_KEY` in the environment to a unique value, then run:
+
+```powershell
+docker compose up --build
+```
+
+The web app is available at `http://localhost:3000`, and the API at
+`http://localhost:8000`. To start the optional local chatbot model service:
+
+```powershell
+docker compose --profile bot up --build -d
+docker compose exec ollama ollama pull qwen2.5:3b
+```
+
+The first chatbot request downloads the embedding model. The bot also needs
+the Ollama model above. The app's analytics do not require either service.
 
 ---
 
@@ -367,3 +462,15 @@ This is a portfolio project. Suggestions welcome via issues.
 
 **Built with** ❤️ **using StatsBomb Open Data, FastAPI, and Next.js.**#   e u r o - 2 0 2 4  
  
+## Known Limitations
+
+- Chatbot tidak menjawab sebagian pertanyaan berdata. Retrieval mengembalikan
+  8 dokumen, tetapi LLM fallback ke "Tidak ada data". Perbaikan dijadwalkan
+  pada iterasi berikutnya.
+- Docker indexing belum diverifikasi end-to-end karena Docker CLI tidak
+  tersedia di lingkungan pengembangan. Wajib diverifikasi sebelum deploy
+  Production.
+- Audit dependency produksi bersih. Audit penuh melaporkan 5 high pada
+  rantai ESLint (dev-only), tidak memengaruhi runtime produksi.
+- Vite config memakai ESM di file yang dibaca sebagai CommonJS. Warning
+  non-fatal saat ini; akan menjadi error pada Vite versi berikutnya.

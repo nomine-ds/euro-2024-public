@@ -1,17 +1,32 @@
 // frontend/lib/api.ts
-const API_BASE = "http://127.0.0.1:8000";
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, "") || "/api";
 
 async function fetcher<T>(url: string): Promise<T> {
-  const res = await fetch(url);
+  let requestUrl = url;
+  if (typeof window === "undefined" && url.startsWith("/api/")) {
+    const backendUrl = process.env.BACKEND_INTERNAL_URL;
+    if (!backendUrl) {
+      throw new Error("BACKEND_INTERNAL_URL must be set for server-side API requests.");
+    }
+    requestUrl = `${new URL(backendUrl).origin}${url.slice(4)}`;
+  }
+  const res = await fetch(requestUrl);
   if (!res.ok) {
     throw new Error(`HTTP ${res.status} - ${res.statusText} (${url})`);
   }
   return res.json();
 }
 
+export interface MatchRecord {
+  match_id: number;
+  home_team: string;
+  away_team: string;
+  date: string | null;
+}
+
 // --- MATCHES ---
 export async function fetchMatches() {
-  return fetcher<any>(`${API_BASE}/matches`);
+  return fetcher<MatchRecord[]>(`${API_BASE}/matches`);
 }
 
 export async function fetchMatchSummary(matchId: number) {

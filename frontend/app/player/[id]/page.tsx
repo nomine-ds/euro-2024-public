@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { API_BASE } from "@/lib/api";
 import {
   Radar,
   RadarChart,
@@ -74,9 +75,9 @@ export default function PlayerDetailPage() {
     const load = async () => {
       try {
         const [summaryRes, bulkRes, breakdownRes] = await Promise.all([
-          fetch(`http://127.0.0.1:8000/player/${playerId}/summary`),
-          fetch(`http://127.0.0.1:8000/players/bulk`),
-          fetch(`http://127.0.0.1:8000/player/${playerId}/breakdown`),
+          fetch(`${API_BASE}/player/${playerId}/summary`),
+          fetch(`${API_BASE}/players/bulk`),
+          fetch(`${API_BASE}/player/${playerId}/breakdown`),
         ]);
 
         if (!summaryRes.ok) throw new Error(`Summary HTTP ${summaryRes.status}`);

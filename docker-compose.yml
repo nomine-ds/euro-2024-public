@@ -1,24 +1,56 @@
 # docker-compose.yml
-version: '3.8'
-
 services:
-  qdrant:
-    image: qdrant/qdrant:latest
-    ports:
-      - "6333:6333"
-    volumes:
-      - ./data/qdrant_storage:/qdrant/storage
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
-      - QDRANT__SERVICE__GRPC_PORT=6334
-    restart: unless-stopped
+      APP_ENV: production
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      CACHE_API_KEY: "${CACHE_API_KEY:?Set CACHE_API_KEY in the environment}"
+      OLLAMA_HOST: http://ollama:11434
+      DATA_DIR: /app/data/raw
+      CHROMA_DB_PATH: /app/data/chroma_db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data/raw:/app/data/raw
+      - ./data/chroma_db:/app/data/chroma_db
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/', timeout=5)"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        BACKEND_INTERNAL_URL: http://api:8000
+        NEXT_PUBLIC_API_BASE: /api
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_BASE: /api
+      BACKEND_INTERNAL_URL: http://api:8000
+    volumes:
+      - ./frontend/data:/app/data
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
 
   ollama:
-    image: ollama/ollama:latest
-    ports:
-      - "11434:11434"
+    image: ollama/ollama:0.12.6
+    profiles: ["bot"]
+    restart: unless-stopped
     volumes:
       - ./data/ollama:/root/.ollama
-    environment:
-      - OLLAMA_KEEP_ALIVE=24h
-    restart: unless-stopped
-    command: serve
+    expose:
+      - "11434"

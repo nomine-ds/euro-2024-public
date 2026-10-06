@@ -1,6 +1,5 @@
 import json
 import os
-import time
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,8 +10,8 @@ from collections import defaultdict
 from scipy.optimize import linear_sum_assignment
 import traceback
 
-from app.cache import shared_cache
-from app.core.config import DATA_DIR
+from app.core.config import DATA_DIR, get_cors_origins
+from app.core.redis_cache import shared_cache
 from app.data.loader import load_or_fetch_all
 
 
@@ -1252,11 +1251,12 @@ APP_ENV = os.getenv("APP_ENV", "development").strip().lower()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    startup_load()
     try:
+        await shared_cache.connect()
+        startup_load()
         yield
     finally:
-        shared_cache.invalidate(all=True)
+        await shared_cache.close()
 
 
 app = FastAPI(
@@ -1271,9 +1271,9 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=get_cors_origins(),
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "X-API-Key"],
 )
 # Include routers
 from app.routers.bot import router as bot_router

@@ -17,7 +17,7 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
 import app.main as main
-from app.cache import shared_cache
+from app.core.redis_cache import shared_cache
 
 router = APIRouter(tags=["analytics"])
 

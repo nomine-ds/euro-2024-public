@@ -40,19 +40,29 @@ def get_360(event_uuid: str, match_id: Optional[int] = Query(None)):
 def avg_position(player_id: int, match_id: int):
     if main.EVENTS_DF is None:
         raise HTTPException(503, "Data not loaded.")
-    if 'freeze_frame' not in main.EVENTS_DF.columns:
-        raise HTTPException(404, "360 data not available in this dataset.")
-    mask = (main.EVENTS_DF['match_id'] == match_id) & (main.EVENTS_DF['freeze_frame'].notna())
+    required_columns = {"match_id", "player", "location"}
+    if not required_columns.issubset(main.EVENTS_DF.columns):
+        raise HTTPException(503, "Event coordinates are not available in this dataset.")
+    mask = main.EVENTS_DF["match_id"] == match_id
     subset = main.EVENTS_DF[mask]
     if subset.empty:
-        return {"found": False, "message": "No 360 data for this match."}
+        return {"found": False, "message": "No event data for this match."}
     xs, ys = [], []
     for _, row in subset.iterrows():
-        players = main.parse_freezeframe_safely(row)
-        for p in players:
-            if p['player_id'] == player_id:
-                xs.append(p['x'])
-                ys.append(p['y'])
+        player = row.get("player")
+        location = row.get("location")
+        if not isinstance(player, dict) or player.get("id") != player_id:
+            continue
+        if not isinstance(location, (list, tuple)) or len(location) < 2:
+            continue
+        try:
+            x, y = float(location[0]), float(location[1])
+        except (TypeError, ValueError):
+            continue
+        if not math.isfinite(x) or not math.isfinite(y):
+            continue
+        xs.append(x)
+        ys.append(y)
     if not xs:
         return {"found": False, "message": f"Player {player_id} not found."}
     return {
