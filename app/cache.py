@@ -25,23 +25,30 @@ class TTLCache:
         self.ttl = ttl
         self._entries: dict[str, dict[str, Any]] = {}
         self._inflight: dict[str, asyncio.Task[Any]] = {}
+        self._versions: dict[str, int] = {}
         self._lock = asyncio.Lock()
 
     def invalidate(self, keys: Iterable[str] | None = None, *, all: bool = False):
         if all:
             invalidated = list(self._entries.keys())
             self._entries.clear()
+            for key in list(self._inflight):
+                self._versions[key] = self._versions.get(key, 0) + 1
+            self._inflight.clear()
             return invalidated
 
         keys = list(keys or [])
         invalidated = []
         for key in keys:
+            self._versions[key] = self._versions.get(key, 0) + 1
             if key in self._entries:
                 invalidated.append(key)
                 del self._entries[key]
+            self._inflight.pop(key, None)
         return invalidated
 
     async def get_or_compute(self, key: str, compute_fn: Callable[[], Any]):
+        version = self._versions.get(key, 0)
         now = time.monotonic()
         entry = self._entries.get(key)
         if entry is not None and entry["expires_at"] > now:
@@ -56,7 +63,7 @@ class TTLCache:
 
             if key not in self._inflight:
                 logger.info("cache_miss", key=key)
-                self._inflight[key] = asyncio.create_task(self._run_compute(key, compute_fn))
+                self._inflight[key] = asyncio.create_task(self._run_compute(key, compute_fn, version))
 
             task = self._inflight[key]
 
@@ -67,7 +74,7 @@ class TTLCache:
                 if self._inflight.get(key) is task:
                     self._inflight.pop(key, None)
 
-    async def _run_compute(self, key: str, compute_fn: Callable[[], Any]):
+    async def _run_compute(self, key: str, compute_fn: Callable[[], Any], version: int):
         start = time.perf_counter()
         logger.info("compute_start", key=key)
         try:
@@ -79,15 +86,16 @@ class TTLCache:
             duration_ms = (time.perf_counter() - start) * 1000
             logger.info("compute_end", key=key, duration_ms=round(duration_ms, 2))
 
-        self._entries[key] = {
-            "value": value,
-            "expires_at": time.monotonic() + self.ttl,
-        }
+        if self._versions.get(key, 0) == version:
+            self._entries[key] = {
+                "value": value,
+                "expires_at": time.monotonic() + self.ttl,
+            }
         return value
 
 
 shared_cache = TTLCache(ttl=600)
 
 
-def get_admin_api_key() -> str:
-    return os.getenv("CACHE_API_KEY", "change-me")
+def get_admin_api_key() -> str | None:
+    return os.getenv("CACHE_API_KEY")

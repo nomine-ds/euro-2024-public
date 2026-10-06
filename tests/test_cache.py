@@ -7,6 +7,13 @@ from app.cache import TTLCache, shared_cache
 from app.main import app
 
 
+@pytest.fixture(autouse=True)
+def isolate_shared_cache():
+    shared_cache.invalidate(all=True)
+    yield
+    shared_cache.invalidate(all=True)
+
+
 def test_first_call_computes():
     cache = TTLCache(ttl=600)
     calls = {"count": 0}
@@ -104,6 +111,15 @@ def test_admin_endpoint_requires_api_key(monkeypatch):
     assert "invalidated" in payload
 
 
+def test_admin_endpoint_is_disabled_without_api_key(monkeypatch):
+    monkeypatch.delenv("CACHE_API_KEY", raising=False)
+    response = TestClient(app).post(
+        "/admin/cache/invalidate",
+        json={"keys": ["player:base"]},
+    )
+    assert response.status_code == 503
+
+
 def test_shared_cache_reuses_library_instance():
     shared_cache.invalidate(all=True)
     calls = {"count": 0}
@@ -122,3 +138,35 @@ def test_shared_cache_reuses_library_instance():
     assert first == {"value": 6}
     assert second == {"value": 6}
     assert calls["count"] == 1
+
+
+def test_invalidate_prevents_stale_task_from_repopulating_cache():
+    cache = TTLCache(ttl=600)
+    started = asyncio.Event()
+    release = asyncio.Event()
+    calls = {"count": 0}
+
+    async def compute():
+        calls["count"] += 1
+        started.set()
+        await release.wait()
+        return {"value": 7}
+
+    async def run_case():
+        task = asyncio.create_task(cache.get_or_compute("stale:key", compute))
+        await started.wait()
+        cache.invalidate(["stale:key"])
+        release.set()
+        first = await task
+        assert first == {"value": 7}
+        assert "stale:key" not in cache._entries
+
+        def recompute():
+            calls["count"] += 1
+            return {"value": 8}
+
+        second = await cache.get_or_compute("stale:key", recompute)
+        assert second == {"value": 8}
+        assert calls["count"] == 2
+
+    asyncio.run(run_case())
