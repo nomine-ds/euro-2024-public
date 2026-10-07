@@ -127,6 +127,9 @@ export default function RootLayout({
       <body
         className={`${inter.className} bg-gray-50 dark:bg-gray-900 transition-colors`}
       >
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <Providers>
           <Toaster
             position="top-right"
@@ -148,7 +151,7 @@ export default function RootLayout({
           />
           <KeyboardShortcuts />
           <Navbar />
-          <div className="min-h-screen">{children}</div>
+          <main id="main-content" className="min-h-screen">{children}</main>
           <Footer />
           <Onboarding />
         </Providers>
