@@ -16,7 +16,7 @@ const STEPS: Step[] = [
   {
     title: "👋 Selamat Datang di Euro 2024 Context Zone!",
     description:
-      "Platform analisis taktik interaktif dengan data StatsBomb 360. Mari kita jelajahi fitur-fiturnya dalam 6 langkah singkat.",
+      "Interactive tactical analysis platform with StatsBomb 360 data. Let's explore its features in 6 short steps.",
     target: null,
     position: "center",
   },
@@ -56,7 +56,7 @@ const STEPS: Step[] = [
     position: "center",
   },
   {
-    title: "🎉 Siap Menjelajah!",
+    title: "🎉 Ready to Explore!",
     description:
       "Sekarang kamu siap menggunakan semua fitur. Kalau butuh bantuan lagi, klik tombol '?' di footer untuk lihat tour ini kembali.",
     target: null,

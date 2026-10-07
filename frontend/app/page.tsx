@@ -106,7 +106,7 @@ export default function Home() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
               </span>
-              Data 360 siap diakses
+              Data 360 is ready
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
@@ -183,7 +183,7 @@ behind every match.
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Jelajahi Data
+            Explore Data
           </h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Features to analyze Euro 2024 from multiple angles
@@ -227,17 +227,17 @@ behind every match.
           className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700 p-12 text-center"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Siap Menjelajah?
+            Ready to Explore?
           </h2>
           <p className="text-white/90 mb-8 max-w-2xl mx-auto">
             Ask Hudl Bot anything about Euro 2024. Get data-backed answers
-            berdasarkan data StatsBomb.
+            based on StatsBomb data.
           </p>
           <Link
             href="/bot"
             className="inline-flex items-center gap-2 px-8 py-3 bg-white text-blue-600 rounded-xl font-medium hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
           >
-            🤖 Mulai Chat Sekarang
+            🤖 Start Chat Now
           </Link>
         </motion.div>
       </section>

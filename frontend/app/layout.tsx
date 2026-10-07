@@ -17,7 +17,7 @@ const SITE_URL =
 const SITE_NAME = "Euro 2024 Context Zone";
 
 const SITE_DESCRIPTION =
-  "Platform analitik taktis Euro 2024 dengan data StatsBomb 360. Pass network, cognitive mirror, counterfactual engine, dan analitik lanjutan untuk 51 pertandingan.";
+  "Tactical analytics platform for Euro 2024 with StatsBomb 360 data. Pass networks, cognitive mirror, counterfactual engine, and advanced analytics for 51 matches.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
     "counterfactual",
     "cognitive mirror",
     "soccer analytics",
-    "sepak bola",
-    "analitik taktis",
+    "football",
+    "tactical analytics",
   ],
 
   authors: [{ name: "nomine-ds", url: "https://github.com/nomine-ds" }],
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
 
   openGraph: {
     type: "website",
-    locale: "id_ID",
+    locale: "en_US",
     alternateLocale: ["en_US"],
     url: SITE_URL,
     siteName: SITE_NAME,
@@ -123,7 +123,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.className} bg-gray-50 dark:bg-gray-900 transition-colors`}
       >
