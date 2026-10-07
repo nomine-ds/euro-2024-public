@@ -69,7 +69,7 @@ export default function BotPage() {
   return (
     <main className="min-h-screen bg-gray-50 p-4 dark:bg-gray-900 sm:p-8">
       <div className="mx-auto max-w-3xl">
-        <Link href="/" className="text-blue-600 hover:underline inline-block mb-6">
+        <Link href="/" className="text-emerald-600 hover:underline inline-block mb-6">
           ← Back to Home
         </Link>
 
@@ -95,7 +95,7 @@ export default function BotPage() {
                 <div
                   className={`max-w-[80%] rounded-lg px-4 py-3 ${
                     msg.role === "user"
-                      ? "bg-blue-600 text-white"
+                      ? "bg-emerald-600 text-white"
                       : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100"
                   }`}
                 >
@@ -142,13 +142,13 @@ export default function BotPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask anything about Euro 2024..."
-              className="min-h-11 min-w-0 flex-1 rounded-xl border border-gray-500 bg-gray-50 px-4 py-2 text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 dark:border-gray-500 dark:bg-gray-900 dark:text-white dark:focus-visible:outline-blue-300"
+              className="min-h-11 min-w-0 flex-1 rounded-xl border border-gray-500 bg-gray-50 px-4 py-2 text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 dark:border-gray-500 dark:bg-gray-900 dark:text-white dark:focus-visible:outline-emerald-300"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="min-h-11 rounded-xl bg-blue-700 px-6 py-2 font-medium text-white transition hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:bg-gray-500"
+              className="min-h-11 rounded-xl bg-emerald-700 px-6 py-2 font-medium text-white transition hover:bg-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 disabled:cursor-not-allowed disabled:bg-gray-500"
             >
               Send question
             </button>
@@ -167,7 +167,7 @@ export default function BotPage() {
               key={i}
               type="button"
               onClick={() => setInput(q)}
-              className="min-h-11 rounded-full border border-gray-300 bg-white px-3 py-2 text-left text-xs text-gray-800 transition hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus-visible:outline-blue-300"
+              className="min-h-11 rounded-full border border-gray-300 bg-white px-3 py-2 text-left text-xs text-gray-800 transition hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus-visible:outline-emerald-300"
             >
               {q}
             </button>
