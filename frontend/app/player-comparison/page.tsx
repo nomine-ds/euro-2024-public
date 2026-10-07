@@ -2,23 +2,32 @@
 "use client";
 
 import { ChartSkeleton } from "@/components/Skeleton";
-import { useState, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { API_BASE } from "@/lib/api";
-import {
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-  Legend,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
+import dynamic from "next/dynamic";
+
+const RadarChartWrapper = dynamic(
+  () =>
+    import("@/components/charts/PlayerComparisonCharts").then((m) => ({
+      default: m.RadarChartWrapper,
+    })),
+  {
+    ssr: false,
+    loading: () => <ChartSkeleton height={CHART_HEIGHT} />,
+  },
+);
+
+const BarChartWrapper = dynamic(
+  () =>
+    import("@/components/charts/PlayerComparisonCharts").then((m) => ({
+      default: m.BarChartWrapper,
+    })),
+  {
+    ssr: false,
+    loading: () => <ChartSkeleton height={CHART_HEIGHT} />,
+  },
+);
 
 interface Player {
   player_id: number;
@@ -49,168 +58,10 @@ const CHART_HEIGHT = 400;
 // ================================================================
 // HOOK: measure width sekali + window resize (debounced).
 // ================================================================
-function useContainerWidth<T extends HTMLElement>() {
-  const ref = useRef<T>(null);
-  const [width, setWidth] = useState(0);
-
-  useLayoutEffect(() => {
-    const measure = () => {
-      if (ref.current) {
-        const w = ref.current.clientWidth;
-        if (w > 0) setWidth(w);
-      }
-    };
-
-    measure();
-
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    const onResize = () => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(measure, 300);
-    };
-
-    window.addEventListener("resize", onResize);
-    return () => {
-      if (timer) clearTimeout(timer);
-      window.removeEventListener("resize", onResize);
-    };
-  }, []);
-
-  return { ref, width };
-}
 
 // ================================================================
 // WRAPPERS
 // ================================================================
-function RadarChartWrapper({ data, players }: { data: any[]; players: Player[] }) {
-  const { ref, width } = useContainerWidth<HTMLDivElement>();
-
-  return (
-    <div
-      ref={ref}
-      className="w-full"
-      style={{
-        height: CHART_HEIGHT,
-        overflow: "hidden",
-        contain: "layout paint",
-      }}
-    >
-      {width > 0 && (
-        <RadarChart
-          width={width}
-          height={CHART_HEIGHT}
-          data={data}
-          outerRadius="78%"
-        >
-          <PolarGrid stroke="#9ca3af" opacity={0.35} />
-          <PolarAngleAxis
-            dataKey="metric"
-            tick={{ fontSize: 14, fontWeight: 600, fill: "#4b5563" }}
-          />
-          <PolarRadiusAxis
-            angle={90}
-            domain={[0, 100]}
-            tick={{ fill: "#9ca3af", fontSize: 10 }}
-          />
-          {players.map((p, i) => (
-            <Radar
-              key={p.player_id}
-              name={p.player_name}
-              dataKey={p.player_name}
-              stroke={COLORS[i]}
-              fill={COLORS[i]}
-              fillOpacity={0.3}
-              isAnimationActive={false}
-            />
-          ))}
-          <Legend
-            wrapperStyle={{ fontSize: "13px", paddingTop: "8px" }}
-          />
-          <Tooltip
-            formatter={(value: any) => `${Number(value).toFixed(0)}%`}
-            contentStyle={{
-              backgroundColor: "rgba(17, 24, 39, 0.95)",
-              border: "none",
-              borderRadius: "8px",
-              color: "white",
-              fontSize: "12px",
-            }}
-          />
-        </RadarChart>
-      )}
-    </div>
-  );
-}
-
-function BarChartWrapper({
-  data,
-  players,
-  rawData,
-}: {
-  data: any[];
-  players: Player[];
-  rawData: any[];
-}) {
-  const { ref, width } = useContainerWidth<HTMLDivElement>();
-  void rawData;
-
-  return (
-    <div
-      ref={ref}
-      className="w-full"
-      style={{
-        height: CHART_HEIGHT,
-        overflow: "hidden",
-        contain: "layout paint",
-      }}
-    >
-      {width > 0 && (
-        <BarChart
-          width={width}
-          height={CHART_HEIGHT}
-          data={data}
-          margin={{ top: 8, right: 12, bottom: 8, left: 0 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#9ca3af" opacity={0.3} />
-          <XAxis
-            dataKey="metric"
-            tick={{ fontSize: 13, fill: "#4b5563" }}
-          />
-          <YAxis
-            domain={[0, 100]}
-            tick={{ fontSize: 11, fill: "#9ca3af" }}
-            tickFormatter={(v) => `${v}%`}
-          />
-          <Tooltip
-            formatter={(value: any, name: any) => {
-              const pct = Number(value).toFixed(0);
-              // Look up raw value from rawData by metric + player
-              return [`${pct}% (of 0-100 scale)`, name];
-            }}
-            contentStyle={{
-              backgroundColor: "rgba(17, 24, 39, 0.95)",
-              border: "none",
-              borderRadius: "8px",
-              color: "white",
-              fontSize: "12px",
-            }}
-          />
-          <Legend wrapperStyle={{ fontSize: "13px", paddingTop: "8px" }} />
-          {players.map((p, i) => (
-            <Bar
-              key={p.player_id}
-              dataKey={p.player_name}
-              fill={COLORS[i]}
-              isAnimationActive={false}
-              radius={[4, 4, 0, 0]}
-            />
-          ))}
-        </BarChart>
-      )}
-    </div>
-  );
-}
-
 // ================================================================
 // SIMILARITY BADGE
 // ================================================================
@@ -583,8 +434,7 @@ export default function PlayerComparisonPage() {
                 key={`bar-${comparisonKey}`}
                 data={barDataNormalized}
                 players={comparedPlayers}
-                rawData={barDataNormalized}
-              />
+                    />
             </div>
 
             {/* Similarity Matrix with interpretation */}
