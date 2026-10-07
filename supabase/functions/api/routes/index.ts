@@ -49,6 +49,11 @@ export async function dispatch(
     );
   }
 
+  if (path === "/bot/health") {
+    const { botHealthHandler } = await import("./bot.ts");
+    return await botHealthHandler(client);
+  }
+
   return json(
     { message: "This API endpoint has not been migrated to Supabase yet." },
     501,
