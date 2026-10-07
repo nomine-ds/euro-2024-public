@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://euro-2024-public.vercel.app/sitemap.xml

@@ -61,3 +61,6 @@ typecheck-*.txt
 # OS files
 .DS_Store
 Thumbs.db
+
+# Supabase CLI temp
+supabase/.temp/
