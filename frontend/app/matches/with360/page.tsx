@@ -5,7 +5,7 @@ import { connection } from "next/server";
 export default async function MatchesWith360Page() {
   await connection();
   const allMatches = await fetchMatches();
-  // Filter match yang punya 360 (hardcode dari daftar yang kita tahu)
+  // Filter matches with 360 data (hardcoded from known list)
   const matchIdsWith360 = [
     3764440, 3764661, 3773369, 3773372, 3773377, 3773386, 3773387,
     3773403, 3773415, 3773428, 3773457, 3773466, 3773474, 3773477,

@@ -5,7 +5,7 @@ const isProd = process.env.VERCEL_ENV === "production";
 
 // Content Security Policy
 // - 'unsafe-inline' pada style dibutuhkan Tailwind v4 (inline style injection)
-// - 'unsafe-eval' hanya dibutuhkan untuk /lab (Pyodide WASM), aman karena tidak ada user input
+// - 'unsafe-eval' is only needed for /lab (Pyodide WASM); safe since there is no user input
 // - connect-src: Supabase REST + Realtime + Vercel Analytics
 const cspDirectives = [
   "default-src 'self'",

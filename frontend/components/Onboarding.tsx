@@ -84,7 +84,7 @@ export default function Onboarding() {
     return undefined;
   }, []);
 
-  // Highlight target saat step berubah
+  // Highlight target when step changes
   useEffect(() => {
     if (!show) return;
     const currentStep = STEPS[step];
@@ -240,7 +240,7 @@ export default function Onboarding() {
 }
 
 // ================================================================
-// Hook untuk reset onboarding (dipanggil dari footer)
+// Hook to reset onboarding (called from footer)
 // ================================================================
 export function resetOnboarding() {
   if (typeof window !== "undefined") {

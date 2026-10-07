@@ -363,7 +363,7 @@ import math
     loadPyodide();
   }, []);
 
-  // Load dari URL share atau localStorage
+  // Load from share URL or localStorage
   useEffect(() => {
     const shareParam = searchParams.get("code");
     if (shareParam) {
@@ -384,7 +384,7 @@ import math
     }
   }, [searchParams]);
 
-  // Save ke localStorage
+  // Save to localStorage
   useEffect(() => {
     localStorage.setItem("euro2024_notebooks", JSON.stringify(notebooks));
   }, [notebooks]);

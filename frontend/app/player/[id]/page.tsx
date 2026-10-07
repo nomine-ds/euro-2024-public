@@ -130,7 +130,7 @@ export default function PlayerDetailPage() {
     );
   }
 
-  // ---- Hitung rata-rata & max untuk perbandingan ----
+  // ---- Compute average & max for comparison ----
   const n = allPlayers.length || 1;
   const avg = {
     goals: allPlayers.reduce((s, p) => s + (p.goals || 0), 0) / n,

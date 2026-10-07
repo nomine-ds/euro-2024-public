@@ -99,7 +99,7 @@ export async function ghostRoutes(
     if (!detections.length) continue;
     framesProcessed += 1;
 
-    // Predict posisi track (simple velocity prediction)
+    // Predict track position (simple velocity prediction)
     for (const t of tracks.values()) {
       t.x += t.vx;
       t.y += t.vy;
@@ -171,7 +171,7 @@ export async function ghostRoutes(
     }
   }
 
-  // Hitung vacuum score per track
+  // Compute vacuum score per track
   const computeVacuum = (avgDist: number): number => {
     return Math.max(0, 5 * (1 - avgDist / 25));
   };
@@ -211,14 +211,14 @@ export async function ghostRoutes(
   }
 
   // Per-frame density calculation (approximation)
-  // Untuk performa, kita pakai avg distance dari sampel frames
+  // For performance, use avg distance from sampled frames
   const framesForDensity = frames.slice(0, Math.min(frames.length, 500));
   for (const entry of ghostEntries) {
     let sumDist = 0;
     let count = 0;
     for (const frame of framesForDensity) {
       const dets = parseDetections(frame.players);
-      // Cari deteksi terdekat dengan posisi rata-rata track
+      // Find nearest detection to average track position
       let nearest: Detection | null = null;
       let nearestDist = Infinity;
       for (const d of dets) {
@@ -229,7 +229,7 @@ export async function ghostRoutes(
         }
       }
       if (!nearest || nearestDist > 15) continue;
-      // Hitung avg distance ke semua deteksi lain di frame ini
+      // Compute avg distance to all other detections in this frame
       let frameSum = 0;
       let frameCount = 0;
       for (const other of dets) {

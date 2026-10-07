@@ -90,7 +90,7 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
     const gridSize = 20;
     const grid: number[][] = Array(gridSize).fill(0).map(() => Array(Math.floor(gridSize * 0.75)).fill(0));
 
-    // Normalisasi x (0-120) ke grid (0-19), y (0-80) ke grid (0-14)
+    // Normalize x (0-120) to grid (0-19), y (0-80) to grid (0-14)
     heatmapData.forEach((pos) => {
       const gx = Math.min(Math.floor((pos.x / 120) * gridSize), gridSize - 1);
       const gy = Math.min(Math.floor((pos.y / 80) * (gridSize * 0.75)), Math.floor(gridSize * 0.75) - 1);
@@ -99,7 +99,7 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
       }
     });
 
-    // Cari max untuk normalisasi warna
+    // Find max for color normalization
     let maxVal = 0;
     for (let i = 0; i < grid.length; i++) {
       for (let j = 0; j < grid[i].length; j++) {
@@ -111,7 +111,7 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
     const cellW = 100 / gridSize;
     const cellH = 100 / (gridSize * 0.75);
 
-    // Nama pemain yang dipilih
+    // Name of selected player
     const playerName = players.find(p => p.player_id === selectedPlayerId)?.player_name || 'Player';
 
     return (
@@ -144,7 +144,7 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
               row.map((val, j) => {
                 if (val === 0) return null;
                 const intensity = maxVal > 0 ? val / maxVal : 0;
-                // Warna dari biru (dingin) ke merah (panas)
+                // Color gradient from blue (cold) to red (hot)
                 const r = Math.round(255 * intensity);
                 const g = Math.round(100 * (1 - intensity));
                 const b = Math.round(100 * (1 - intensity));
