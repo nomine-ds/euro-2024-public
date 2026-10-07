@@ -26,6 +26,7 @@ export default function PlayersPage() {
   const [search, setSearch] = useState("");
   const [teamFilter, setTeamFilter] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("goals");
+  const [visibleCount, setVisibleCount] = useState(100);
 
   useEffect(() => {
     const load = async () => {
@@ -47,6 +48,11 @@ export default function PlayersPage() {
     };
     load();
   }, []);
+
+  // Reset pagination when filter or search changes
+  useEffect(() => {
+    setVisibleCount(100);
+  }, [search, teamFilter, sortKey]);
 
   const teams = Array.from(
     new Set(players.map((p) => p.team_name).filter(Boolean))
@@ -78,7 +84,7 @@ export default function PlayersPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="text-blue-600 dark:text-blue-400 hover:underline text-sm"
+          className="text-emerald-600 dark:text-emerald-400 hover:underline text-sm"
         >
           ← Back
         </Link>
@@ -110,7 +116,7 @@ export default function PlayersPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Player name..."
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
 
@@ -121,7 +127,7 @@ export default function PlayersPage() {
               <select
                 value={teamFilter}
                 onChange={(e) => setTeamFilter(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 <option value="">All Teams</option>
                 {teams.map((t) => (
@@ -139,7 +145,7 @@ export default function PlayersPage() {
               <select
                 value={sortKey}
                 onChange={(e) => setSortKey(e.target.value as SortKey)}
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 <option value="goals">Goals</option>
                 <option value="assists">🎯 Assists</option>
@@ -170,7 +176,7 @@ export default function PlayersPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                {filtered.slice(0, 100).map((p, idx) => (
+                {filtered.slice(0, visibleCount).map((p, idx) => (
                   <tr
                     key={p.player_id}
                     className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition"
@@ -181,7 +187,7 @@ export default function PlayersPage() {
                     <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
                       <Link
                         href={`/player/${p.player_id}`}
-                        className="hover:text-blue-600 dark:hover:text-blue-400 transition"
+                        className="hover:text-emerald-600 dark:hover:text-emerald-400 transition"
                       >
                         {p.player_name}
                       </Link>
@@ -219,9 +225,20 @@ export default function PlayersPage() {
             </div>
           )}
 
-          {filtered.length > 100 && (
-            <div className="px-4 py-3 text-center text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700">
-              Showing 100 of {filtered.length} players.
+          {filtered.length > 0 && (
+            <div className="px-4 py-4 flex flex-col items-center gap-3 border-t border-gray-100 dark:border-gray-700">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Showing {Math.min(visibleCount, filtered.length)} of {filtered.length} players
+              </p>
+              {visibleCount < filtered.length && (
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((c) => c + 100)}
+                  className="px-4 py-2 text-sm font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-lg transition-colors"
+                >
+                  Load 100 more
+                </button>
+              )}
             </div>
           )}
         </div>
