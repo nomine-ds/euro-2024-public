@@ -169,7 +169,7 @@ export default function CounterfactualPage() {
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
             🧠 Counterfactual Engine
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-gray-500 dark:text-gray-500 mt-1">
             Select match → select moment → see what happens if action differed
           </p>
         </div>
@@ -267,7 +267,7 @@ export default function CounterfactualPage() {
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-2">
+                    <div className="text-xs text-gray-500 dark:text-gray-500 mt-1 flex items-center gap-2">
                       <span>{ev.team_name || "—"}</span>
                       <span>•</span>
                       <span>{formatTimestamp(ev.timestamp)}</span>
@@ -298,7 +298,7 @@ export default function CounterfactualPage() {
             </div>
 
             <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 mb-4">
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+              <div className="text-xs text-gray-500 dark:text-gray-500 mb-1">
                 Selected moment:
               </div>
               <div className="text-sm font-medium text-gray-900 dark:text-white">
@@ -351,7 +351,7 @@ export default function CounterfactualPage() {
               <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
                 Simulation Results
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-sm text-gray-600 dark:text-gray-500 mb-4">
                 {result.message}
               </p>
 
@@ -367,7 +367,7 @@ export default function CounterfactualPage() {
                     Goal Probability:{" "}
                     {Math.round(formatNumber(result.original?.probability_goal) * 100)}%
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  <div className="text-xs text-gray-500 dark:text-gray-500 mt-2">
                     Action: <strong>{result.original?.action ?? "—"}</strong>
                   </div>
                 </div>
@@ -383,7 +383,7 @@ export default function CounterfactualPage() {
                     Goal Probability:{" "}
                     {Math.round(formatNumber(result.alternative?.probability_goal) * 100)}%
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  <div className="text-xs text-gray-500 dark:text-gray-500 mt-2">
                     Action: <strong>{result.alternative?.action ?? "—"}</strong>
                   </div>
                 </div>
@@ -433,7 +433,7 @@ export default function CounterfactualPage() {
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-gray-500 dark:text-gray-500">
                       Mean xG
                     </div>
                     <div className="text-lg font-bold text-gray-900 dark:text-white">
@@ -441,7 +441,7 @@ export default function CounterfactualPage() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-gray-500 dark:text-gray-500">
                       Std Dev
                     </div>
                     <div className="text-lg font-bold text-gray-900 dark:text-white">
@@ -449,7 +449,7 @@ export default function CounterfactualPage() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-gray-500 dark:text-gray-500">
                       Percentile 25
                     </div>
                     <div className="text-lg font-bold text-gray-900 dark:text-white">
@@ -457,7 +457,7 @@ export default function CounterfactualPage() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-gray-500 dark:text-gray-500">
                       Percentile 75
                     </div>
                     <div className="text-lg font-bold text-gray-900 dark:text-white">

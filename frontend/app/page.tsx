@@ -174,7 +174,7 @@ behind every match.
                 <div className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                   {stat.value}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
                   {stat.label}
                 </div>
               </motion.div>
@@ -194,7 +194,7 @@ behind every match.
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Explore Data
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-500 max-w-2xl mx-auto">
             Features to analyze Euro 2024 from multiple angles
           </p>
         </motion.div>
@@ -224,7 +224,7 @@ behind every match.
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-500 dark:text-gray-500">
                   {feature.desc}
                 </p>
               </Link>

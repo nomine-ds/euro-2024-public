@@ -102,14 +102,14 @@ export default function ComparePage() {
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mt-2 mb-2 text-gray-900 dark:text-white">
           ⚔️ Team Comparison
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 mb-6">
+        <p className="text-gray-500 dark:text-gray-500 mb-6">
           Compare two teams head-to-head
         </p>
 
         <div className="bg-white dark:bg-gray-800 rounded-lg p-5 mb-6 border border-gray-200 dark:border-gray-700">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-500 mb-1">
                 Team 1
               </label>
               <select
@@ -136,7 +136,7 @@ export default function ComparePage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-500 mb-1">
                 Team 2
               </label>
               <select
@@ -185,7 +185,7 @@ export default function ComparePage() {
               <div className="p-4 text-right font-bold text-gray-900 dark:text-white text-sm md:text-base">
                 {comparison[0].team_name}
               </div>
-              <div className="p-4 text-center text-xs text-gray-500 dark:text-gray-400 uppercase font-medium">
+              <div className="p-4 text-center text-xs text-gray-500 dark:text-gray-500 uppercase font-medium">
                 Statistik
               </div>
               <div className="p-4 text-left font-bold text-gray-900 dark:text-white text-sm md:text-base">
@@ -228,7 +228,7 @@ export default function ComparePage() {
                       </div>
                     </div>
                     <div className="p-4 text-center">
-                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
                         {metric.label}
                       </div>
                     </div>

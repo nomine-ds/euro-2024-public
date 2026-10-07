@@ -139,7 +139,7 @@ export default function MatchDetailPage() {
               <div className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white">
                 {summary.home_goals} – {summary.away_goals}
               </div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              <div className="text-xs text-gray-500 dark:text-gray-500 mt-2">
                 Match ID: {summary.match_id}
               </div>
             </div>
@@ -154,7 +154,7 @@ export default function MatchDetailPage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="text-xs text-gray-500 dark:text-gray-400">
+            <div className="text-xs text-gray-500 dark:text-gray-500">
               Total Events
             </div>
             <div className="text-xl font-bold text-gray-900 dark:text-white mt-1">
@@ -162,7 +162,7 @@ export default function MatchDetailPage() {
             </div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="text-xs text-gray-500 dark:text-gray-400">
+            <div className="text-xs text-gray-500 dark:text-gray-500">
               Shots
             </div>
             <div className="text-xl font-bold text-gray-900 dark:text-white mt-1">
@@ -170,7 +170,7 @@ export default function MatchDetailPage() {
             </div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="text-xs text-gray-500 dark:text-gray-400">
+            <div className="text-xs text-gray-500 dark:text-gray-500">
              Passes
             </div>
             <div className="text-xl font-bold text-gray-900 dark:text-white mt-1">
@@ -178,7 +178,7 @@ export default function MatchDetailPage() {
             </div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="text-xs text-gray-500 dark:text-gray-400">
+            <div className="text-xs text-gray-500 dark:text-gray-500">
               Total xG
             </div>
             <div className="text-xl font-bold text-gray-900 dark:text-white mt-1">
@@ -254,7 +254,7 @@ export default function MatchDetailPage() {
                         {e.player_name || "—"}
                       </span>
                       {e.team_name && (
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-xs text-gray-500 dark:text-gray-500">
                           ({e.team_name})
                         </span>
                       )}
@@ -281,7 +281,7 @@ export default function MatchDetailPage() {
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
                       {e.event_type}
                       {e.outcome && ` · ${e.outcome}`}
                     </div>
@@ -292,13 +292,13 @@ export default function MatchDetailPage() {
           </ul>
 
           {filteredEvents.length > 200 && (
-            <div className="px-6 py-3 text-center text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700">
+            <div className="px-6 py-3 text-center text-xs text-gray-500 dark:text-gray-500 border-t border-gray-100 dark:border-gray-700">
               Showing 200 of {filteredEvents.length} events.
             </div>
           )}
 
           {filteredEvents.length === 0 && (
-            <div className="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400">
+            <div className="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-500">
               No events for this filter.
             </div>
           )}

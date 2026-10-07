@@ -530,7 +530,7 @@ export default function PassNetworkPage() {
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
             🔗 Pass Network
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
+          <p className="text-gray-500 dark:text-gray-500 mt-1 text-sm">
             Player positions = average pitch location. Hover a node to
             view names & connections.
           </p>
@@ -545,7 +545,7 @@ export default function PassNetworkPage() {
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-800 mb-6 flex flex-wrap items-center gap-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+            <span className="text-xs text-gray-500 dark:text-gray-500 font-medium">
               Team:
             </span>
             <button
@@ -578,7 +578,7 @@ export default function PassNetworkPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+            <span className="text-xs text-gray-500 dark:text-gray-500 font-medium">
               Min. passes:
             </span>
             {[1, 3, 5, 10].map((n) => (
@@ -588,7 +588,7 @@ export default function PassNetworkPage() {
                 className={`px-2.5 py-1 rounded text-xs border transition ${
                   minPasses === n
                     ? "bg-gray-800 dark:bg-gray-700 text-white border-gray-800"
-                    : "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700"
+                    : "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-500 border-gray-200 dark:border-gray-700"
                 }`}
               >
                 ≥ {n}
@@ -603,7 +603,7 @@ export default function PassNetworkPage() {
               onChange={(e) => setShowAllLabels(e.target.checked)}
               className="w-4 h-4 accent-blue-600"
             />
-            <span className="text-xs text-gray-600 dark:text-gray-400">
+            <span className="text-xs text-gray-600 dark:text-gray-500">
               Show all names
             </span>
           </label>
@@ -762,14 +762,14 @@ export default function PassNetworkPage() {
                       key={p.id}
                       className="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                     >
-                      <td className="px-3 py-2 text-gray-500 dark:text-gray-400 font-mono">
+                      <td className="px-3 py-2 text-gray-500 dark:text-gray-500 font-mono">
                         {i + 1}
                       </td>
                       <td className="px-3 py-2 text-gray-900 dark:text-white">
                         <span className="font-medium">
                           {getShortName(p.name)}
                         </span>
-                        <span className="text-xs text-gray-400 ml-2 hidden md:inline">
+                        <span className="text-xs text-gray-500 ml-2 hidden md:inline">
                           {p.name}
                         </span>
                       </td>
@@ -784,7 +784,7 @@ export default function PassNetworkPage() {
                       <td className="px-3 py-2 text-right font-mono text-gray-700 dark:text-gray-300">
                         {p.outgoing}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-400">
+                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-500">
                         {p.incoming}
                       </td>
                       <td className="px-3 py-2 text-right font-mono font-medium text-gray-900 dark:text-white">
@@ -805,7 +805,7 @@ export default function PassNetworkPage() {
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-100 dark:border-gray-800">
-      <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+      <div className="text-xs text-gray-500 dark:text-gray-500 mb-1">
         {label}
       </div>
       <div className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">

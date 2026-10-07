@@ -186,7 +186,7 @@ export default function TacticalPage() {
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
             📜 Tactical Timeline
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
+          <p className="text-gray-500 dark:text-gray-500 mt-1 text-sm">
             Match-level aggregate across both teams — {windowMin}-minute
             rolling window. Multivariate change-point detection (PELT) on
             xG / PPDA / Field Tilt.
@@ -375,7 +375,7 @@ export default function TacticalPage() {
           </h2>
 
           {narrative.length === 0 && (
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-500 text-sm">
               No significant tempo shifts detected.
             </p>
           )}
@@ -408,7 +408,7 @@ export default function TacticalPage() {
                     <p className="text-sm text-gray-900 dark:text-white font-medium">
                       {n.text}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono">
+                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-1 font-mono">
                       xG before: {n.xg_before.toFixed(3)} → after:{" "}
                       {n.xg_after.toFixed(3)}
                     </p>
@@ -451,7 +451,7 @@ function StatCard({
 }) {
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-100 dark:border-gray-800">
-      <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+      <div className="text-xs text-gray-500 dark:text-gray-500 mb-1">
         {label}
       </div>
       <div className={`text-2xl font-bold ${color}`}>{value}</div>
@@ -484,7 +484,7 @@ function ChartCard({
         >
           {title}
         </h2>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+        <p className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">
           {subtitle}
         </p>
       </div>

@@ -448,7 +448,7 @@ export default function PlayerComparisonPage() {
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
             Player Comparison
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-gray-500 dark:text-gray-500 mt-1">
             Compare 2–4 players with radar chart, bar chart, and similarity score
           </p>
         </div>
@@ -535,7 +535,7 @@ export default function PlayerComparisonPage() {
                 <div className="font-medium text-gray-900 dark:text-white truncate">
                   {p.player_name}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+                <div className="text-xs text-gray-500 dark:text-gray-500">
                   {p.team_name || "Unknown"} · {p.goals} goals
                 </div>
               </button>
@@ -570,11 +570,11 @@ export default function PlayerComparisonPage() {
                 <h2 className="font-semibold text-gray-900 dark:text-white">
                   📈 Head-to-Head per Metric
                 </h2>
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-gray-500">
                   Scale 0–100 (per metric)
                 </span>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+              <p className="text-xs text-gray-500 dark:text-gray-500 mb-4">
                    Each metric is normalized 0–100 so comparison between metrics
                 is balanced. 100 = best player in that metric (among
                 those compared).

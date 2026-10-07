@@ -540,7 +540,7 @@ sys.stderr = StringIO()
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
             🧪 Public Data Lab v2
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-gray-500 dark:text-gray-500 mt-1">
             Python REPL + 10 template + Export PDF/PNG + Share link + Multi-tab
           </p>
         </div>
@@ -569,7 +569,7 @@ sys.stderr = StringIO()
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer transition ${
                 activeTab === n.id
                   ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  : "text-gray-600 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
               onClick={() => setActiveTab(n.id)}
             >
@@ -589,7 +589,7 @@ sys.stderr = StringIO()
           ))}
           <button
             onClick={addNotebook}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+            className="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
           >
             + New Tab
           </button>
@@ -599,7 +599,7 @@ sys.stderr = StringIO()
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-0">
           {/* Sidebar Templates */}
           <div className="lg:col-span-1 bg-white dark:bg-gray-800 border border-r-0 border-gray-200 dark:border-gray-700 p-2 max-h-[600px] overflow-y-auto">
-            <div className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
+            <div className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase">
               📚 Templates
             </div>
             <ul className="space-y-1">

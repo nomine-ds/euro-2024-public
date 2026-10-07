@@ -198,7 +198,7 @@ export default function GhostPage() {
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white mb-1">
             📍 Player Position Density
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
+          <p className="text-gray-500 dark:text-gray-500 text-sm">
             Spatial distribution of players from 360 freeze-frames.
             {data.source && (
               <span className="ml-2 px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 text-xs">
@@ -206,7 +206,7 @@ export default function GhostPage() {
               </span>
             )}
             {data.total_frames && (
-              <span className="ml-2 text-xs text-gray-400">
+              <span className="ml-2 text-xs text-gray-500">
                 {data.total_frames} frames
               </span>
             )}
@@ -217,7 +217,7 @@ export default function GhostPage() {
         {insights && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             <div className="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-100 dark:border-gray-800">
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+              <div className="text-xs text-gray-500 dark:text-gray-500 mb-1">
                 Total appearances
               </div>
               <div className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
@@ -225,7 +225,7 @@ export default function GhostPage() {
               </div>
             </div>
             <div className="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-100 dark:border-gray-800">
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+              <div className="text-xs text-gray-500 dark:text-gray-500 mb-1">
                 Avg crowding score
               </div>
               <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
@@ -233,7 +233,7 @@ export default function GhostPage() {
               </div>
             </div>
             <div className="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-100 dark:border-gray-800">
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+              <div className="text-xs text-gray-500 dark:text-gray-500 mb-1">
                 Avg dist to nearest
               </div>
               <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
@@ -241,13 +241,13 @@ export default function GhostPage() {
               </div>
             </div>
             <div className="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-100 dark:border-gray-800">
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+              <div className="text-xs text-gray-500 dark:text-gray-500 mb-1">
                 Most crowded
               </div>
               <div className="text-lg font-bold text-red-600 dark:text-red-400">
                 {insights.most_crowded?.name ?? "—"}
               </div>
-              <div className="text-xs text-gray-400">
+              <div className="text-xs text-gray-500">
                 score {insights.most_crowded?.score ?? "—"}
               </div>
             </div>
@@ -340,16 +340,16 @@ export default function GhostPage() {
                     <td className="px-4 py-2 text-right font-mono text-gray-900 dark:text-white">
                       {p.vacuum_created.toFixed(2)}
                     </td>
-                    <td className="px-4 py-2 text-right font-mono text-gray-500 dark:text-gray-400">
+                    <td className="px-4 py-2 text-right font-mono text-gray-500 dark:text-gray-500">
                       {p.raw_avg_distance.toFixed(2)}
                     </td>
-                    <td className="px-4 py-2 text-right font-mono text-gray-500 dark:text-gray-400">
+                    <td className="px-4 py-2 text-right font-mono text-gray-500 dark:text-gray-500">
                       {p.sample_count}
                     </td>
-                    <td className="px-4 py-2 text-right font-mono text-gray-500 dark:text-gray-400">
+                    <td className="px-4 py-2 text-right font-mono text-gray-500 dark:text-gray-500">
                       {p.avg_x?.toFixed(1) ?? "—"}
                     </td>
-                    <td className="px-4 py-2 text-right font-mono text-gray-500 dark:text-gray-400">
+                    <td className="px-4 py-2 text-right font-mono text-gray-500 dark:text-gray-500">
                       {p.avg_y?.toFixed(1) ?? "—"}
                     </td>
                   </tr>

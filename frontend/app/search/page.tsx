@@ -58,10 +58,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 >
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{m.home_team}</span>
-                    <span className="text-gray-400 text-sm">vs</span>
+                    <span className="text-gray-500 text-sm">vs</span>
                     <span className="font-medium">{m.away_team}</span>
                   </div>
-                  <div className="text-xs text-gray-400 mt-1">{m.date}</div>
+                  <div className="text-xs text-gray-500 mt-1">{m.date}</div>
                 </a>
               ))}
             </div>
@@ -80,19 +80,19 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 >
                   <div className="font-medium text-gray-800">{p.player_name}</div>
                   {p.team_name && (
-                    <div className="text-xs text-gray-400">{p.team_name}</div>
+                    <div className="text-xs text-gray-500">{p.team_name}</div>
                   )}
                 </a>
               ))}
             </div>
             {matchedPlayers.length > 20 && (
-              <p className="text-xs text-gray-400 mt-2">Showing 20 of {matchedPlayers.length} players.</p>
+              <p className="text-xs text-gray-500 mt-2">Showing 20 of {matchedPlayers.length} players.</p>
             )}
           </div>
         )}
 
         {matchedMatches.length === 0 && matchedPlayers.length === 0 && (
-          <p className="text-gray-400 text-center py-8">
+          <p className="text-gray-500 text-center py-8">
             No results found for "{query}".
           </p>
         )}

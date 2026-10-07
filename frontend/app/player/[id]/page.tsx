@@ -181,7 +181,7 @@ export default function PlayerDetailPage() {
                 {summary.player_name}
               </h1>
               {summary.team_name && (
-                <p className="text-gray-600 dark:text-gray-400 mt-1">
+                <p className="text-gray-600 dark:text-gray-500 mt-1">
                   {summary.team_name}
                 </p>
               )}
@@ -239,24 +239,24 @@ export default function PlayerDetailPage() {
         {/* xG / xA */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800">
-            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+            <div className="text-xs text-gray-500 dark:text-gray-500 mb-1">
               Expected Goals (xG)
             </div>
             <div className="text-3xl font-bold text-gray-900 dark:text-white">
               {summary.xG.toFixed(2)}
             </div>
-            <div className="text-xs text-gray-400 mt-1">
+            <div className="text-xs text-gray-500 mt-1">
               Average: {avg.xg.toFixed(2)}
             </div>
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800">
-            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+            <div className="text-xs text-gray-500 dark:text-gray-500 mb-1">
               Expected Assists (xA)
             </div>
             <div className="text-3xl font-bold text-gray-900 dark:text-white">
               {summary.xA.toFixed(2)}
             </div>
-            <div className="text-xs text-gray-400 mt-1">
+            <div className="text-xs text-gray-500 mt-1">
               Average: {avg.xa.toFixed(2)}
             </div>
           </div>
@@ -308,7 +308,7 @@ export default function PlayerDetailPage() {
               </RadarChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+          <p className="text-xs text-gray-500 dark:text-gray-500 mt-2 text-center">
             Scale 0–100% of the maximum value among all players.
           </p>
         </div>
@@ -357,13 +357,13 @@ export default function PlayerDetailPage() {
                       <td className="px-3 py-2 text-right font-mono text-gray-700 dark:text-gray-300">
                         {m.assists}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-400">
+                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-500">
                         {m.shots}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-400">
+                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-500">
                         {m.passes}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-400">
+                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-500">
                         {m.xg.toFixed(2)}
                       </td>
                     </tr>
@@ -428,7 +428,7 @@ function StatCard({
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-200 dark:border-gray-800">
-      <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+      <div className="text-xs text-gray-500 dark:text-gray-500 mb-1">
         {label}
       </div>
       <div className={`text-2xl font-bold ${color}`}>{value}</div>

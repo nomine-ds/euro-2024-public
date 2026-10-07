@@ -93,7 +93,7 @@ export default function PlayersPage() {
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
             Euro 2024 Players
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-gray-500 dark:text-gray-500 mt-1">
             {players.length} players • {teams.length} teams
           </p>
         </div>
@@ -108,7 +108,7 @@ export default function PlayersPage() {
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-6 border border-gray-200 dark:border-gray-700">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-500 mb-1">
                 Search Players
               </label>
               <input
@@ -121,7 +121,7 @@ export default function PlayersPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-500 mb-1">
                 Filter Team
               </label>
               <select
@@ -139,7 +139,7 @@ export default function PlayersPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-500 mb-1">
                 Sort by
               </label>
               <select
@@ -163,7 +163,7 @@ export default function PlayersPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-900/50">
-                <tr className="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <tr className="text-left text-xs font-medium text-gray-500 dark:text-gray-500 uppercase">
                   <th className="px-4 py-3 w-12">#</th>
                   <th className="px-4 py-3">Player</th>
                   <th className="px-4 py-3">Team</th>
@@ -192,7 +192,7 @@ export default function PlayersPage() {
                         {p.player_name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-500">
                       {p.team_name || "—"}
                     </td>
                     <td className="px-4 py-3 text-sm text-right font-medium text-gray-900 dark:text-white">
@@ -220,14 +220,14 @@ export default function PlayersPage() {
           </div>
 
           {filtered.length === 0 && (
-            <div className="px-4 py-12 text-center text-gray-500 dark:text-gray-400 text-sm">
+            <div className="px-4 py-12 text-center text-gray-500 dark:text-gray-500 text-sm">
               No players match the current filter.
             </div>
           )}
 
           {filtered.length > 0 && (
             <div className="px-4 py-4 flex flex-col items-center gap-3 border-t border-gray-100 dark:border-gray-700">
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-gray-500 dark:text-gray-500">
                 Showing {Math.min(visibleCount, filtered.length)} of {filtered.length} players
               </p>
               {visibleCount < filtered.length && (

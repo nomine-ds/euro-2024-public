@@ -61,7 +61,7 @@ export default function KeyboardShortcuts() {
               </h2>
               <button
                 onClick={() => setShowHelp(false)}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl leading-none"
+                className="text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 text-2xl leading-none"
               >
                 ×
               </button>
@@ -69,14 +69,14 @@ export default function KeyboardShortcuts() {
             <ul className="space-y-2">
               {SHORTCUTS.map((s, i) => (
                 <li key={i} className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">{s.desc}</span>
+                  <span className="text-gray-600 dark:text-gray-500">{s.desc}</span>
                   <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-xs font-mono text-gray-800 dark:text-gray-200">
                     {s.keys}
                   </kbd>
                 </li>
               ))}
             </ul>
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400">
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-500">
               Tekan <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded">?</kbd>{" "}
               at any time to open this help.
             </div>

@@ -9,7 +9,7 @@ export default function ResetTourButton() {
         localStorage.removeItem("euro2024_seen_onboarding");
         window.location.reload();
       }}
-      className="mt-4 block text-xs text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+      className="mt-4 block text-xs text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition"
     >
       Show Tour Again
     </button>

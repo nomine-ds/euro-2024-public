@@ -30,10 +30,10 @@ export default async function MatchesWith360Page() {
             >
               <div className="flex justify-between items-center">
                 <span className="font-semibold">{match.home_team}</span>
-                <span className="text-gray-400 text-sm">vs</span>
+                <span className="text-gray-500 text-sm">vs</span>
                 <span className="font-semibold">{match.away_team}</span>
               </div>
-              <div className="text-sm text-gray-400 mt-2">
+              <div className="text-sm text-gray-500 mt-2">
                 {new Date(match.date).toLocaleDateString('id-ID')}
               </div>
             </a>

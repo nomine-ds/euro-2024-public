@@ -112,7 +112,7 @@ export default function CognitivePage() {
         <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mb-2">
           🧠 Cognitive Mirror
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
+        <p className="text-gray-500 dark:text-gray-500 text-sm mb-6">
           Decision Quality (DQ) analysis — quality of decisions under opponent
           pressure. Analyzed {data.total_events_analyzed} events.
         </p>
@@ -120,7 +120,7 @@ export default function CognitivePage() {
         {/* Summary — Avg DQ + 4 label cards */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
           <div className="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-100 dark:border-gray-800">
-            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+            <div className="text-xs text-gray-500 dark:text-gray-500 mb-1">
               Avg Decision Quality
             </div>
             <div className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
@@ -139,13 +139,13 @@ export default function CognitivePage() {
             </div>
           </div>
           <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+            <div className="text-xs text-gray-600 dark:text-gray-500 mb-1">
               ⚖️ Neutral
             </div>
             <div className="text-2xl font-bold text-gray-800 dark:text-gray-200">
               {s.count_neutral}
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
               {s.pct_neutral}%
             </div>
           </div>
@@ -258,14 +258,14 @@ export default function CognitivePage() {
                       key={e.event_id}
                       className="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                     >
-                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-400">
+                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-500">
                         {e.minute}&apos;
                       </td>
                       <td className="px-3 py-2">
                         <div className="text-gray-900 dark:text-white">
                           {e.player_name}
                         </div>
-                        <div className="text-xs text-gray-400">
+                        <div className="text-xs text-gray-500">
                           {e.team_name}
                         </div>
                       </td>
@@ -275,7 +275,7 @@ export default function CognitivePage() {
                       <td className="px-3 py-2 text-right font-mono text-gray-700 dark:text-gray-300">
                         {e.pressure.toFixed(3)}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-400">
+                      <td className="px-3 py-2 text-right font-mono text-gray-500 dark:text-gray-500">
                         {e.nearest_opponent_dist.toFixed(2)}
                       </td>
                       <td className="px-3 py-2 text-right font-mono text-gray-700 dark:text-gray-300">
@@ -295,12 +295,12 @@ export default function CognitivePage() {
             </table>
           </div>
           {filtered.length === 0 && (
-            <p className="text-center text-gray-400 py-8 text-sm">
+            <p className="text-center text-gray-500 py-8 text-sm">
               No events with this label.
             </p>
           )}
           {filtered.length > 200 && (
-            <div className="px-4 py-3 text-center text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-800">
+            <div className="px-4 py-3 text-center text-xs text-gray-500 dark:text-gray-500 border-t border-gray-100 dark:border-gray-800">
               Showing 200 of {filtered.length} events.
             </div>
           )}

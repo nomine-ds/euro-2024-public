@@ -95,7 +95,7 @@ export default function MatchSimilarityPage() {
         <h1 className="text-3xl font-semibold tracking-tight mt-2 mb-2 text-gray-900 dark:text-white">
           Match Similarity
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 mb-6">
+        <p className="text-gray-500 dark:text-gray-500 mb-6">
           Find the most similar matches to the one you selected.
         </p>
 
@@ -164,7 +164,7 @@ export default function MatchSimilarityPage() {
               <h2 className="font-semibold text-gray-900 dark:text-white">
                 Referensi: {selectedMatch.home_team} vs {selectedMatch.away_team}
               </h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
                 Top 5 matches with most similar statistical patterns
               </p>
             </div>
@@ -188,7 +188,7 @@ export default function MatchSimilarityPage() {
                             ? `${m.home_team} vs ${m.away_team}`
                             : `Match ${s.match_id}`}
                         </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                        <div className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">
                           Jarak statistik:{" "}
                           <span className="font-medium text-blue-600 dark:text-blue-400">
                             {typeof s.distance === "number"

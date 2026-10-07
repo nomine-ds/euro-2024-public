@@ -169,7 +169,7 @@ export default function Navbar() {
 
               <button
                 onClick={() => setSearchOpen(true)}
-                className="ml-2 flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="ml-2 flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-500 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 aria-label="Search"
               >
                 <Search className="w-4 h-4" strokeWidth={2} />
@@ -295,7 +295,7 @@ export default function Navbar() {
           }`}
         >
           <form onSubmit={handleSearchSubmit} className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-gray-800">
-            <Search className="w-5 h-5 text-gray-400 shrink-0" strokeWidth={2} />
+            <Search className="w-5 h-5 text-gray-500 shrink-0" strokeWidth={2} />
             <input
               ref={searchInputRef}
               type="text"
@@ -307,7 +307,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setSearchOpen(false)}
-              className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 font-mono px-1.5 py-0.5 rounded border border-gray-300 dark:border-gray-600"
+              className="text-xs text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 font-mono px-1.5 py-0.5 rounded border border-gray-300 dark:border-gray-600"
             >
               Esc
             </button>

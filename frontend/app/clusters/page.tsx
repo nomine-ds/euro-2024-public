@@ -77,7 +77,7 @@ export default function ClustersPage() {
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mt-2 mb-2 text-gray-900 dark:text-white">
           Player Clustering
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 mb-6">
+        <p className="text-gray-500 dark:text-gray-500 mb-6">
           Players grouped by playing style using K-Means
         </p>
 
@@ -97,7 +97,7 @@ export default function ClustersPage() {
           <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg font-bold text-sm">
             {nClusters}
           </span>
-          <span className="text-xs text-gray-500 dark:text-gray-400">
+          <span className="text-xs text-gray-500 dark:text-gray-500">
             {players.length} players
           </span>
         </div>
@@ -130,7 +130,7 @@ export default function ClustersPage() {
 
                 <div className="grid grid-cols-3 divide-x divide-gray-100 dark:divide-gray-700 border-b border-gray-100 dark:border-gray-700">
                   <div className="p-3 text-center">
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-gray-500 dark:text-gray-500">
                       Avg Goals
                     </div>
                     <div className="font-bold text-gray-900 dark:text-white text-sm">
@@ -141,7 +141,7 @@ export default function ClustersPage() {
                     </div>
                   </div>
                   <div className="p-3 text-center">
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-gray-500 dark:text-gray-500">
                       Avg 🎯
                     </div>
                     <div className="font-bold text-gray-900 dark:text-white text-sm">
@@ -152,7 +152,7 @@ export default function ClustersPage() {
                     </div>
                   </div>
                   <div className="p-3 text-center">
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-gray-500 dark:text-gray-500">
                       Avg xG
                     </div>
                     <div className="font-bold text-gray-900 dark:text-white text-sm">

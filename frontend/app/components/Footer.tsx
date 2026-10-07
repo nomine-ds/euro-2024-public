@@ -15,7 +15,7 @@ export default function Footer() {
                 Euro 2024 Context Zone
               </span>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-500 dark:text-gray-500">
               Interactive tactical analysis with StatsBomb 360 data.
             </p>
           </div>
@@ -29,7 +29,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/"
-                  className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+                  className="text-gray-500 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition"
                 >
                   Home
                 </Link>
@@ -37,7 +37,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/players"
-                  className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+                  className="text-gray-500 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition"
                 >
                   Players
                 </Link>
@@ -45,7 +45,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/match-similarity"
-                  className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+                  className="text-gray-500 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition"
                 >
                   Similarity
                 </Link>
@@ -53,7 +53,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/clusters"
-                  className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+                  className="text-gray-500 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition"
                 >
                   Clusters
                 </Link>
@@ -61,7 +61,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/compare"
-                  className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+                  className="text-gray-500 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition"
                 >
                   Compare
                 </Link>
@@ -69,7 +69,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/player-comparison"
-                  className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+                  className="text-gray-500 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition"
                 >
                   Compare Players
                 </Link>
@@ -77,7 +77,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/bot"
-                  className="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+                  className="text-gray-500 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition"
                 >
                   Hudl Bot
                 </Link>
@@ -90,7 +90,7 @@ export default function Footer() {
             <h3 className="font-semibold text-gray-900 dark:text-white mb-3 text-sm">
               Data Source
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+            <p className="text-sm text-gray-500 dark:text-gray-500 mb-2">
               Event &amp; 360 data provided by:
             </p>
             <a
