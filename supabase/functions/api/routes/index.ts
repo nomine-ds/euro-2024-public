@@ -1,0 +1,40 @@
+﻿// supabase/functions/api/routes/index.ts
+import { json, numeric } from "../lib/core.ts";
+import type { SupabaseClient } from "../lib/core.ts";
+import { matchRoutes } from "./matches.ts";
+import { eventRoutes } from "./events.ts";
+import { playerRoutes } from "./players.ts";
+import { analyticsRoutes } from "./analytics.ts";
+import { passNetwork } from "./passnetwork.ts";
+
+export async function dispatch(
+  client: SupabaseClient,
+  path: string,
+  url: URL,
+): Promise<Response> {
+  const matchResponse = await matchRoutes(client, path);
+  if (matchResponse) return matchResponse;
+
+  const eventResponseValue = await eventRoutes(client, path, url);
+  if (eventResponseValue) return eventResponseValue;
+
+  const playerResponse = await playerRoutes(client, path, url);
+  if (playerResponse) return playerResponse;
+
+  const analyticsResponse = await analyticsRoutes(client, path, url);
+  if (analyticsResponse) return analyticsResponse;
+
+  const network = path.match(/^\/passnetwork\/(\d+)$/);
+  if (network) {
+    return await passNetwork(
+      client,
+      Number(network[1]),
+      numeric(url.searchParams.get("team_id")),
+    );
+  }
+
+  return json(
+    { message: "This API endpoint has not been migrated to Supabase yet." },
+    501,
+  );
+}
