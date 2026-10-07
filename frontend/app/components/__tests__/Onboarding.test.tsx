@@ -33,7 +33,7 @@ describe("onboarding tour", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("1 / 7")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Lanjut →" }));
+    fireEvent.click(screen.getByRole("button", { name: "Next →" }));
     expect(
       screen.getByRole("heading", {
         name: /Main Navigation|Navigasi Utama/,
@@ -57,12 +57,12 @@ describe("onboarding tour", () => {
     await showTour();
 
     for (let step = 0; step < 6; step += 1) {
-      fireEvent.click(screen.getByRole("button", { name: "Lanjut →" }));
+      fireEvent.click(screen.getByRole("button", { name: "Next →" }));
     }
 
     expect(screen.getByText("7 / 7")).toBeInTheDocument();
     fireEvent.click(
-      screen.getByRole("button", { name: "Mulai Menjelajah 🚀" }),
+      screen.getByRole("button", { name: "Start Exploring 🚀" }),
     );
     expect(localStorage.getItem("euro2024_seen_onboarding")).toBe("true");
   });
