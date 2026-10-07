@@ -223,8 +223,8 @@ export default function PlayerDetailPage() {
             value={summary.shots}
             avg={avg.shots}
             max={max.shots}
-            color="text-purple-600 dark:text-purple-400"
-            barColor="bg-purple-500"
+            color="text-emerald-600 dark:text-emerald-400"
+            barColor="bg-slate-500"
           />
           <StatCard
             label="⚡ Passes"

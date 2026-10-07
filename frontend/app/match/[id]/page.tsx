@@ -203,7 +203,7 @@ export default function MatchDetailPage() {
   </Link>
           <Link
             href={`/ghost/${matchId}`}
-            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition"
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition"
           >
             👻 Ghost
           </Link>

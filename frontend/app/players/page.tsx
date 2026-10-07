@@ -30,7 +30,7 @@ export default function PlayersPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        console.log("🔄 Loading players from", `${API_BASE}/players/bulk`);
+        console.log("Loading players from", `${API_BASE}/players/bulk`);
         const res = await fetch(`${API_BASE}/players/bulk`);
         console.log("📡 Response status:", res.status);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -85,7 +85,7 @@ export default function PlayersPage() {
 
         <div className="mt-2 mb-6">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-            👤 Euro 2024 Players
+            Euro 2024 Players
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
             {players.length} players • {teams.length} teams
@@ -99,7 +99,7 @@ export default function PlayersPage() {
         )}
 
         {/* Filter Bar */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-6 border border-gray-200 dark:border-gray-700">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
@@ -141,11 +141,11 @@ export default function PlayersPage() {
                 onChange={(e) => setSortKey(e.target.value as SortKey)}
                 className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="goals">⚽ Goals</option>
+                <option value="goals">Goals</option>
                 <option value="assists">🎯 Assists</option>
                 <option value="shots">🎪 Shots</option>
                 <option value="passes">🎾 Passes</option>
-                <option value="xg">📊 xG</option>
+                <option value="xg">xG</option>
                 <option value="xa">🎨 xA</option>
               </select>
             </div>
@@ -153,7 +153,7 @@ export default function PlayersPage() {
         </div>
 
         {/* Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-900/50">
@@ -161,7 +161,7 @@ export default function PlayersPage() {
                   <th className="px-4 py-3 w-12">#</th>
                   <th className="px-4 py-3">Player</th>
                   <th className="px-4 py-3">Team</th>
-                  <th className="px-4 py-3 text-right">⚽</th>
+                  <th className="px-4 py-3 text-right">Goals</th>
                   <th className="px-4 py-3 text-right">🎯</th>
                   <th className="px-4 py-3 text-right">🎪</th>
                   <th className="px-4 py-3 text-right">🎾</th>

@@ -178,7 +178,7 @@ export default function MatchSimilarityPage() {
                       href={`/match/${s.match_id}`}
                       className="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition"
                     >
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white flex items-center justify-center font-bold text-sm">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-700 text-white flex items-center justify-center font-bold text-sm">
                         {idx + 1}
                       </div>
 

@@ -84,7 +84,7 @@ export default function BotPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
 
           <div aria-live="polite" aria-relevant="additions" className="h-[min(60vh,500px)] min-h-64 overflow-y-auto p-4 sm:p-6 space-y-4">
             {messages.map((msg, idx) => (
@@ -93,7 +93,7 @@ export default function BotPage() {
                 className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                  className={`max-w-[80%] rounded-lg px-4 py-3 ${
                     msg.role === "user"
                       ? "bg-blue-600 text-white"
                       : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100"
@@ -122,7 +122,7 @@ export default function BotPage() {
 
             {loading && (
               <div className="flex justify-start" role="status">
-                <div className="bg-gray-100 dark:bg-gray-700 rounded-2xl px-4 py-3">
+                <div className="bg-gray-100 dark:bg-gray-700 rounded-lg px-4 py-3">
                   <span className="text-sm text-gray-800 dark:text-gray-100">Searching match data…</span>
                 </div>
               </div>

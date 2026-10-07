@@ -80,14 +80,14 @@ export default function ComparePage() {
     if (team1 && team2) handleCompare();
   }, [team1, team2]);
 
-  const metrics: { key: keyof TeamStats; label: string; icon: string }[] = [
-    { key: "goals", label: "Goals", icon: "⚽" },
-    { key: "shots", label: "Shots", icon: "🎪" },
-    { key: "passes", label: "Passes", icon: "🎾" },
-    { key: "xG", label: "xG", icon: "📊" },
-    { key: "tackles", label: "Tackles", icon: "🛡️" },
-    { key: "interceptions", label: "Interceptions", icon: "✋" },
-    { key: "clearances", label: "Clearances", icon: "🚫" },
+  const metrics: { key: keyof TeamStats; label: string }[] = [
+    { key: "goals", label: "Goals" },
+    { key: "shots", label: "Shots" },
+    { key: "passes", label: "Passes" },
+    { key: "xG", label: "xG" },
+    { key: "tackles", label: "Tackles" },
+    { key: "interceptions", label: "Interceptions" },
+    { key: "clearances", label: "Clearances" },
   ];
 
   return (
@@ -106,7 +106,7 @@ export default function ComparePage() {
           Compare two teams head-to-head
         </p>
 
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-5 mb-6 border border-gray-200 dark:border-gray-700">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
@@ -161,7 +161,7 @@ export default function ComparePage() {
 
           {teams.length > 0 && (
             <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">
-              📊 {teams.length} teams available
+              {teams.length} teams available
             </p>
           )}
         </div>
@@ -180,7 +180,7 @@ export default function ComparePage() {
         )}
 
         {comparison && comparison.length === 2 && !loading && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="grid grid-cols-3 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
               <div className="p-4 text-right font-bold text-gray-900 dark:text-white text-sm md:text-base">
                 {comparison[0].team_name}
@@ -228,8 +228,7 @@ export default function ComparePage() {
                       </div>
                     </div>
                     <div className="p-4 text-center">
-                      <div className="text-2xl">{metric.icon}</div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {metric.label}
                       </div>
                     </div>
@@ -237,7 +236,7 @@ export default function ComparePage() {
                       <div
                         className={`text-left font-semibold ${
                           bWins
-                            ? "text-purple-600 dark:text-purple-400"
+                            ? "text-emerald-600 dark:text-emerald-400"
                             : "text-gray-900 dark:text-white"
                         }`}
                       >
@@ -247,7 +246,7 @@ export default function ComparePage() {
                         <div
                           className={`h-full rounded-full ${
                             bWins
-                              ? "bg-purple-500"
+                              ? "bg-slate-500"
                               : "bg-gray-400 dark:bg-gray-500"
                           }`}
                           style={{ width: `${pctB}%` }}

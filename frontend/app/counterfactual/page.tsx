@@ -372,14 +372,14 @@ export default function CounterfactualPage() {
                   </div>
                 </div>
 
-                <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
-                  <div className="text-xs text-purple-600 dark:text-purple-400 uppercase font-medium mb-2">
+                <div className="bg-emerald-50 dark:bg-emerald-950/20 rounded-lg p-4 border border-emerald-200 dark:border-emerald-800">
+                  <div className="text-xs text-emerald-600 dark:text-emerald-400 uppercase font-medium mb-2">
                     🔮 World B (Alternative)
                   </div>
-                  <div className="text-2xl font-bold text-purple-700 dark:text-purple-300">
+                  <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">
                     {formatNumber(result.alternative?.mean_xg).toFixed(3)}
                   </div>
-                  <div className="text-xs text-purple-600 dark:text-purple-400 mt-1">
+                  <div className="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
                     Goal Probability:{" "}
                     {Math.round(formatNumber(result.alternative?.probability_goal) * 100)}%
                   </div>
