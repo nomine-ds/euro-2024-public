@@ -48,7 +48,6 @@ const mockCompare = {
 export async function mockApi(page: Page) {
   await page.route(API_PATTERN, async (route) => {
     const url = route.request().url();
-    const method = route.request().method();
 
     let body: unknown = {};
 
