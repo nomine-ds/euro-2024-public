@@ -2,6 +2,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { AlertTriangle, RotateCw, Home } from "lucide-react";
+import Link from "next/link";
 
 export default function Error({
   error,
@@ -16,17 +18,20 @@ export default function Error({
 
   return (
     <div className="mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center gap-6 px-6 py-16 text-center">
-      <div className="text-6xl" role="img" aria-label="Error">
-        ⚠️
+      <AlertTriangle
+        className="w-12 h-12 text-emerald-600 dark:text-emerald-400"
+        strokeWidth={1.5}
+        aria-hidden="true"
+      />
+
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 mb-2">
+          Something went wrong
+        </h1>
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          {error.message || "Failed to load this page. Please try again."}
+        </p>
       </div>
-
-      <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-        Terjadi kesalahan
-      </h1>
-
-      <p className="text-sm text-neutral-600 dark:text-neutral-400">
-        {error.message || "Failed to load page. Please try again."}
-      </p>
 
       {error.digest && (
         <p className="font-mono text-xs text-neutral-400 dark:text-neutral-600">
@@ -38,16 +43,18 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className="rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
         >
-          Coba lagi
+          <RotateCw className="w-4 h-4" strokeWidth={2} />
+          Try again
         </button>
-        <a
+        <Link
           href="/"
-          className="rounded-md border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+          className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
         >
+          <Home className="w-4 h-4" strokeWidth={2} />
           Back to Home
-        </a>
+        </Link>
       </div>
     </div>
   );
