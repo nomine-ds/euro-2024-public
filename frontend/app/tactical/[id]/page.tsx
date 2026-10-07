@@ -4,18 +4,31 @@
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  ResponsiveContainer,
-  ReferenceLine,
-} from "recharts";
+import dynamic from "next/dynamic";
+
+const XgRollingChart = dynamic(
+  () =>
+    import("@/components/charts/TacticalCharts").then((m) => ({
+      default: m.XgRollingChart,
+    })),
+  { ssr: false },
+);
+
+const PpdaChart = dynamic(
+  () =>
+    import("@/components/charts/TacticalCharts").then((m) => ({
+      default: m.PpdaChart,
+    })),
+  { ssr: false },
+);
+
+const FieldTiltChart = dynamic(
+  () =>
+    import("@/components/charts/TacticalCharts").then((m) => ({
+      default: m.FieldTiltChart,
+    })),
+  { ssr: false },
+);
 
 import { API_BASE } from "@/lib/api";
 
@@ -221,157 +234,35 @@ export default function TacticalPage() {
 
         {/* xG rolling */}
         <ChartCard
-          title="⚡ xG Rolling"
+          title="xG Rolling"
           subtitle="Sum of expected goals in 5-minute window (both teams)"
           color="#e11d48"
         >
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={chartRows}
-              margin={{ top: 8, right: 24, bottom: 8, left: 0 }}
-            >
-              <defs>
-                <linearGradient id="xgGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#e11d48" stopOpacity={0.6} />
-                  <stop offset="100%" stopColor="#e11d48" stopOpacity={0.05} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="#9ca3af"
-                opacity={0.25}
-              />
-              <XAxis
-                dataKey="minute"
-                tick={{ fontSize: 11, fill: "#6b7280" }}
-                tickFormatter={(v) => `${v}'`}
-              />
-              <YAxis
-                tick={{ fontSize: 11, fill: "#6b7280" }}
-                tickFormatter={(v) => Number(v).toFixed(2)}
-              />
-              <Tooltip content={<TacticalTooltip metric="xG" />} />
-              <Area
-                type="monotone"
-                dataKey="xg"
-                stroke="#e11d48"
-                fill="url(#xgGrad)"
-                strokeWidth={2}
-                isAnimationActive={false}
-              />
-              {changeMinutes.map((m, i) => (
-                <ReferenceLine
-                  key={`cp-xg-${i}`}
-                  x={m}
-                  stroke="#f59e0b"
-                  strokeDasharray="4 4"
-                  strokeWidth={1.5}
-                />
-              ))}
-            </AreaChart>
-          </ResponsiveContainer>
+          <XgRollingChart data={chartRows} changeMinutes={changeMinutes} />
         </ChartCard>
 
         {/* PPDA */}
         <ChartCard
-          title="🔥 PPDA"
+          title="PPDA"
           subtitle="Passes per defensive action. Lower = more aggressive pressing. Gaps = no defensive actions in that window."
           color="#2563eb"
         >
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={chartRows}
-              margin={{ top: 8, right: 24, bottom: 8, left: 0 }}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="#9ca3af"
-                opacity={0.25}
-              />
-              <XAxis
-                dataKey="minute"
-                tick={{ fontSize: 11, fill: "#6b7280" }}
-                tickFormatter={(v) => `${v}'`}
-              />
-              <YAxis
-                tick={{ fontSize: 11, fill: "#6b7280" }}
-                tickFormatter={(v) => Number(v).toFixed(1)}
-              />
-              <Tooltip content={<TacticalTooltip metric="PPDA" />} />
-              <Line
-                type="monotone"
-                dataKey="ppda"
-                stroke="#2563eb"
-                strokeWidth={2}
-                dot={{ r: 3, fill: "#2563eb" }}
-                connectNulls={true}
-                isAnimationActive={false}
-              />
-              {changeMinutes.map((m, i) => (
-                <ReferenceLine
-                  key={`cp-ppda-${i}`}
-                  x={m}
-                  stroke="#f59e0b"
-                  strokeDasharray="4 4"
-                  strokeWidth={1.5}
-                />
-              ))}
-            </LineChart>
-          </ResponsiveContainer>
+          <PpdaChart data={chartRows} changeMinutes={changeMinutes} />
         </ChartCard>
 
         {/* Field Tilt */}
         <ChartCard
-          title="🌊 Field Tilt"
+          title="Field Tilt"
           subtitle="Share of final-third vs defensive-third passes. 0.5 = neutral. Higher = more dominant."
           color="#10b981"
         >
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={chartRows}
-              margin={{ top: 8, right: 24, bottom: 8, left: 0 }}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="#9ca3af"
-                opacity={0.25}
-              />
-              <XAxis
-                dataKey="minute"
-                tick={{ fontSize: 11, fill: "#6b7280" }}
-                tickFormatter={(v) => `${v}'`}
-              />
-              <YAxis
-                domain={[0, 1]}
-                tick={{ fontSize: 11, fill: "#6b7280" }}
-                tickFormatter={(v) => Number(v).toFixed(2)}
-              />
-              <Tooltip content={<TacticalTooltip metric="Field Tilt" />} />
-              <Line
-                type="monotone"
-                dataKey="field_tilt"
-                stroke="#10b981"
-                strokeWidth={2}
-                dot={{ r: 3, fill: "#10b981" }}
-                isAnimationActive={false}
-              />
-              {changeMinutes.map((m, i) => (
-                <ReferenceLine
-                  key={`cp-ft-${i}`}
-                  x={m}
-                  stroke="#f59e0b"
-                  strokeDasharray="4 4"
-                  strokeWidth={1.5}
-                />
-              ))}
-            </LineChart>
-          </ResponsiveContainer>
+          <FieldTiltChart data={chartRows} changeMinutes={changeMinutes} />
         </ChartCard>
 
         {/* Narrative */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 mt-6">
           <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
-            🎬 Match Narrative — Tempo Shifts
+            Match Narrative — Tempo Shifts
           </h2>
 
           {narrative.length === 0 && (
@@ -419,7 +310,7 @@ export default function TacticalPage() {
           </div>
 
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-6 leading-relaxed">
-            💡 <strong>How to read:</strong> Charts show the match&apos;s
+            <strong>How to read:</strong> Charts show the match&apos;s
             aggregate tempo. Orange line = detected change point (from
             multivariate PELT on xG, PPDA, Field Tilt).
             {data.pen_used !== undefined && (
@@ -476,7 +367,7 @@ function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 mb-6">
+    <div className="bg-white dark:bg-gray-900 rounded-lg p-5 border border-gray-100 dark:border-gray-800 mb-6">
       <div className="mb-4">
         <h2
           className="font-semibold text-gray-900 dark:text-white"
@@ -489,35 +380,6 @@ function ChartCard({
         </p>
       </div>
       <div style={{ width: "100%", height: 260 }}>{children}</div>
-    </div>
-  );
-}
-
-function TacticalTooltip({
-  active,
-  payload,
-  label,
-  metric,
-}: {
-  active?: boolean;
-  payload?: Array<{ value: number | null }>;
-  label?: number;
-  metric: string;
-}) {
-  if (!active || !payload || payload.length === 0) return null;
-  const v = payload[0].value;
-  const valueStr =
-    v === null || v === undefined
-      ? "—"
-      : typeof v === "number"
-      ? v.toFixed(3)
-      : String(v);
-  return (
-    <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2">
-      <div className="font-bold">Minute {label}&apos;</div>
-      <div className="text-gray-300 mt-0.5">
-        {metric}: {valueStr}
-      </div>
     </div>
   );
 }
