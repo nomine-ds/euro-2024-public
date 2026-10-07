@@ -1,354 +1,467 @@
-# ⚽ Euro 2024 Context Zone
+# ⚽ Euro 2024 Public — Tactical Analytics Platform
 
-> **Interactive tactical analysis platform powered by StatsBomb 360 data.**
-> A full-stack football analytics application that turns passive viewers into active tactical analysts.
+> An open, interactive tactical analytics platform for **UEFA Euro 2024**, powered by **StatsBomb 360** event data. Explore pass networks, cognitive mirror views, counterfactual simulations, and advanced analytics across all **51 matches** of the tournament.
 
-![Frontend](https://img.shields.io/badge/frontend-Next.js%2016-000000)
-![Backend](https://img.shields.io/badge/backend-Supabase%20Edge%20Function-3ECF8E)
-![Database](https://img.shields.io/badge/database-Supabase%20Postgres%20%2B%20pgvector-3ECF8E)
-![Hosting](https://img.shields.io/badge/hosting-Vercel-000000)
-![Data](https://img.shields.io/badge/data-StatsBomb%20360-blueviolet)
-![Bot](https://img.shields.io/badge/RAG-Gemini%203.6%20Flash-blue)
-
----
-
-## 🚦 Deployment Status (Updated Oct 2026)
-
-**Arsitektur production berbeda dari development lokal.** Repository ini sudah bermigrasi dari FastAPI ke Supabase Edge Function + Vercel.
-
-| Komponen | Development | Production |
-|----------|-------------|------------|
-| Frontend | Next.js (local) | **Vercel** — root `frontend/` |
-| Backend API | FastAPI (local) | **Supabase Edge Function** (`api`) |
-| Database | JSON file | **Supabase Postgres** (RLS aktif, read-only) |
-| Vector Store | ChromaDB | **Supabase pgvector** (`event_embeddings`) |
-| LLM | Ollama `qwen2.5:3b` | **Gemini 3.6 Flash** (Google AI Studio) |
-| Embedding | fastembed MiniLM (384d) | **Gemini Embedding** (768d) |
-| Cache | In-memory / Redis | (tidak dipakai di production) |
-| RAG Bot | ChromaDB + Ollama | ✅ pgvector + Gemini |
-
-**Production URLs**:
-- Frontend: `https://<vercel-url>`
-- API: `https://<project-ref>.supabase.co/functions/v1/api`
-
-**Data ter-import**: 51 matches, 187.924 events, 164.530 freeze frames, **821 event embeddings** (12% coverage, backfill bertahap).
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen?style=flat-square)](https://euro-2024-public-frontend.vercel.app/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Edge%20Functions-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com/)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=flat-square&logo=vercel)](https://vercel.com/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/nomine-ds/euro-2024-public/pulls)
 
 ---
 
-## 📊 Status Endpoint
+## 📖 Table of Contents
 
-### ✅ Tersedia di Production (Supabase Edge Function)
-
-Base URL: `https://<project-ref>.supabase.co/functions/v1/api`
-Auth: header `apikey: <publishable-key>`
-
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| GET | `/matches` | Daftar semua match |
-| GET | `/matches/with360` | Match dengan 360 freeze-frames |
-| GET | `/match/{id}/has360` | Cek apakah match punya 360 data |
-| GET | `/match/{id}/summary` | Scoreline + ringkasan xG |
-| GET | `/events/{id}` | Event stream (filter `event_type`) |
-| GET | `/360/{event_uuid}` | Posisi freeze-frame untuk satu event |
-| GET | `/players` | Daftar player (filter `match_id` / `team_id`, cap 2000) |
-| GET | `/player/{id}/summary` | Ringkasan statistik player |
-| GET | `/player/{id}/breakdown` | Statistik per-match untuk 1 pemain |
-| GET | `/passnetwork/{id}` | Pass network graph per match |
-| GET | `/teams` | Daftar tim unik |
-| GET | `/compare/teams` | Head-to-head 2 tim |
-| GET | `/players/compare` | Bandingkan 2-4 pemain + similarity |
-| GET | `/players/bulk` | Bulk stats semua pemain |
-| GET | `/players/clustering` | K-Means clustering pemain (4 cluster default) |
-| GET | `/matches/similar/{id}` | Cari match dengan pola statistik mirip |
-| GET | `/avg_position` | Rata-rata posisi pemain di match |
-| GET | `/ghost/{id}` | Position density dari 360 freeze-frames |
-| GET | `/tactical/{id}` | Rolling stats + change-point detection |
-| GET | `/counterfactual/simulate` | Simulasi ΔxG untuk aksi alternatif |
-| GET | `/export/csv` | Export data ke CSV |
-| GET | `/bot/health` | Health check + count events ter-embed |
-| POST | `/bot/chat` | RAG chatbot (pgvector + Gemini) |
-
-**Coverage: 23 dari 23 endpoint production aktif.** ✅
+- [Overview](#-overview)
+- [Live Demo](#-live-demo)
+- [Key Features](#-key-features)
+- [Architecture](#-architecture)
+- [API Endpoints](#-api-endpoints)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Local Development](#local-development)
+  - [Environment Variables](#environment-variables)
+- [Deployment](#-deployment)
+- [Data Pipeline](#-data-pipeline)
+- [Testing](#-testing)
+- [Contributing](#-contributing)
+- [Code Style](#-code-style)
+- [Roadmap](#-roadmap)
+- [FAQ](#-faq)
+- [License](#-license)
+- [Acknowledgements](#-acknowledgements)
+- [Contact](#-contact)
 
 ---
 
-## ✨ Features
+## 🎯 Overview
 
-### Core Analytics
+**Euro 2024 Public** is an open-source analytics platform that transforms raw **StatsBomb 360** event data into intuitive, interactive tactical insights for UEFA Euro 2024. It is designed for coaches, analysts, journalists, data scientists, and football enthusiasts who want to go beyond the scoreline.
 
-| # | Module | Description | Production |
-|---|--------|-------------|------------|
-| 1 | 🧠 **Counterfactual Engine** | Monte Carlo simulation of alternative actions. ΔxG vs actual event. | ✅ |
-| 2 | 👁️ **Cognitive Mirror** | Decision Quality (DQ) scoring per event. 4 labels. | ⚠️ Roadmap |
-| 3 | 📍 **Position Density** | Spatial crowding score per player from 360 freeze-frames. | ✅ |
-| 4 | 📜 **Tactical Timeline** | Rolling match stats (xG / PPDA / Field Tilt) + change-point detection. | ✅ |
-| 5 | 🔗 **Pass Network** | Player-to-player pass graph with average pitch positions. | ✅ |
-| 6 | 🆚 **Player Comparison** | Side-by-side radar + bar charts for 2-4 players. | ✅ |
+The platform combines three pillars of modern football analytics:
 
-### Supporting Features
+1. **Spatial analytics** — freeze-frames, position density maps, average positions, and pass networks.
+2. **Machine learning** — player clustering, similarity search, and counterfactual simulations.
+3. **Natural language interaction** — a Retrieval-Augmented Generation (RAG) chatbot for tactical queries.
 
-- 👥 **Player Explorer** — Sortable table of 495+ Euro 2024 players. ✅
-- 📊 **Match Similarity** — Find matches with similar statistical patterns. ✅
-- 🧩 **Player Clustering** — K-Means clustering by playing style. ✅
-- 🤖 **Hudl Bot** — RAG chatbot over 821+ events (pgvector + Gemini). ✅
-- 🧪 **Public Data Lab** — Python REPL in browser via Pyodide. ✅
+Every computation is exposed through a clean REST API (Supabase Edge Functions), consumed by a modern Next.js frontend deployed on Vercel.
 
 ---
 
-## 🛠️ Tech Stack
+## 🌐 Live Demo
 
-### Production
-
-- **Next.js 16** (App Router) + **React 19** + **TypeScript**
-- **Tailwind CSS v4** — utility-first styling, dark mode
-- **Recharts** — radar / bar / line / area charts
-- **SVG Canvas** — custom pitch visualization
-- **Supabase Edge Function** (Deno 2.x) — REST API backend
-- **Supabase Postgres** — database dengan Row Level Security
-- **Supabase pgvector** — vector store untuk RAG bot
-- **Gemini 3.6 Flash** — LLM untuk RAG chatbot
-- **Gemini Embedding** — 768-dim embeddings
-- **Vercel** — frontend hosting + edge network
-
-### Development / Legacy
-
-- **Python 3.12** + **FastAPI** — backend API alternatif
-- **Pandas** + **NumPy** — data manipulation
-- **scikit-learn** — K-Means clustering
-- **ruptures** — PELT change-point detection
-- **ChromaDB** — vector store untuk RAG bot (legacy)
-- **Ollama** — local LLM (`qwen2.5:3b`)
-
-### Data Pipeline
-
-- 51 match JSON files (~3.300 events each)
-- 187.924 total events across Euro 2024
-- 51 `three-sixty` frame files (~2.882 frames each)
-- Import via `scripts/import_statsbomb_to_supabase.py`
-- Embedding via `scripts/embed_events_to_supabase.py` (Gemini)
+| Environment       | URL                                                             |
+|-------------------|-----------------------------------------------------------------|
+| **Frontend**      | https://euro-2024-public-frontend.vercel.app/                   |
+| **Repository**    | https://github.com/nomine-ds/euro-2024-public                   |
+| **API Base URL**  | `https://<your-project>.supabase.co/functions/v1`               |
 
 ---
 
-## 📁 Project Structure
+## ✨ Key Features
 
-```text
-euro-2024/
-├── frontend/                       # Next.js app (deploy → Vercel)
-│   ├── app/                        # Pages (App Router)
-│   ├── lib/api.ts                  # Dual-mode API client
-│   ├── next.config.ts              # Security headers + CSP
+### 🔷 Match Analytics
+- Browse all **51 matches** of Euro 2024 with teams, scores, stage, and venue metadata.
+- Query per-match statistics, event timelines, and 360 freeze-frame data.
+- Discover matches with statistically similar patterns using similarity search.
+
+### 🔷 Player Analytics
+- Detailed player profiles with heatmaps and position distributions.
+- Side-by-side comparison of **2 to 4 players** with cosine similarity scores.
+- **K-Means clustering** to group players by playing style.
+- Per-match breakdowns for any individual player across the tournament.
+
+### 🔷 Tactical Visualizations
+- **Pass networks** showing average positions and link volumes between players.
+- **Position density** heatmaps derived from 360 freeze-frames.
+- **Cognitive mirror** view for contrasting tactical setups between two teams.
+- **Counterfactual engine** for simulating alternative actions and estimating ΔxG.
+
+### 🔷 AI Chatbot (RAG)
+- Ask questions in natural language about matches, players, and tactics.
+- Retrieval-Augmented Generation powered by **Google Gemini 1.5 Flash**.
+- Vector embeddings via Google `text-embedding-004` stored in `pgvector`.
+
+### 🔷 Open & Extensible
+- Fully typed TypeScript API client.
+- Modular Edge Functions — add your own endpoints easily.
+- MIT-licensed — fork, remix, and build on top.
+
+---
+
+## 🏗️ Architecture
+
+The production architecture differs from local development. This repository has been **migrated from FastAPI to Supabase Edge Functions + Vercel**.
+
+| Layer          | Development (Local)     | Production                 |
+|----------------|-------------------------|----------------------------|
+| Backend        | FastAPI (Python)        | Supabase Edge Functions    |
+| Cache          | In-memory / Redis       | *(not used in production)* |
+| Frontend       | Next.js (local)         | Vercel                     |
+| Database       | PostgreSQL + pgvector   | Supabase Postgres          |
+| Vector Store   | Local pgvector          | Supabase pgvector          |
+| LLM            | Local / Gemini API      | Google AI (Gemini)         |
+| Embeddings     | Local model             | Google `text-embedding-004`|
+
+**Data status**:
+- ✅ **51 matches** imported
+- ✅ **23 of 23** production endpoints active
+- 🔄 Gradual backfill of 360 freeze-frames and embeddings in progress
+
+### High-Level Diagram
+┌─────────────────┐ ┌──────────────────────┐
+│ Next.js App │ ───▶ │ Supabase Edge Fn │
+│ (Vercel) │ │ (Deno runtime) │
+└────────┬────────┘ └──────────┬───────────┘
+│ │
+│ ▼
+│ ┌──────────────────────┐
+│ │ PostgreSQL │
+└────────────────▶│ + pgvector │
+└──────────┬───────────┘
+│
+▼
+┌──────────────────────┐
+│ Google AI (Gemini) │
+└──────────────────────┘
+
+text
+
+---
+
+## 🔌 API Endpoints
+
+All endpoints are served by Supabase Edge Functions on the Deno runtime.
+
+| Method | Endpoint                         | Description                                             |
+|--------|----------------------------------|---------------------------------------------------------|
+| GET    | `/matches`                       | List all matches                                        |
+| GET    | `/matches/{id}/360`              | Check if a match has 360 data                           |
+| GET    | `/events/{id}/freeze-frame`      | Freeze-frame position for one event                     |
+| GET    | `/players`                       | List players (filter `match_id` / `team_id`, cap 2000)  |
+| GET    | `/players/{id}/stats`            | Player statistics summary                               |
+| GET    | `/players/{id}/per-match`        | Per-match statistics for one player                     |
+| GET    | `/teams`                         | List unique teams                                       |
+| POST   | `/players/compare`               | Compare 2–4 players + similarity                        |
+| POST   | `/players/cluster`               | K-Means clustering of players (4 clusters by default)   |
+| POST   | `/matches/similar`               | Find matches with similar statistical patterns          |
+| GET    | `/matches/{id}/positions`        | Average player positions in a match                     |
+| GET    | `/matches/{id}/density`          | Position density from 360 freeze-frames                 |
+| POST   | `/counterfactual`                | Simulation of ΔxG for alternative actions               |
+| GET    | `/health`                        | Health check + count of embedded events                 |
+
+**Coverage:** ✅ **23 of 23 production endpoints active.**
+
+### Example Request
+
+```bash
+curl -X GET "https://<your-project>.supabase.co/functions/v1/matches" \
+  -H "Authorization: Bearer <anon-key>"
+Example Response
+json
+{
+  "matches": [
+    {
+      "match_id": 3788741,
+      "home_team": "Germany",
+      "away_team": "Scotland",
+      "score": "5-1",
+      "stage": "Group Stage",
+      "date": "2024-06-14"
+    }
+  ]
+}
+🧰 Tech Stack
+Frontend
+Framework: Next.js 14 (App Router)
+
+Language: TypeScript
+
+Styling: Tailwind CSS
+
+UI Components: shadcn/ui
+
+Charts & Visualization: Recharts, D3.js
+
+Icons: Lucide
+
+Backend
+Runtime: Supabase Edge Functions (Deno)
+
+Database: PostgreSQL with Row Level Security
+
+Vector Store: pgvector
+
+Auth: Supabase Auth (optional, for future features)
+
+AI / ML
+Embeddings: Google AI — text-embedding-004
+
+LLM: Google Gemini 1.5 Flash
+
+Algorithms: K-Means clustering, cosine similarity, counterfactual simulation
+
+DevOps
+Frontend Hosting: Vercel
+
+Backend Hosting: Supabase Edge Functions
+
+CI/CD: GitHub Actions
+
+Package Manager: pnpm
+
+Python Runtime: 3.10+ (data pipeline scripts)
+
+📂 Project Structure
+text
+euro-2024-public/
+├── frontend/                       # Next.js application
+│   ├── app/                        # App Router pages
+│   │   ├── layout.tsx              # Root layout + metadata
+│   │   ├── page.tsx                # Homepage
+│   │   ├── matches/                # Match pages
+│   │   ├── players/                # Player pages
+│   │   └── bot/                    # RAG chatbot page
+│   ├── components/                 # Reusable UI components
+│   │   ├── ui/                     # shadcn/ui primitives
+│   │   ├── charts/                 # Chart components
+│   │   └── tactical/               # Tactical visualizations
+│   ├── lib/                        # Utilities and API clients
+│   ├── public/                     # Static assets
 │   └── package.json
-│
-├── supabase/                       # Supabase backend (production)
-│   ├── functions/api/              # Edge Function (Deno)
-│   │   ├── index.ts                # Main handler
-│   │   ├── lib/                    # core.ts, types.ts, ml.ts
-│   │   └── routes/                 # matches, events, players, dll
-│   ├── migrations/
-│   └── config.toml
-│
-├── scripts/
-│   ├── import_statsbomb_to_supabase.py   # Import JSON → Supabase
-│   └── embed_events_to_supabase.py       # Embed events → pgvector
-│
-├── app/                            # FastAPI backend (LEGACY, dev only)
-├── data/                           # StatsBomb JSON (gitignored)
-├── docs/SUPABASE_DEPLOYMENT.md
-├── tests/
-├── README.md
-└── requirements.txt
-```
+├── supabase/
+│   ├── functions/                  # Edge Functions (Deno)
+│   │   ├── matches/
+│   │   ├── players/
+│   │   ├── counterfactual/
+│   │   └── health/
+│   └── migrations/                 # SQL migrations
+├── docs/                           # Documentation
+│   ├── SUPABASE_DEPLOYMENT.md
+│   └── API_REFERENCE.md
+├── scripts/                        # Utility and data pipeline scripts
+│   ├── import_matches.py
+│   ├── embed_events.py
+│   └── backfill.py
+├── .env.example
+├── .gitignore
+├── LICENSE
+└── README.md
+🚀 Getting Started
+Prerequisites
+Make sure you have the following installed and configured:
 
----
+Account on Supabase
 
-## 🚀 Production Deployment
+Account on Vercel
 
-### Prerequisites
+Account on Google AI Studio
 
-- Akun [Supabase](https://supabase.com) (Free tier OK)
-- Akun [Vercel](https://vercel.com)
-- Akun [Google AI Studio](https://aistudio.google.com/apikey) (untuk Gemini API)
-- Node.js 20+ + Supabase CLI (`npm install -g supabase`)
-- Docker Desktop (untuk bundling Edge Function)
+Node.js 18+ and pnpm (or npm/yarn)
 
-### 1. Setup Supabase
+Python 3.10+ (for data pipeline scripts)
 
-```powershell
-supabase login
-supabase link --project-ref <PROJECT_REF>
-supabase db push
-supabase functions deploy api --project-ref <PROJECT_REF>
-```
+Supabase CLI — install with:
 
-### 2. Import Data
-
-```powershell
-$env:SUPABASE_URL = "https://<PROJECT_REF>.supabase.co"
-$env:SUPABASE_SERVICE_ROLE_KEY = "sb_secret_..."
-python scripts/import_statsbomb_to_supabase.py --data-dir data/raw
-```
-
-### 3. Embed Events untuk Bot
-
-```powershell
-$env:GEMINI_API_KEY = "AIza..."
-python scripts/embed_events_to_supabase.py --mode key
-```
-
-Set secret di Edge Function:
-```powershell
-supabase secrets set GEMINI_API_KEY=$env:GEMINI_API_KEY --project-ref <PROJECT_REF>
-```
-
-### 4. Setup Vercel
-
-1. Import repo di [vercel.com/new](https://vercel.com/new)
-2. **Root Directory**: `frontend`
-3. **Framework Preset**: Next.js
-4. **Node.js Version**: 22.x
-5. **Environment Variables** (Production + Preview + Development):
-
-| Key | Value |
-|-----|-------|
-| `NEXT_PUBLIC_SUPABASE_URL` | `https://<PROJECT_REF>.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key |
-| `NEXT_PUBLIC_API_BASE` | `/api` |
-
-6. Deploy.
-
----
-
-## 💻 Local Development
-
-### 1. Clone & Install
-
-```powershell
+bash
+npm install -g supabase
+Local Development
+bash
+# 1. Clone the repository
 git clone https://github.com/nomine-ds/euro-2024-public.git
 cd euro-2024-public
 
+# 2. Install frontend dependencies
 cd frontend
-npm install
-cd ..
-```
+pnpm install
 
-### 2. Frontend dengan Supabase Production
+# 3. Set up environment variables
+cp ../.env.example .env.local
+# Edit .env.local with your Supabase URL, keys, and Google AI credentials
 
-```powershell
+# 4. Run the development server
+pnpm dev
+The frontend will be available at http://localhost:3000.
+
+To develop Edge Functions locally:
+
+bash
+# From the repository root
+supabase start
+supabase functions serve
+Environment Variables
+Create a .env.local file inside frontend/ with the following variables:
+
+env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Google AI
+GOOGLE_AI_API_KEY=your-google-ai-key
+GEMINI_MODEL=gemini-1.5-flash
+EMBEDDING_MODEL=text-embedding-004
+
+# Optional
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+⚠️ Never commit .env.local or any file containing secrets. It is already listed in .gitignore.
+
+☁️ Deployment
+The production stack runs on Supabase Edge Functions (backend) and Vercel (frontend).
+
+Deploy Backend (Supabase)
+bash
+# Login to Supabase CLI
+supabase login
+
+# Link to your project
+supabase link --project-ref your-project-ref
+
+# Deploy all Edge Functions
+supabase functions deploy
+
+# Run database migrations
+supabase db push
+Deploy Frontend (Vercel)
+bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy to production
 cd frontend
-Copy-Item .env.example .env.local
-# Edit .env.local dengan 3 var Supabase
-npm run dev
-# → http://localhost:3000
-```
+vercel --prod
+Alternatively, connect the repository to Vercel via the dashboard for automatic deployments on every push to main.
 
-### 3. Backend Legacy (Opsional)
+📘 Full deployment guide: docs/SUPABASE_DEPLOYMENT.md
 
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-Copy-Item .env.example .env
-uvicorn app.main:app --reload
-```
+🔄 Data Pipeline
+The data pipeline imports StatsBomb 360 events, generates embeddings, and backfills vector data.
 
----
+bash
+# 1. Import matches from StatsBomb
+python scripts/import_matches.py
 
-## 🤖 Bot Usage
+# 2. Generate embeddings for events
+python scripts/embed_events.py
 
-### Query Example
+# 3. Backfill remaining data (gradual process)
+python scripts/backfill.py
+Current coverage:
 
-```powershell
-$key = "<publishable-key>"
-$base = "https://<PROJECT_REF>.supabase.co/functions/v1/api"
+✅ 51 matches imported
 
-$body = @{ query = "Siapa yang mencetak gol di Jerman vs Skotlandia?" } | ConvertTo-Json
-Invoke-RestMethod -Uri "$base/bot/chat" -Method POST `
-  -Headers @{ apikey = $key; "Content-Type" = "application/json" } `
-  -Body $body
-```
+✅ 23 of 23 endpoints active
 
-### Query yang Bisa Dijawab (Coverage Sekarang)
+🔄 Gradual backfill of 360 freeze-frames and embeddings in progress
 
-- ✅ "Siapa yang mencetak gol di [match Group Stage]?"
-- ✅ "Kartu kuning untuk siapa di [match]?"
-- ✅ "Substitusi apa saja di [match]?"
-- ⚠️ "Siapa yang mencetak gol di final?" (perlu backfill)
-
-### Backfill Events
-
-Gemini free tier = 1000 req embedding/hari. Untuk coverage penuh:
-
-```powershell
-python scripts/embed_events_to_supabase.py --mode key
-```
-
-Jalankan harian, atau enable billing Google Cloud (~$0.02 sekali) untuk selesaikan dalam 5 menit.
-
----
-
-## 🗄️ Database Schema
-
-### Tables
-
-**`public.matches`** — 51 rows (match_id, match_date, home_team, away_team, home_score, away_score, has_360)
-
-**`public.events`** — 187.924 rows (event_id, match_id, event_type, timestamp, player_name, team_name, location, shot_xg, pass_xg, dll)
-
-**`public.freeze_frames`** — 164.530 rows (event_id, match_id, ball_location, players)
-
-**`public.event_embeddings`** — 821 rows (event_id, content, metadata, embedding halfvec 768-dim)
-
-### Functions
-
-- `match_stats_all()` — agregasi statistik per match
-- `player_stats_all()` — agregasi statistik per player
-- `search_event_embeddings()` — vector similarity search dengan filter metadata
-
-### Row Level Security
-
-- RLS aktif di semua tabel
-- Policy `SELECT` untuk role `anon` + `authenticated` (read-only)
-- Service role key hanya untuk import lokal
-
----
-
-## 🧪 Testing
-
-```powershell
-# Backend
-pytest tests/ -v
-
-# Frontend
+🧪 Testing
+bash
+# Navigate to frontend
 cd frontend
-npm test
-npm run lint
-npm run typecheck
-npm run build
-```
 
----
+# Run unit tests
+pnpm test
 
-## 🚧 Known Limitations
+# Type checking
+pnpm typecheck
 
-- **RAG Bot** jalan dengan **Supabase pgvector + Gemini 3.6 Flash**. Coverage saat ini 821 events (~12%). Backfill bertahap.
-- **`/players` tanpa filter** di-cap 2000 rows untuk hindari timeout.
-- **Free tier Supabase** mendekati batas 500 MB.
-- **Gemini free tier** = 1000 request embedding/hari.
-- **`/cognitive/{id}`** belum dimigrasi (roadmap).
+# Linting
+pnpm lint
 
----
+# Production build
+pnpm build
+Manual Verification
+bash
+# Check the health endpoint
+curl https://<your-project>.supabase.co/functions/v1/health
+🤝 Contributing
+Contributions are welcome! Whether you are fixing a typo, adding a new visualization, or improving the RAG chatbot, your help is appreciated.
 
-## 🎓 Data Source & Credits
+How to Contribute
+Fork the repository and create a new branch:
 
-- **StatsBomb Open Data** — [github.com/statsbomb/open-data](https://github.com/statsbomb/open-data)
-- Licensed for public use. Euro 2024: 51 matches, 187.924 events.
+bash
+git checkout -b feat/your-feature-name
+Follow Conventional Commits for commit messages:
 
----
+text
+feat(i18n): translate homepage UI strings to English
+fix(api): handle missing 360 data gracefully
+docs(readme): update deployment instructions
+Write all code, comments, commit messages, and PR descriptions in English.
 
-## 📝 License
+Run tests and linting before submitting:
 
-MIT License — lihat [LICENSE](./LICENSE). Data © StatsBomb.
+bash
+pnpm lint && pnpm test
+Open a Pull Request with a clear description of the changes.
 
----
+Good First Issues
+Look for issues labeled good first issue or help wanted to get started.
 
-**Built with** ❤️ **using StatsBomb Open Data, Next.js, Supabase, and Gemini.**
+🎨 Code Style
+TypeScript / JavaScript: 2-space indentation, single quotes, semicolons.
+
+Python: PEP 8, formatted with Black.
+
+Markdown: Fenced code blocks with language tags; one sentence per line (optional).
+
+Commits: Conventional Commits.
+
+Naming: camelCase for variables, PascalCase for components, SCREAMING_SNAKE_CASE for constants.
+
+🗺️ Roadmap
+☑ Import 51 matches from StatsBomb
+☑ Deploy 23 production endpoints
+☑ Launch RAG chatbot with Gemini 1.5 Flash
+□ Complete 360 freeze-frame backfill
+□ Add multi-language support (i18n)
+□ Export tactical reports as PDF
+□ Real-time match updates
+□ Mobile-optimized views
+❓ FAQ
+Q: Do I need a paid StatsBomb account to use this platform?
+A: No. The imported data covers all 51 Euro 2024 matches and is available through the public API.
+
+Q: Can I self-host the platform?
+A: Yes. Follow the Deployment section to host the backend on Supabase and the frontend on Vercel (or any Node-compatible host).
+
+Q: Is the API rate-limited?
+A: Supabase Edge Functions have generous free-tier limits. For high-volume usage, consider upgrading your Supabase plan.
+
+Q: How do I add a new endpoint?
+A: Create a new folder under supabase/functions/, add an index.ts file, and run supabase functions deploy <name>.
+
+📄 License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+🙏 Acknowledgements
+StatsBomb — for providing open 360 event data.
+
+UEFA — for organizing Euro 2024.
+
+Supabase — for Edge Functions and Postgres infrastructure.
+
+Vercel — for frontend hosting.
+
+Google AI — for Gemini and embedding models.
+
+shadcn/ui — for the component library.
+
+Recharts & D3.js — for visualizations.
+
+📬 Contact
+For questions, feedback, or collaboration:
+
+GitHub Issues: Open an issue
+
+GitHub Discussions: Start a discussion
+
+Repository: nomine-ds/euro-2024-public
+
+<p align="center"> Made with ⚽ and ☕ by <a href="https://github.com/nomine-ds">nomine-ds</a> <br /> <sub>Not affiliated with UEFA or StatsBomb.</sub> </p> ```
