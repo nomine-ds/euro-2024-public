@@ -129,7 +129,7 @@ export default function Home() {
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="text-emerald-600 dark:text-emerald-400">
                 Euro 2024
               </span>
               <br />
@@ -144,15 +144,15 @@ behind every match.
             <div className="flex flex-wrap gap-4 justify-center">
               <Link
                 href="/bot"
-                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors"
               >
-                🤖 Coba Hudl Bot
+                Ask Hudl Bot
               </Link>
               <Link
                 href="/players"
-                className="px-8 py-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 border border-gray-200 dark:border-gray-700"
+                className="px-6 py-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-medium transition-colors border border-gray-200 dark:border-gray-700"
               >
-                👤 View Players
+                View Players
               </Link>
             </div>
           </motion.div>
@@ -249,7 +249,7 @@ behind every match.
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700 p-12 text-center"
+          className="relative overflow-hidden rounded-3xl bg-emerald-600 dark:bg-emerald-700 p-12 text-center"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Explore?
@@ -260,9 +260,9 @@ behind every match.
           </p>
           <Link
             href="/bot"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-white text-blue-600 rounded-xl font-medium hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-emerald-700 rounded-lg font-medium hover:bg-emerald-50 transition-colors"
           >
-            🤖 Start Chat Now
+            Start Chat Now
           </Link>
         </motion.div>
       </section>
