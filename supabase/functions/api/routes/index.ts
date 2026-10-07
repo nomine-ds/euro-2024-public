@@ -6,6 +6,8 @@ import { eventRoutes } from "./events.ts";
 import { playerRoutes } from "./players.ts";
 import { analyticsRoutes } from "./analytics.ts";
 import { passNetwork } from "./passnetwork.ts";
+import { exportRoutes } from "./export.ts";
+import { ghostRoutes } from "./ghost.ts";
 
 export async function dispatch(
   client: SupabaseClient,
@@ -23,6 +25,12 @@ export async function dispatch(
 
   const analyticsResponse = await analyticsRoutes(client, path, url);
   if (analyticsResponse) return analyticsResponse;
+
+  const ghostResponse = await ghostRoutes(client, path);
+  if (ghostResponse) return ghostResponse;
+
+  const exportResponse = await exportRoutes(client, path, url);
+  if (exportResponse) return exportResponse;
 
   const network = path.match(/^\/passnetwork\/(\d+)$/);
   if (network) {

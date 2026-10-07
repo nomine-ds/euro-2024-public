@@ -76,5 +76,46 @@ export async function eventRoutes(
       ball_y: ballY,
     });
   }
+    // GET /avg_position?player_id=X&match_id=Y
+  if (path === "/avg_position") {
+    const playerId = numeric(url.searchParams.get("player_id"));
+    const matchId = numeric(url.searchParams.get("match_id"));
+    if (playerId === null || matchId === null) {
+      return json({ message: "player_id and match_id are required." }, 400);
+    }
+
+    const events = await getRows<
+      Pick<EventRow, "player_id" | "location">
+    >(
+      client
+        .from("events")
+        .select("player_id,location")
+        .eq("match_id", matchId)
+        .eq("player_id", playerId),
+    );
+
+    const xs: number[] = [];
+    const ys: number[] = [];
+    for (const e of events) {
+      const point = coordinates(e.location);
+      if (point) {
+        xs.push(point[0]);
+        ys.push(point[1]);
+      }
+    }
+
+    if (!xs.length) {
+      return json({ found: false, message: `Player ${playerId} not found.` });
+    }
+
+    return json({
+      found: true,
+      player_id: playerId,
+      match_id: matchId,
+      avg_x: Number((xs.reduce((s, v) => s + v, 0) / xs.length).toFixed(2)),
+      avg_y: Number((ys.reduce((s, v) => s + v, 0) / ys.length).toFixed(2)),
+      samples: xs.length,
+    });
+  }
   return null;
 }
