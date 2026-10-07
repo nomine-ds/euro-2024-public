@@ -5,30 +5,33 @@
 
 ![Frontend](https://img.shields.io/badge/frontend-Next.js%2016-000000)
 ![Backend](https://img.shields.io/badge/backend-Supabase%20Edge%20Function-3ECF8E)
-![Database](https://img.shields.io/badge/database-Supabase%20Postgres-3ECF8E)
+![Database](https://img.shields.io/badge/database-Supabase%20Postgres%20%2B%20pgvector-3ECF8E)
 ![Hosting](https://img.shields.io/badge/hosting-Vercel-000000)
 ![Data](https://img.shields.io/badge/data-StatsBomb%20360-blueviolet)
+![Bot](https://img.shields.io/badge/RAG-Gemini%203.6%20Flash-blue)
 
 ---
 
 ## 🚦 Deployment Status (Updated Oct 2026)
 
-**Arsitektur production berbeda dari development lokal.** Repository ini sedang dalam proses migrasi bertahap dari FastAPI ke Supabase Edge Function.
+**Arsitektur production berbeda dari development lokal.** Repository ini sudah bermigrasi dari FastAPI ke Supabase Edge Function + Vercel.
 
 | Komponen | Development | Production |
 |----------|-------------|------------|
 | Frontend | Next.js (local) | **Vercel** — root `frontend/` |
 | Backend API | FastAPI (local) | **Supabase Edge Function** (`api`) |
 | Database | JSON file | **Supabase Postgres** (RLS aktif, read-only) |
+| Vector Store | ChromaDB | **Supabase pgvector** (`event_embeddings`) |
+| LLM | Ollama `qwen2.5:3b` | **Gemini 3.6 Flash** (Google AI Studio) |
+| Embedding | fastembed MiniLM (384d) | **Gemini Embedding** (768d) |
 | Cache | In-memory / Redis | (tidak dipakai di production) |
-| RAG Bot | ChromaDB + Ollama | ❌ Belum dimigrasi |
-| Data | `data/raw/*.json` | Supabase Postgres |
+| RAG Bot | ChromaDB + Ollama | ✅ pgvector + Gemini |
 
-**Production URLs** (ganti `<vercel-url>` dengan URL deployment kamu):
+**Production URLs**:
 - Frontend: `https://<vercel-url>`
 - API: `https://<project-ref>.supabase.co/functions/v1/api`
 
-**Data ter-import**: 51 matches, 187.924 events, 164.530 freeze frames.
+**Data ter-import**: 51 matches, 187.924 events, 164.530 freeze frames, **821 event embeddings** (12% coverage, backfill bertahap).
 
 ---
 
@@ -36,35 +39,36 @@
 
 ### ✅ Tersedia di Production (Supabase Edge Function)
 
+Base URL: `https://<project-ref>.supabase.co/functions/v1/api`
+Auth: header `apikey: <publishable-key>`
+
 | Method | Endpoint | Deskripsi |
 |--------|----------|-----------|
 | GET | `/matches` | Daftar semua match |
 | GET | `/matches/with360` | Match dengan 360 freeze-frames |
-| GET | `/match/{match_id}/has360` | Cek apakah match punya 360 data |
-| GET | `/match/{match_id}/summary` | Scoreline + ringkasan xG |
-| GET | `/events/{match_id}` | Event stream (bisa difilter `event_type`) |
+| GET | `/match/{id}/has360` | Cek apakah match punya 360 data |
+| GET | `/match/{id}/summary` | Scoreline + ringkasan xG |
+| GET | `/events/{id}` | Event stream (filter `event_type`) |
 | GET | `/360/{event_uuid}` | Posisi freeze-frame untuk satu event |
 | GET | `/players` | Daftar player (filter `match_id` / `team_id`, cap 2000) |
-| GET | `/player/{player_id}/summary` | Ringkasan statistik player |
-| GET | `/passnetwork/{match_id}` | Pass network graph per match |
+| GET | `/player/{id}/summary` | Ringkasan statistik player |
+| GET | `/player/{id}/breakdown` | Statistik per-match untuk 1 pemain |
+| GET | `/passnetwork/{id}` | Pass network graph per match |
+| GET | `/teams` | Daftar tim unik |
+| GET | `/compare/teams` | Head-to-head 2 tim |
+| GET | `/players/compare` | Bandingkan 2-4 pemain + similarity |
+| GET | `/players/bulk` | Bulk stats semua pemain |
+| GET | `/players/clustering` | K-Means clustering pemain (4 cluster default) |
+| GET | `/matches/similar/{id}` | Cari match dengan pola statistik mirip |
+| GET | `/avg_position` | Rata-rata posisi pemain di match |
+| GET | `/ghost/{id}` | Position density dari 360 freeze-frames |
+| GET | `/tactical/{id}` | Rolling stats + change-point detection |
+| GET | `/counterfactual/simulate` | Simulasi ΔxG untuk aksi alternatif |
+| GET | `/export/csv` | Export data ke CSV |
+| GET | `/bot/health` | Health check + count events ter-embed |
+| POST | `/bot/chat` | RAG chatbot (pgvector + Gemini) |
 
-### ❌ Belum Dimigrasi (Return 501 di Production)
-
-Endpoint berikut masih di FastAPI dan **tidak jalan** di production Supabase:
-
-| Endpoint | Router Legacy |
-|----------|---------------|
-| `/bot/chat`, `/bot/health`, `/bot/reindex` | `bot.py` |
-| `/teams`, `/compare/teams`, `/players/compare` | `analytics.py` |
-| `/matches/similar/{id}`, `/players/clustering` | `analytics.py` |
-| `/players/bulk`, `/player/{id}/breakdown` | `players.py` |
-| `/tactical/{id}` | `tactical.py` |
-| `/ghost/{id}` | `ghost.py` |
-| `/cognitive/{id}` | `cognitive.py` |
-| `/counterfactual/simulate` | `counterfactual.py` |
-| `/export/csv` | `export.py` |
-
-Untuk mengaktifkan fitur-fitur ini di production, deploy FastAPI backend terpisah (lihat [Legacy Backend](#-legacy-backend-fastapi)).
+**Coverage: 23 dari 23 endpoint production aktif.** ✅
 
 ---
 
@@ -74,20 +78,20 @@ Untuk mengaktifkan fitur-fitur ini di production, deploy FastAPI backend terpisa
 
 | # | Module | Description | Production |
 |---|--------|-------------|------------|
-| 1 | 🧠 **Counterfactual Engine** | Monte Carlo simulation of alternative actions (`pass` / `shoot` / `dribble`). ΔxG vs actual event. | ❌ 501 |
-| 2 | 👁️ **Cognitive Mirror** | Decision Quality (DQ) scoring per event. 4 labels: Excellent / Neutral / Under Pressure / Mistake. | ❌ 501 |
-| 3 | 📍 **Position Density** | Spatial crowding score per detected player from 360 freeze-frames. | ❌ 501 |
-| 4 | 📜 **Tactical Timeline** | Rolling match stats (xG / PPDA / Field Tilt) + PELT change-point detection. | ❌ 501 |
+| 1 | 🧠 **Counterfactual Engine** | Monte Carlo simulation of alternative actions. ΔxG vs actual event. | ✅ |
+| 2 | 👁️ **Cognitive Mirror** | Decision Quality (DQ) scoring per event. 4 labels. | ⚠️ Roadmap |
+| 3 | 📍 **Position Density** | Spatial crowding score per player from 360 freeze-frames. | ✅ |
+| 4 | 📜 **Tactical Timeline** | Rolling match stats (xG / PPDA / Field Tilt) + change-point detection. | ✅ |
 | 5 | 🔗 **Pass Network** | Player-to-player pass graph with average pitch positions. | ✅ |
-| 6 | 🆚 **Player Comparison** | Side-by-side radar + bar charts for 2–4 players. | ❌ 501 |
+| 6 | 🆚 **Player Comparison** | Side-by-side radar + bar charts for 2-4 players. | ✅ |
 
 ### Supporting Features
 
-- 👥 **Player Explorer** — Sortable table of 495+ Euro 2024 players. (✅ via `/players`)
-- 📊 **Match Similarity** — Find matches with similar statistical patterns. (❌ 501)
-- 🧩 **Player Clustering** — K-Means clustering by playing style. (❌ 501)
-- 🤖 **Hudl Bot** — RAG chatbot over 187.924 events. (❌ 501)
-- 🧪 **Public Data Lab** — Python REPL in browser via Pyodide. (client-side, ✅)
+- 👥 **Player Explorer** — Sortable table of 495+ Euro 2024 players. ✅
+- 📊 **Match Similarity** — Find matches with similar statistical patterns. ✅
+- 🧩 **Player Clustering** — K-Means clustering by playing style. ✅
+- 🤖 **Hudl Bot** — RAG chatbot over 821+ events (pgvector + Gemini). ✅
+- 🧪 **Public Data Lab** — Python REPL in browser via Pyodide. ✅
 
 ---
 
@@ -99,8 +103,11 @@ Untuk mengaktifkan fitur-fitur ini di production, deploy FastAPI backend terpisa
 - **Tailwind CSS v4** — utility-first styling, dark mode
 - **Recharts** — radar / bar / line / area charts
 - **SVG Canvas** — custom pitch visualization
-- **Supabase Edge Function** (Deno) — REST API backend
+- **Supabase Edge Function** (Deno 2.x) — REST API backend
 - **Supabase Postgres** — database dengan Row Level Security
+- **Supabase pgvector** — vector store untuk RAG bot
+- **Gemini 3.6 Flash** — LLM untuk RAG chatbot
+- **Gemini Embedding** — 768-dim embeddings
 - **Vercel** — frontend hosting + edge network
 
 ### Development / Legacy
@@ -109,8 +116,7 @@ Untuk mengaktifkan fitur-fitur ini di production, deploy FastAPI backend terpisa
 - **Pandas** + **NumPy** — data manipulation
 - **scikit-learn** — K-Means clustering
 - **ruptures** — PELT change-point detection
-- **SciPy** — Hungarian matching
-- **ChromaDB** — vector store untuk RAG bot
+- **ChromaDB** — vector store untuk RAG bot (legacy)
 - **Ollama** — local LLM (`qwen2.5:3b`)
 
 ### Data Pipeline
@@ -119,6 +125,7 @@ Untuk mengaktifkan fitur-fitur ini di production, deploy FastAPI backend terpisa
 - 187.924 total events across Euro 2024
 - 51 `three-sixty` frame files (~2.882 frames each)
 - Import via `scripts/import_statsbomb_to_supabase.py`
+- Embedding via `scripts/embed_events_to_supabase.py` (Gemini)
 
 ---
 
@@ -127,65 +134,29 @@ Untuk mengaktifkan fitur-fitur ini di production, deploy FastAPI backend terpisa
 ```text
 euro-2024/
 ├── frontend/                       # Next.js app (deploy → Vercel)
-│   ├── app/
-│   │   ├── page.tsx                # Home
-│   │   ├── api/[...path]/route.ts  # Proxy → Supabase Edge Function
-│   │   ├── cognitive/[matchId]/    # Cognitive Mirror
-│   │   ├── tactical/[id]/          # Tactical Timeline
-│   │   ├── ghost/[id]/             # Position Density
-│   │   ├── passnetwork/[matchId]/  # Pass Network
-│   │   ├── player/[id]/            # Player detail
-│   │   ├── player-comparison/      # Compare players
-│   │   ├── counterfactual/         # Counterfactual engine
-│   │   ├── players/                # Player explorer
-│   │   ├── clusters/               # K-Means clusters
-│   │   ├── match-similarity/       # Match similarity
-│   │   ├── match/[id]/             # Match detail
-│   │   ├── bot/                    # Hudl Bot UI
-│   │   ├── lab/                    # Pyodide data lab
-│   │   └── components/             # Navbar, Footer, dll
-│   ├── lib/
-│   │   └── api.ts                  # Dual-mode API client (client + server)
-│   ├── next.config.ts              # Security headers
-│   ├── postcss.config.mjs          # Tailwind v4
+│   ├── app/                        # Pages (App Router)
+│   ├── lib/api.ts                  # Dual-mode API client
+│   ├── next.config.ts              # Security headers + CSP
 │   └── package.json
 │
 ├── supabase/                       # Supabase backend (production)
-│   ├── functions/api/index.ts      # Edge Function (Deno)
+│   ├── functions/api/              # Edge Function (Deno)
+│   │   ├── index.ts                # Main handler
+│   │   ├── lib/                    # core.ts, types.ts, ml.ts
+│   │   └── routes/                 # matches, events, players, dll
 │   ├── migrations/
-│   │   └── 20261007000000_create_public_data.sql
 │   └── config.toml
 │
 ├── scripts/
-│   └── import_statsbomb_to_supabase.py   # Import data ke Supabase
+│   ├── import_statsbomb_to_supabase.py   # Import JSON → Supabase
+│   └── embed_events_to_supabase.py       # Embed events → pgvector
 │
 ├── app/                            # FastAPI backend (LEGACY, dev only)
-│   ├── main.py
-│   ├── routers/                    # 12 feature routers
-│   ├── core/config.py
-│   ├── data/loader.py
-│   └── services/
-│       ├── counterfactual.py
-│       └── rag_bot.py
-│
-├── data/
-│   ├── raw/                        # StatsBomb JSON (gitignored)
-│   │   ├── matches.json
-│   │   ├── match_{id}.json
-│   │   └── three-sixty/{match_id}.json
-│   └── chroma_db/                  # ChromaDB index (gitignored)
-│
-├── docs/
-│   └── SUPABASE_DEPLOYMENT.md      # Detail deployment Supabase
-│
-├── tests/                          # Backend tests
-├── conftest.py
-├── pytest.ini
+├── data/                           # StatsBomb JSON (gitignored)
+├── docs/SUPABASE_DEPLOYMENT.md
+├── tests/
 ├── README.md
-├── AUDIT_REPORT.md
-├── .env.example
-├── requirements.txt
-└── Dockerfile                      # Untuk legacy FastAPI
+└── requirements.txt
 ```
 
 ---
@@ -194,77 +165,60 @@ euro-2024/
 
 ### Prerequisites
 
-- Akun [Supabase](https://supabase.com) (Free tier OK, tapi data ~380 MiB mendekati limit 500 MB)
+- Akun [Supabase](https://supabase.com) (Free tier OK)
 - Akun [Vercel](https://vercel.com)
-- Akun GitHub dengan akses ke repo ini
-- Node.js 20+ (untuk Supabase CLI)
-- Supabase CLI (`npm install -g supabase`)
+- Akun [Google AI Studio](https://aistudio.google.com/apikey) (untuk Gemini API)
+- Node.js 20+ + Supabase CLI (`npm install -g supabase`)
+- Docker Desktop (untuk bundling Edge Function)
 
 ### 1. Setup Supabase
 
 ```powershell
-# Login & link ke project
 supabase login
 supabase link --project-ref <PROJECT_REF>
-
-# Push migrasi (buat tabel + RLS policy)
 supabase db push
-
-# Deploy Edge Function
 supabase functions deploy api --project-ref <PROJECT_REF>
 ```
 
-Dapatkan **Project URL** dan **Publishable key** dari Supabase Dashboard → Settings → API.
-
 ### 2. Import Data
-
-Set environment variable (sesi PowerShell ini saja):
 
 ```powershell
 $env:SUPABASE_URL = "https://<PROJECT_REF>.supabase.co"
-# Set SUPABASE_SERVICE_ROLE_KEY via file .env.import (jangan paste ke chat)
+$env:SUPABASE_SERVICE_ROLE_KEY = "sb_secret_..."
 python scripts/import_statsbomb_to_supabase.py --data-dir data/raw
 ```
 
-⚠️ **Service role key HANYA untuk import lokal.** Jangan pernah taruh di Vercel atau variable `NEXT_PUBLIC_*`.
+### 3. Embed Events untuk Bot
 
-### 3. Setup Vercel
+```powershell
+$env:GEMINI_API_KEY = "AIza..."
+python scripts/embed_events_to_supabase.py --mode key
+```
 
-1. Buka [vercel.com/new](https://vercel.com/new) → import repo ini
-2. **Root Directory**: `frontend` (WAJIB)
-3. **Framework Preset**: Next.js (auto)
+Set secret di Edge Function:
+```powershell
+supabase secrets set GEMINI_API_KEY=$env:GEMINI_API_KEY --project-ref <PROJECT_REF>
+```
+
+### 4. Setup Vercel
+
+1. Import repo di [vercel.com/new](https://vercel.com/new)
+2. **Root Directory**: `frontend`
+3. **Framework Preset**: Next.js
 4. **Node.js Version**: 22.x
 5. **Environment Variables** (Production + Preview + Development):
 
 | Key | Value |
 |-----|-------|
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://<PROJECT_REF>.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key (`sb_publishable_...` atau `eyJ...`) |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key |
 | `NEXT_PUBLIC_API_BASE` | `/api` |
 
 6. Deploy.
 
-### Verifikasi
-
-```powershell
-# Test Edge Function langsung
-$key = "<publishable-key>"
-$base = "https://<PROJECT_REF>.supabase.co/functions/v1/api"
-Invoke-RestMethod -Uri "$base/matches" -Headers @{ apikey = $key } | Select-Object -First 3
-
-# Test via Vercel proxy
-Invoke-RestMethod -Uri "https://<vercel-url>/api/matches" | Select-Object -First 3
-```
-
 ---
 
 ## 💻 Local Development
-
-### Prasyarat
-
-- Python 3.12
-- Node.js 20+
-- Git
 
 ### 1. Clone & Install
 
@@ -272,261 +226,93 @@ Invoke-RestMethod -Uri "https://<vercel-url>/api/matches" | Select-Object -First
 git clone https://github.com/nomine-ds/euro-2024-public.git
 cd euro-2024-public
 
-# Backend (opsional, untuk fitur legacy)
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-
-# Frontend
 cd frontend
 npm install
 cd ..
 ```
 
-### 2. Frontend dengan Supabase (Recommended)
-
-Cara paling simple — frontend langsung konek ke Supabase production:
+### 2. Frontend dengan Supabase Production
 
 ```powershell
 cd frontend
 Copy-Item .env.example .env.local
-# Edit .env.local, isi:
-#   NEXT_PUBLIC_SUPABASE_URL=https://<PROJECT_REF>.supabase.co
-#   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable-key>
-#   NEXT_PUBLIC_API_BASE=/api
+# Edit .env.local dengan 3 var Supabase
 npm run dev
 # → http://localhost:3000
 ```
 
-### 3. Backend Legacy (FastAPI) — Untuk Fitur yang Belum Dimigrasi
-
-Hanya perlu jika kamu mau mengembangkan endpoint yang belum ada di Edge Function (`/bot`, `/analytics`, dll).
+### 3. Backend Legacy (Opsional)
 
 ```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 Copy-Item .env.example .env
-# Edit .env, set CACHE_API_KEY ke unique secret
-
-# Load data sekali (download StatsBomb, ~5 menit)
 uvicorn app.main:app --reload
-# Di terminal lain: curl http://127.0.0.1:8000/load
-
-# Untuk pakai FastAPI sebagai backend frontend, ubah frontend/.env.local:
-#   NEXT_PUBLIC_API_BASE=http://127.0.0.1:8000
 ```
 
-### 4. Run Tests
+---
+
+## 🤖 Bot Usage
+
+### Query Example
 
 ```powershell
-# Backend
-pytest tests/ -v
+$key = "<publishable-key>"
+$base = "https://<PROJECT_REF>.supabase.co/functions/v1/api"
 
-# Frontend
-cd frontend
-npm test
-npm run lint
-npm run typecheck
+$body = @{ query = "Siapa yang mencetak gol di Jerman vs Skotlandia?" } | ConvertTo-Json
+Invoke-RestMethod -Uri "$base/bot/chat" -Method POST `
+  -Headers @{ apikey = $key; "Content-Type" = "application/json" } `
+  -Body $body
 ```
 
----
+### Query yang Bisa Dijawab (Coverage Sekarang)
 
-## 🔌 API Endpoints (Reference)
+- ✅ "Siapa yang mencetak gol di [match Group Stage]?"
+- ✅ "Kartu kuning untuk siapa di [match]?"
+- ✅ "Substitusi apa saja di [match]?"
+- ⚠️ "Siapa yang mencetak gol di final?" (perlu backfill)
 
-### Production (Supabase Edge Function)
+### Backfill Events
 
-Lihat [Status Endpoint](#-status-endpoint) di atas.
-
-Base URL: `https://<PROJECT_REF>.supabase.co/functions/v1/api`
-Auth: header `apikey: <publishable-key>`
-
-### Legacy (FastAPI) — 29 Endpoints
-
-<details>
-<summary>Klik untuk expand daftar lengkap</summary>
-
-#### System — `system.py`
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Health check + total events |
-| GET | `/load` | Force reload dari StatsBomb Open Data |
-
-#### Matches — `matches.py`
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/matches` | List all matches |
-| GET | `/matches/with360` | Matches with 360 freeze-frames |
-| GET | `/match/{match_id}/has360` | Check if match has 360 data |
-| GET | `/match/{match_id}/summary` | Scoreline + xG summary |
-
-#### Events — `events.py`
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/events/{match_id}` | Full event stream (filterable) |
-| GET | `/360/{event_uuid}` | Freeze-frame positions |
-| GET | `/avg_position` | Average pitch position per player |
-| GET | `/debug/{event_uuid}` | Raw event dict (NaN-sanitized) |
-
-#### Players — `players.py`
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/players` | All players (filterable) |
-| GET | `/players/bulk` | Bulk stats (cached) |
-| GET | `/player/{player_id}/summary` | Player season summary |
-| GET | `/player/{player_id}/breakdown` | Per-match breakdown |
-
-#### Analytics — `analytics.py`
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/teams` | All teams (cached) |
-| GET | `/compare/teams?team_ids=1,2` | Head-to-head comparison |
-| GET | `/players/compare?ids=1,2,3` | Compare 2–4 players |
-| GET | `/matches/similar/{match_id}` | Similar matches |
-| GET | `/players/clustering?n_clusters=4` | K-Means clusters |
-
-#### Advanced Analytics
-
-| Method | Endpoint | Router |
-|--------|----------|--------|
-| GET | `/counterfactual/simulate` | `counterfactual.py` |
-| GET | `/cognitive/{match_id}` | `cognitive.py` |
-| GET | `/ghost/{match_id}` | `ghost.py` |
-| GET | `/tactical/{match_id}` | `tactical.py` |
-| GET | `/passnetwork/{match_id}` | `passnetwork.py` |
-
-#### Export & Bot
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/export/csv` | CSV export |
-| POST | `/bot/chat` | Chat with Hudl Bot |
-| GET | `/bot/health` | Bot status |
-| POST | `/bot/reindex` | Rebuild vector store |
-| POST | `/admin/cache/invalidate` | Invalidate cache (X-API-Key) |
-
-</details>
-
----
-
-## 🧰 Legacy Backend (FastAPI)
-
-> **Note**: Section ini untuk deployment FastAPI ke Railway. Production sekarang **sudah pindah ke Supabase Edge Function**. Railway hanya diperlukan kalau mau mengaktifkan endpoint yang belum dimigrasi.
-
-### Deployment Layout
-
-- **Vercel** serves Next.js dari `frontend/`
-- **Railway** serves FastAPI backend dari root repo (pakai `Dockerfile`)
-- **Upstash Redis** untuk shared API cache (opsional)
-- **Ollama** endpoint untuk RAG bot (opsional)
-
-### Railway Setup
-
-1. Buat service dari repo yang sama, root = repository root
-2. Attach persistent volume di `/app/data`
-3. Set env vars:
-
-| Variable | Value |
-|----------|-------|
-| `APP_ENV` | `production` |
-| `BACKEND_INTERNAL_URL` | Railway origin (set di Vercel) |
-| `CORS_ORIGINS` | Empty (pakai same-origin proxy) |
-| `CACHE_API_KEY` | Strong secret |
-| `REDIS_URL` | Upstash TLS URL |
-| `DATA_DIR` | `/app/data/raw` |
-| `CHROMA_DB_PATH` | `/app/data/chroma_db` |
-| `OLLAMA_HOST` | Ollama endpoint |
-
-4. Deploy, lalu run `python -m app.data.loader` di Railway shell
-5. Untuk RAG: `python index_bot.py` (setelah backup volume)
-
-### Docker Compose (Local)
+Gemini free tier = 1000 req embedding/hari. Untuk coverage penuh:
 
 ```powershell
-# Set CACHE_API_KEY dulu
-docker compose up --build
-# Web: http://localhost:3000, API: http://localhost:8000
-
-# Dengan bot profile
-docker compose --profile bot up --build -d
-docker compose exec ollama ollama pull qwen2.5:3b
+python scripts/embed_events_to_supabase.py --mode key
 ```
 
----
-
-## 🔐 Environment Variables
-
-### Vercel (Production / Preview / Development)
-
-| Key | Value | Notes |
-|-----|-------|-------|
-| `NEXT_PUBLIC_SUPABASE_URL` | `https://<ref>.supabase.co` | Public, aman |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key | Public, aman |
-| `NEXT_PUBLIC_API_BASE` | `/api` | Same-origin proxy |
-
-⚠️ **JANGAN pernah** taruh di Vercel:
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `sb_secret_*` key apapun
-- `REDIS_URL`, `CACHE_API_KEY`, `OLLAMA_HOST`
-- LLM credentials
-
-### Local `.env` (Backend Legacy)
-
-Lihat `.env.example`. **Jangan commit `.env`** — sudah ada di `.gitignore`.
-
-### Local `frontend/.env.local`
-
-Lihat `frontend/.env.example`.
+Jalankan harian, atau enable billing Google Cloud (~$0.02 sekali) untuk selesaikan dalam 5 menit.
 
 ---
 
-## 🗄️ Database Schema (Supabase)
-
-Dibuat via `supabase/migrations/20261007000000_create_public_data.sql`.
+## 🗄️ Database Schema
 
 ### Tables
 
-**`public.matches`**
-| Column | Type | Notes |
-|--------|------|-------|
-| `match_id` | `bigint` | Primary key |
-| `match_date` | `date` | |
-| `home_team` | `text` | |
-| `away_team` | `text` | |
-| `home_team_id` | `bigint` | |
-| `away_team_id` | `bigint` | |
-| `home_score` | `integer` | |
-| `away_score` | `integer` | |
-| `has_360` | `boolean` | |
+**`public.matches`** — 51 rows (match_id, match_date, home_team, away_team, home_score, away_score, has_360)
 
-**`public.events`** — ~187k rows. Primary key `event_id` (uuid). FK ke `matches`. Index di `match_id`, `player_id`, `event_type`.
+**`public.events`** — 187.924 rows (event_id, match_id, event_type, timestamp, player_name, team_name, location, shot_xg, pass_xg, dll)
 
-**`public.freeze_frames`** — ~164k rows. Primary key `event_id` (uuid). FK ke `events` + `matches`. Kolom `ball_location` (jsonb), `players` (jsonb).
+**`public.freeze_frames`** — 164.530 rows (event_id, match_id, ball_location, players)
 
-### View
+**`public.event_embeddings`** — 821 rows (event_id, content, metadata, embedding halfvec 768-dim)
 
-**`public.player_directory`** — `security_invoker = true`, DISTINCT player from events.
+### Functions
+
+- `match_stats_all()` — agregasi statistik per match
+- `player_stats_all()` — agregasi statistik per player
+- `search_event_embeddings()` — vector similarity search dengan filter metadata
 
 ### Row Level Security
 
-- RLS aktif di ketiga tabel
+- RLS aktif di semua tabel
 - Policy `SELECT` untuk role `anon` + `authenticated` (read-only)
-- Tidak ada policy `INSERT` / `UPDATE` / `DELETE`
-
-### Kapasitas
-
-Free tier Supabase = 500 MB. Data kamu ~380 MiB payload → kemungkinan 480–550 MB setelah overhead. Monitoring di Dashboard → Settings → Billing.
+- Service role key hanya untuk import lokal
 
 ---
 
-## 🧪 Testing & Code Quality
-
-- **Backend tests**: `tests/` — unit + data-backed API smoke tests
-- **Frontend tests**: Vitest untuk API client & proxy route
-- **CI**: GitHub Actions — test, lint, typecheck, build, secret scanning
-- **Audit trail**: lihat [`AUDIT_REPORT.md`](./AUDIT_REPORT.md)
+## 🧪 Testing
 
 ```powershell
 # Backend
@@ -544,33 +330,25 @@ npm run build
 
 ## 🚧 Known Limitations
 
-- **RAG Bot** tidak jalan di production (butuh ChromaDB + Ollama). Perbaikan direncanakan via Supabase Vector + external LLM API.
-- **Analytics, Tactical, Cognitive, Counterfactual, Ghost, Export** — masih di FastAPI, belum dimigrasi ke Edge Function.
-- **`/players` tanpa filter** di-cap 2000 rows untuk hindari statement timeout. Pakai `?match_id=X` untuk hasil lengkap.
-- **Free tier Supabase** mendekati batas 500 MB. Kalau mau import data baru, cek kapasitas dulu.
-- **Docker indexing** belum diverifikasi end-to-end (Docker CLI tidak tersedia di env dev).
+- **RAG Bot** jalan dengan **Supabase pgvector + Gemini 3.6 Flash**. Coverage saat ini 821 events (~12%). Backfill bertahap.
+- **`/players` tanpa filter** di-cap 2000 rows untuk hindari timeout.
+- **Free tier Supabase** mendekati batas 500 MB.
+- **Gemini free tier** = 1000 request embedding/hari.
+- **`/cognitive/{id}`** belum dimigrasi (roadmap).
 
 ---
 
 ## 🎓 Data Source & Credits
 
 - **StatsBomb Open Data** — [github.com/statsbomb/open-data](https://github.com/statsbomb/open-data)
-- Licensed for public use. Semua event data (xG, freeze-frames, coordinates) dari StatsBomb.
-- Euro 2024: 51 matches, 187.924 events.
+- Licensed for public use. Euro 2024: 51 matches, 187.924 events.
 
 ---
 
 ## 📝 License
 
-MIT License — lihat [LICENSE](./LICENSE) untuk detail.
-Data © StatsBomb — digunakan di bawah Open Data terms.
+MIT License — lihat [LICENSE](./LICENSE). Data © StatsBomb.
 
 ---
 
-## 🤝 Contributing
-
-Portfolio project. Saran via issues atau PR.
-
----
-
-**Built with** ❤️ **using StatsBomb Open Data, Next.js, and Supabase.**
+**Built with** ❤️ **using StatsBomb Open Data, Next.js, Supabase, and Gemini.**
