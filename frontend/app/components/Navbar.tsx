@@ -20,8 +20,6 @@ export default function Navbar() {
     { href: "/bot", label: "Hudl Bot", icon: "🤖" },
     { href: "/lab", label: "Data Lab", icon: "🧪" },
     { href: "/counterfactual", label: "Counterfactual", icon: "🔮" },
-    { href: "/cognitive", label: "Cognitive", icon: "🧠" },
-    { href: "/ghost", label: "Ghost", icon: "👻" },
   ];
 
   const isActive = (href: string) => {
