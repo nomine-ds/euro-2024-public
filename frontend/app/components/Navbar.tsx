@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import { navIcons } from "@/lib/icons";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
@@ -11,15 +12,15 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const links = [
-    { href: "/", label: "Home", icon: "🏠" },
-    { href: "/players", label: "Players", icon: "👤" },
-    { href: "/match-similarity", label: "Similarity", icon: "🔍" },
-    { href: "/clusters", label: "Clusters", icon: "🧩" },
-    { href: "/compare", label: "Compare Teams", icon: "⚽" },
-    { href: "/player-comparison", label: "Compare Players", icon: "🆚" },
-    { href: "/bot", label: "Hudl Bot", icon: "🤖" },
-    { href: "/lab", label: "Data Lab", icon: "🧪" },
-    { href: "/counterfactual", label: "Counterfactual", icon: "🔮" },
+    { href: "/", label: "Home" },
+    { href: "/players", label: "Players" },
+    { href: "/match-similarity", label: "Similarity" },
+    { href: "/clusters", label: "Clusters" },
+    { href: "/compare", label: "Teams" },
+    { href: "/player-comparison", label: "Compare" },
+    { href: "/bot", label: "Bot" },
+    { href: "/lab", label: "Lab" },
+    { href: "/counterfactual", label: "Counterfactual" },
   ];
 
   const isActive = (href: string) => {
@@ -54,7 +55,7 @@ export default function Navbar() {
                     : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 }`}
               >
-                <span className="mr-1">{link.icon}</span>
+                {(() => { const Icon = navIcons[link.href]; return Icon ? <Icon className="w-4 h-4 mr-1.5 shrink-0" strokeWidth={2} /> : null; })()}
                 {link.label}
               </Link>
             ))}
@@ -108,7 +109,7 @@ export default function Navbar() {
                       : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                   }`}
                 >
-                  <span className="mr-2">{link.icon}</span>
+                  {(() => { const Icon = navIcons[link.href]; return Icon ? <Icon className="w-4 h-4 mr-2 shrink-0" strokeWidth={2} /> : null; })()}
                   {link.label}
                 </Link>
               ))}
