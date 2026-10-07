@@ -1,4 +1,4 @@
-﻿// supabase/functions/api/routes/analytics.ts
+// supabase/functions/api/routes/analytics.ts
 import { getRows, json, numeric } from "../lib/core.ts";
 import type { SupabaseClient } from "../lib/core.ts";
 import type { EventRow } from "../lib/types.ts";
@@ -66,13 +66,35 @@ export async function analyticsRoutes(
   // GET /players/bulk?match_id=X
   if (path === "/players/bulk") {
     const matchId = numeric(url.searchParams.get("match_id"));
-    let query = client
-      .from("events")
-      .select(
-        "player_id,player_name,team_id,event_type,shot_outcome,shot_xg,pass_xg,goal_assist",
-      );
-    if (matchId !== null) query = query.eq("match_id", matchId);
-    const events = await getRows<EventRow>(query);
+
+    if (matchId === null) {
+      const { data: stats, error: statsError } = await client.rpc("player_stats_all");
+      if (statsError) throw new Error(statsError.message);
+
+      const players = (stats ?? [])
+        .map((s: Record<string, unknown>) => ({
+          player_id: Number(s.player_id),
+          player_name: String(s.player_name ?? "Unknown"),
+          team_name: s.team_name ? String(s.team_name) : null,
+          goals: Number(s.goals ?? 0),
+          assists: Number(s.assists ?? 0),
+          shots: Number(s.shots ?? 0),
+          passes: Number(s.passes ?? 0),
+          xG: Number(Number(s.xg ?? 0).toFixed(2)),
+          xA: Number(Number(s.xa ?? 0).toFixed(2)),
+        }))
+        .filter((p) => p.shots + p.passes > 0)
+        .sort((a, b) => b.goals - a.goals || b.assists - a.assists);
+
+      return json(players);
+    }
+
+    const events = await getRows<EventRow>(
+      client
+        .from("events")
+        .select("player_id,player_name,team_id,event_type,shot_outcome,shot_xg,pass_xg,goal_assist")
+        .eq("match_id", matchId),
+    );
 
     const acc = new Map<
       number,
@@ -122,7 +144,6 @@ export async function analyticsRoutes(
         .sort((a, b) => b.goals - a.goals || b.assists - a.assists),
     );
   }
-
   // GET /players/compare?ids=1,2,3
   if (path === "/players/compare") {
     const idsParam = url.searchParams.get("ids") ?? "";
