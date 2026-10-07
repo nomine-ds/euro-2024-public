@@ -2,8 +2,7 @@
 import { getRows, json, numeric } from "../lib/core.ts";
 import type { SupabaseClient } from "../lib/core.ts";
 import type { EventRow } from "../lib/types.ts";
-import { euclideanDistance, standardize } from "../lib/ml.ts";
-
+import { euclideanDistance, kMeans, standardize } from "../lib/ml.ts";
 export async function analyticsRoutes(
   client: SupabaseClient,
   path: string,
@@ -251,6 +250,91 @@ export async function analyticsRoutes(
       similarities,
     });
   }
+   // GET /players/clustering?n_clusters=4
+  if (path === "/players/clustering") {
+    const nClusters = Math.min(
+      Math.max(Number(url.searchParams.get("n_clusters") ?? 4), 2),
+      10,
+    );
 
+    const { data: stats, error: statsError } = await client.rpc("player_stats_all");
+    if (statsError) throw new Error(statsError.message);
+
+    type PlayerStats = {
+      player_id: number;
+      player_name: string;
+      team_name: string | null;
+      goals: number;
+      assists: number;
+      shots: number;
+      passes: number;
+      xg: number;
+      xa: number;
+      dribbles: number;
+    };
+
+    const players: PlayerStats[] = (stats ?? [])
+      .map((s: Record<string, unknown>) => ({
+        player_id: Number(s.player_id),
+        player_name: String(s.player_name ?? "Unknown"),
+        team_name: s.team_name ? String(s.team_name) : null,
+        goals: Number(s.goals),
+        assists: Number(s.assists),
+        shots: Number(s.shots),
+        passes: Number(s.passes),
+        xg: Number(s.xg),
+        xa: Number(s.xa),
+        dribbles: Number(s.dribbles),
+      }))
+      .filter((p) => p.shots + p.passes + p.dribbles > 0);
+
+    if (players.length < nClusters) {
+      return json({ message: "Too few players for clustering." }, 404);
+    }
+
+    const features = ["goals", "assists", "shots", "passes", "xg", "xa"] as const;
+    const matrix = players.map((p) => features.map((k) => p[k]));
+    const scaled = standardize(matrix);
+    const { labels } = kMeans(scaled, nClusters, 42, 10);
+
+    const clusterData = new Map<number, PlayerStats[]>();
+    for (let i = 0; i < players.length; i++) {
+      const c = labels[i];
+      if (!clusterData.has(c)) clusterData.set(c, []);
+      clusterData.get(c)!.push(players[i]);
+    }
+
+    const clusterLabels = new Map<number, string>();
+    for (const [c, members] of clusterData) {
+      const avgGoals = members.reduce((s, p) => s + p.goals, 0) / members.length;
+      const avgAssists = members.reduce((s, p) => s + p.assists, 0) / members.length;
+      const avgShots = members.reduce((s, p) => s + p.shots, 0) / members.length;
+      const avgPasses = members.reduce((s, p) => s + p.passes, 0) / members.length;
+
+      let label: string;
+      if (avgGoals > 1 && avgShots > 3) label = "Finisher";
+      else if (avgAssists > 1 && avgPasses > 100) label = "Playmaker";
+      else if (avgPasses > 200 && avgShots < 5) label = "Deep-Lying Playmaker";
+      else if (avgShots > 5 && avgGoals < 1) label = "Ball-Winning Defender";
+      else label = `Cluster ${c + 1}`;
+      clusterLabels.set(c, label);
+    }
+
+    const result = players.map((p, i) => ({
+      player_id: p.player_id,
+      player_name: p.player_name,
+      team_name: p.team_name,
+      goals: p.goals,
+      assists: p.assists,
+      shots: p.shots,
+      passes: p.passes,
+      xg: Number(p.xg.toFixed(2)),
+      xa: Number(p.xa.toFixed(2)),
+      cluster: labels[i],
+      cluster_label: clusterLabels.get(labels[i]) ?? `Cluster ${labels[i] + 1}`,
+    }));
+
+    return json({ n_clusters: nClusters, players: result });
+  }
   return null;
 }

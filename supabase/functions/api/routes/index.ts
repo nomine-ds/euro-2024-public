@@ -8,6 +8,7 @@ import { analyticsRoutes } from "./analytics.ts";
 import { passNetwork } from "./passnetwork.ts";
 import { exportRoutes } from "./export.ts";
 import { ghostRoutes } from "./ghost.ts";
+import { counterfactualRoutes } from "./counterfactual.ts";
 
 export async function dispatch(
   client: SupabaseClient,
@@ -31,6 +32,9 @@ export async function dispatch(
 
   const exportResponse = await exportRoutes(client, path, url);
   if (exportResponse) return exportResponse;
+
+  const counterfactualResponse = await counterfactualRoutes(client, path, url);
+  if (counterfactualResponse) return counterfactualResponse;
 
   const network = path.match(/^\/passnetwork\/(\d+)$/);
   if (network) {
