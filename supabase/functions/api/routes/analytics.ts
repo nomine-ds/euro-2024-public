@@ -327,18 +327,25 @@ export async function analyticsRoutes(
     }
 
     const clusterLabels = new Map<number, string>();
+    const usedLabels = new Map<string, number>();
     for (const [c, members] of clusterData) {
       const avgGoals = members.reduce((s, p) => s + p.goals, 0) / members.length;
-      const avgAssists = members.reduce((s, p) => s + p.assists, 0) / members.length;
       const avgShots = members.reduce((s, p) => s + p.shots, 0) / members.length;
       const avgPasses = members.reduce((s, p) => s + p.passes, 0) / members.length;
 
       let label: string;
-      if (avgGoals > 1 && avgShots > 3) label = "Finisher";
-      else if (avgAssists > 1 && avgPasses > 100) label = "Playmaker";
-      else if (avgPasses > 200 && avgShots < 5) label = "Deep-Lying Playmaker";
-      else if (avgShots > 5 && avgGoals < 1) label = "Ball-Winning Defender";
-      else label = `Cluster ${c + 1}`;
+      if (avgGoals >= 1.5 && avgShots >= 15) label = "Elite Striker";
+      else if (avgGoals >= 1.5 && avgPasses >= 150) label = "Playmaker";
+      else if (avgGoals >= 0.8) label = "Box-to-Box Midfielder";
+      else if (avgShots >= 4 && avgPasses < 150) label = "Attacking Forward";
+      else if (avgPasses >= 200) label = "Center Back";
+      else if (avgPasses >= 100) label = "Defensive Midfielder";
+      else label = "Squad Player";
+
+      const seen = usedLabels.get(label) ?? 0;
+      usedLabels.set(label, seen + 1);
+      if (seen > 0) label = `${label} ${seen + 1}`;
+
       clusterLabels.set(c, label);
     }
 
