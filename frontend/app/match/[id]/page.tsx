@@ -128,7 +128,7 @@ export default function MatchDetailPage() {
         </Link>
 
         {/* Header Score */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 mt-4 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 mt-4 mb-6 border border-gray-200 dark:border-gray-700">
           <div className="grid grid-cols-3 gap-4 items-center">
             <div className="text-center">
               <div className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">
@@ -311,7 +311,7 @@ function MatchDetailSkeleton() {
   return (
     <div className="animate-pulse space-y-6">
       {/* Header Score Skeleton */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 border border-gray-200 dark:border-gray-700 shadow-sm">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 border border-gray-200 dark:border-gray-700">
         <div className="grid grid-cols-3 gap-4 items-center">
           <div className="flex justify-center">
             <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24"></div>

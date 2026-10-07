@@ -81,7 +81,7 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        <div className="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-100 p-3 max-h-96 overflow-y-auto">
+        <div className="lg:col-span-1 bg-white rounded-xl border border-gray-100 p-3 max-h-96 overflow-y-auto">
           <p className="text-xs text-gray-400 mb-2 sticky top-0 bg-white py-1">
             {eventsWith360.length} momen tersedia
           </p>
@@ -92,7 +92,7 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
                   onClick={() => handleSelectEvent(ev.event_id)}
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm transition ${
                     selectedEventId === ev.event_id
-                      ? "bg-blue-600 text-white shadow-md"
+                      ? "bg-blue-600 text-white"
                       : "hover:bg-gray-100 text-gray-700"
                   }`}
                 >

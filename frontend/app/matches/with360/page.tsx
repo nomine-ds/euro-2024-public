@@ -26,7 +26,7 @@ export default async function MatchesWith360Page() {
             <a
               key={match.match_id}
               href={`/match/${match.match_id}`}
-              className="bg-white p-4 rounded-xl shadow hover:shadow-md transition border border-gray-100"
+              className="bg-white p-4 rounded-xl shadow transition border border-gray-100"
             >
               <div className="flex justify-between items-center">
                 <span className="font-semibold">{match.home_team}</span>

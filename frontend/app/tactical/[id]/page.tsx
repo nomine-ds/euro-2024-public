@@ -369,7 +369,7 @@ export default function TacticalPage() {
         </ChartCard>
 
         {/* Narrative */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm mt-6">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 mt-6">
           <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
             🎬 Match Narrative — Tempo Shifts
           </h2>
@@ -476,7 +476,7 @@ function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm mb-6">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 mb-6">
       <div className="mb-4">
         <h2
           className="font-semibold text-gray-900 dark:text-white"
@@ -513,7 +513,7 @@ function TacticalTooltip({
       ? v.toFixed(3)
       : String(v);
   return (
-    <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-lg">
+    <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2">
       <div className="font-bold">Minute {label}&apos;</div>
       <div className="text-gray-300 mt-0.5">
         {metric}: {valueStr}

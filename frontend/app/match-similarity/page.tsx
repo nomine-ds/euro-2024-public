@@ -106,7 +106,7 @@ export default function MatchSimilarityPage() {
         </div>
 
         {/* Match selector */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 mb-6 border border-gray-200 dark:border-gray-700">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Select Match
           </label>
@@ -159,7 +159,7 @@ export default function MatchSimilarityPage() {
 
         {/* Similar results */}
         {!loadingSimilar && similarMatches.length > 0 && selectedMatch && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <h2 className="font-semibold text-gray-900 dark:text-white">
                 Referensi: {selectedMatch.home_team} vs {selectedMatch.away_team}

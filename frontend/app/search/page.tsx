@@ -54,7 +54,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 <a
                   key={m.match_id}
                   href={`/match/${m.match_id}`}
-                  className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition border border-gray-100"
+                  className="bg-white rounded-xl p-4 transition border border-gray-100"
                 >
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{m.home_team}</span>
@@ -76,7 +76,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 <a
                   key={p.player_id}
                   href={`/player/${p.player_id}`}
-                  className="bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition border border-gray-100 text-center"
+                  className="bg-white rounded-xl p-3 transition border border-gray-100 text-center"
                 >
                   <div className="font-medium text-gray-800">{p.player_name}</div>
                   {p.team_name && (

@@ -181,7 +181,7 @@ export default function CounterfactualPage() {
         )}
 
         {/* Step 1 — Select Match */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-3">
             <span className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
               1
@@ -220,7 +220,7 @@ export default function CounterfactualPage() {
 
         {/* Step 2 — Select Moment */}
         {selectedMatchId && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 border border-gray-200 dark:border-gray-700 shadow-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3 mb-3">
               <span className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
                 2
@@ -287,7 +287,7 @@ export default function CounterfactualPage() {
 
         {/* Step 3 — Select Alternative */}
         {selectedEvent && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 border border-gray-200 dark:border-gray-700 shadow-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 border border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3 mb-4">
               <span className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
                 3
@@ -347,7 +347,7 @@ export default function CounterfactualPage() {
         {/* Results */}
         {result && (
           <>
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 border border-gray-200 dark:border-gray-700">
               <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
                 Simulation Results
               </h2>
@@ -426,7 +426,7 @@ export default function CounterfactualPage() {
             </div>
 
             {result.simulation_details ? (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
                 <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
                   📈 Monte Carlo Details (
                   {result.simulation_details.n_simulations ?? "—"} simulations)

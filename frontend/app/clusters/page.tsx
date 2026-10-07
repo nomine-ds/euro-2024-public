@@ -82,7 +82,7 @@ export default function ClustersPage() {
         </p>
 
         {/* Cluster count slider */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm flex items-center gap-4 flex-wrap">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 mb-6 border border-gray-200 dark:border-gray-700 flex items-center gap-4 flex-wrap">
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Cluster count:
           </label>
@@ -115,7 +115,7 @@ export default function ClustersPage() {
             {Array.from(grouped.entries()).map(([label, list], idx) => (
               <div
                 key={label}
-                className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm"
+                className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
               >
                 <div
                   className={`${

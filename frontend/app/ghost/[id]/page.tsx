@@ -289,7 +289,7 @@ export default function GhostPage() {
         </div>
 
         {/* Canvas */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-4 border border-gray-100 dark:border-gray-800 mb-6">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-800 mb-6">
           <canvas
             ref={canvasRef}
             width={900}
@@ -308,7 +308,7 @@ export default function GhostPage() {
         </div>
 
         {/* Table */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
               <tr>

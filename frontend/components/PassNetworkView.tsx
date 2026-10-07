@@ -132,7 +132,7 @@ export default function MatchDetailPage({ params }: PageProps) {
         </div>
 
         {/* Header Skor */}
-        <div className="bg-white rounded-2xl shadow-md p-6 mb-6 border border-gray-100">
+        <div className="bg-white rounded-2xl p-6 mb-6 border border-gray-100">
           <div className="flex justify-between items-center text-center">
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-gray-800">{summary.home_team}</h2>
@@ -151,26 +151,26 @@ export default function MatchDetailPage({ params }: PageProps) {
 
         {/* Statistik Ringkas */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+          <div className="bg-white rounded-xl p-4 border border-gray-100">
             <div className="text-sm text-gray-500">Total Goals</div>
             <div className="text-2xl font-bold text-gray-800">{summary.total_goals}</div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+          <div className="bg-white rounded-xl p-4 border border-gray-100">
             <div className="text-sm text-gray-500">Total xG</div>
             <div className="text-2xl font-bold text-gray-800">{summary.total_xG}</div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+          <div className="bg-white rounded-xl p-4 border border-gray-100">
             <div className="text-sm text-gray-500">Shots</div>
             <div className="text-2xl font-bold text-gray-800">{summary.shots}</div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+          <div className="bg-white rounded-xl p-4 border border-gray-100">
             <div className="text-sm text-gray-500">Passes</div>
             <div className="text-2xl font-bold text-gray-800">{summary.passes}</div>
           </div>
         </div>
 
         {/* Pencetak Gol */}
-        <div className="bg-white rounded-2xl shadow-md p-6 mb-6 border border-gray-100">
+        <div className="bg-white rounded-2xl p-6 mb-6 border border-gray-100">
           <h3 className="text-xl font-bold text-gray-800 mb-4">Goalscorers</h3>
           {goals.length === 0 ? (
             <p className="text-gray-400">No goals recorded.</p>
@@ -193,7 +193,7 @@ export default function MatchDetailPage({ params }: PageProps) {
         </div>
 
         {/* Timeline Event */}
-        <div className="bg-white rounded-2xl shadow-md p-6 mb-6 border border-gray-100">
+        <div className="bg-white rounded-2xl p-6 mb-6 border border-gray-100">
           <h3 className="text-xl font-bold text-gray-800 mb-4">📋 Timeline Event</h3>
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {goals.map((g: any, idx: number) => (
@@ -259,7 +259,7 @@ export default function MatchDetailPage({ params }: PageProps) {
               <a
                 key={p.player_id}
                 href={`/player/${p.player_id}`}
-                className="bg-white border border-gray-200 rounded-lg px-4 py-3 shadow-sm hover:shadow-md hover:border-blue-400 transition text-sm text-gray-700 hover:text-blue-600"
+                className="bg-white border border-gray-200 rounded-lg px-4 py-3 hover:border-blue-400 transition text-sm text-gray-700 hover:text-blue-600"
               >
                 <span className="font-medium">{p.player_name}</span>
                 {p.team_name && (

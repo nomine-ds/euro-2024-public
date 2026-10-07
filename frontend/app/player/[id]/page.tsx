@@ -171,7 +171,7 @@ export default function PlayerDetailPage() {
         </Link>
 
         {/* Header */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 md:p-8 mt-4 mb-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 md:p-8 mt-4 mb-6 border border-gray-200 dark:border-gray-800">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
             <div className="w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-300 text-3xl font-bold flex-shrink-0">
               {summary.player_name?.charAt(0) || "?"}
@@ -263,7 +263,7 @@ export default function PlayerDetailPage() {
         </div>
 
         {/* Radar Chart */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm mb-6">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 mb-6">
           <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
             Profile vs Player Average
           </h2>
@@ -315,7 +315,7 @@ export default function PlayerDetailPage() {
 
         {/* Breakdown per match */}
         {breakdown && breakdown.matches.length > 0 && (
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm mb-6 overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 mb-6 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
               <h2 className="font-semibold text-gray-900 dark:text-white">
                 📅 Performance Per Match ({breakdown.total_matches} match)
@@ -375,7 +375,7 @@ export default function PlayerDetailPage() {
         )}
 
         {/* Ringkasan */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800">
           <h2 className="font-semibold text-gray-900 dark:text-white mb-3">
             📋 Performance Summary
           </h2>

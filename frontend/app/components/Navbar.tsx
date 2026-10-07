@@ -97,7 +97,7 @@ export default function Navbar() {
               </button>
 
               {moreOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg py-1.5 z-50">
+                <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 py-1.5 z-50">
                   {moreLinks.map((link) => {
                     const Icon = navIcons[link.href];
                     return (

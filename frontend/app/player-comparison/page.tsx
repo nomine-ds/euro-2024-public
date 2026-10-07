@@ -460,7 +460,7 @@ export default function PlayerComparisonPage() {
         )}
 
         {/* ---- Selected Players (chip + team_name) ---- */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 border border-gray-200 dark:border-gray-700">
           <h2 className="font-semibold text-gray-900 dark:text-white mb-3">
             Selected Players ({selectedIds.length}/4)
           </h2>
@@ -513,7 +513,7 @@ export default function PlayerComparisonPage() {
         </div>
 
         {/* ---- Search Players ---- */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 border border-gray-200 dark:border-gray-700">
           <h2 className="font-semibold text-gray-900 dark:text-white mb-3">
             Search Players
           </h2>
@@ -553,7 +553,7 @@ export default function PlayerComparisonPage() {
         {comparedPlayers.length >= 2 && !loading && (
           <>
             {/* ---- Radar Chart ---- */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 border border-gray-200 dark:border-gray-700">
               <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
                 Radar Chart (Normalized 0–100)
               </h2>
@@ -565,7 +565,7 @@ export default function PlayerComparisonPage() {
             </div>
 
             {/* Bar Chart (NORMALIZED) */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 border border-gray-200 dark:border-gray-700">
               <div className="flex items-baseline justify-between mb-1">
                 <h2 className="font-semibold text-gray-900 dark:text-white">
                   📈 Head-to-Head per Metric
@@ -588,7 +588,7 @@ export default function PlayerComparisonPage() {
             </div>
 
             {/* Similarity Matrix with interpretation */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
               <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
                 🎯 Similarity Matrix
               </h2>
