@@ -204,7 +204,7 @@ export default function Navbar() {
 
       <div
         className={`md:hidden fixed inset-0 z-[60] transition-opacity duration-200 ${
-          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          mobileOpen ? "opacity-100 pointer-events-auto visible" : "opacity-0 pointer-events-none invisible"
         }`}
         aria-hidden={!mobileOpen}
       >
@@ -281,7 +281,7 @@ export default function Navbar() {
 
       <div
         className={`fixed inset-0 z-[70] flex items-start justify-center pt-24 px-4 transition-opacity duration-150 ${
-          searchOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          searchOpen ? "opacity-100 pointer-events-auto visible" : "opacity-0 pointer-events-none invisible"
         }`}
         aria-hidden={!searchOpen}
       >

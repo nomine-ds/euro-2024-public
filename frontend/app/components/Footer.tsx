@@ -20,7 +20,7 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Navigasi */}
+          {/* Navigation */}
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-white mb-3 text-sm">
               Navigasi
@@ -110,7 +110,7 @@ export default function Footer() {
         <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-gray-400 dark:text-gray-500 text-center sm:text-left">
             © {new Date().getFullYear()} Euro 2024 Context Zone. Built with
-            Next.js + FastAPI + Ollama.
+            Next.js + Supabase + Gemini.
           </p>
           <p className="text-xs text-gray-400 dark:text-gray-500 text-center sm:text-right">
             Powered by <span className="font-medium">StatsBomb Open Data</span> •{" "}
