@@ -17,7 +17,7 @@ describe("Next.js security headers", () => {
 
     expect(headers).toContainEqual({
       key: "Strict-Transport-Security",
-      value: "max-age=31536000",
+      value: "max-age=31536000; includeSubDomains; preload",
     });
   });
 

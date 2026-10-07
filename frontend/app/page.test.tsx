@@ -52,10 +52,10 @@ describe("home page", () => {
     render(<Home />);
 
     expect(
-      screen.getByRole("heading", { name: /Euro 2024 Context Zone/ }),
+      screen.getByRole("heading", { level: 1 }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Coba Hudl Bot/ }),
+      screen.getByRole("link", { name: /Ask Hudl Bot/ }),
     ).toHaveAttribute("href", "/bot");
     expect(
       screen.getByRole("link", { name: /Player Comparison/ }),

@@ -1,8 +1,6 @@
 // frontend/next.config.ts
 import type { NextConfig } from "next";
 
-const isProd = process.env.VERCEL_ENV === "production";
-
 // Content Security Policy
 // - 'unsafe-inline' pada style dibutuhkan Tailwind v4 (inline style injection)
 // - 'unsafe-eval' is only needed for /lab (Pyodide WASM); safe since there is no user input
@@ -27,6 +25,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   async headers() {
+    const isProd = process.env.VERCEL_ENV === "production";
     return [
       {
         source: "/:path*",

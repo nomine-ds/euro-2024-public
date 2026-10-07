@@ -91,4 +91,74 @@ describe("players page", () => {
       await screen.findByText("No players match the current filter."),
     ).toBeInTheDocument();
   });
+
+  it("paginates players with Load 100 more button", async () => {
+    const players = Array.from({ length: 150 }, (_, i) => ({
+      player_id: i + 1,
+      player_name: `Player ${String(i + 1).padStart(3, "0")}`,
+      team_name: "Test Team",
+      goals: 150 - i,
+      assists: 0,
+      shots: 10,
+      passes: 50,
+      xg: 1.0,
+      xa: 0.5,
+    }));
+
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify(players), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    render(<PlayersPage />);
+
+    // Initially shows first 100, pagination info, and "Load 100 more"
+    expect(await screen.findByText("Player 001")).toBeInTheDocument();
+    expect(screen.getByText(/Showing 100 of 150 players/)).toBeInTheDocument();
+
+    const loadMore = screen.getByRole("button", { name: /Load 100 more/i });
+    expect(loadMore).toBeInTheDocument();
+
+    // Click load more → all 150 shown, button disappears
+    fireEvent.click(loadMore);
+    expect(screen.getByText(/Showing 150 of 150 players/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Load 100 more/i })).toBeNull();
+  });
+
+  it("resets pagination when search filter changes", async () => {
+    const players = Array.from({ length: 150 }, (_, i) => ({
+      player_id: i + 1,
+      player_name: `Player ${String(i + 1).padStart(3, "0")}`,
+      team_name: "Test Team",
+      goals: 150 - i,
+      assists: 0,
+      shots: 10,
+      passes: 50,
+      xg: 1.0,
+      xa: 0.5,
+    }));
+
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify(players), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    render(<PlayersPage />);
+
+    expect(await screen.findByText("Player 001")).toBeInTheDocument();
+
+    // Load more to reach 150
+    fireEvent.click(screen.getByRole("button", { name: /Load 100 more/i }));
+    expect(screen.getByText(/Showing 150 of 150 players/)).toBeInTheDocument();
+
+    // Change search → visibleCount resets to 100
+    fireEvent.change(screen.getByPlaceholderText("Player name..."), {
+      target: { value: "Player" },
+    });
+    expect(screen.getByText(/Showing 100 of 150 players/)).toBeInTheDocument();
+  });
 });

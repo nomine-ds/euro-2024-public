@@ -16,7 +16,7 @@ describe("footer", () => {
       screen.getByRole("link", { name: /StatsBomb Open Data/ }),
     ).toHaveAttribute("href", "https://github.com/statsbomb/open-data");
     expect(
-      screen.getByRole("button", { name: /Lihat Tour Lagi/ }),
+      screen.getByRole("button", { name: /Show Tour Again/ }),
     ).toBeInTheDocument();
   });
 });
