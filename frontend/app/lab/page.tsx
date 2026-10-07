@@ -533,7 +533,7 @@ sys.stderr = StringIO()
     <main className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline text-sm">
-          ← Kembali
+          ← Back
         </Link>
 
         <div className="mt-2 mb-6">

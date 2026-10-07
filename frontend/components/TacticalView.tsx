@@ -175,7 +175,7 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
                     strokeWidth="0.3"
                     className="cursor-pointer hover:r-1.6 transition-all"
                   >
-                    <title>{p.player_name} (Possession Team) - Nomor #{p.jersey}</title>
+                    <title>{p.player_name} (Possession Team) - Number #{p.jersey}</title>
                   </circle>
                 ))}
 
@@ -190,7 +190,7 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
                     strokeWidth="0.3"
                     className="cursor-pointer hover:r-1.6 transition-all"
                   >
-                    <title>{p.player_name} (Opponent Team) - Nomor #{p.jersey}</title>
+                    <title>{p.player_name} (Opponent Team) - Number #{p.jersey}</title>
                   </circle>
                 ))}
               </svg>

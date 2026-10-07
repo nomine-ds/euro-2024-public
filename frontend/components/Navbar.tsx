@@ -10,7 +10,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
 const links = [
-  { href: "/", label: "Beranda", icon: "🏠" },
+  { href: "/", label: "Home", icon: "🏠" },
   { href: "/players", label: "Players", icon: "👤" },
   { href: "/match-similarity", label: "Similarity", icon: "🔍" },
   { href: "/clusters", label: "Clusters", icon: "🧩" },

@@ -93,7 +93,7 @@ export default function MatchDetailPage({ params }: PageProps) {
           <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
             <p className="text-red-800">❌ {error || "Data not found"}</p>
             <Link href="/" className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-              Kembali ke Beranda
+              Back to Home
             </Link>
           </div>
         </div>
