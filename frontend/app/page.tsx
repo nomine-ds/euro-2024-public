@@ -4,7 +4,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { featureIcons } from "@/lib/icons";
+import { featureIcons, statIcons } from "@/lib/icons";
 import { API_BASE } from "@/lib/api";
 
 const containerVariants = {
@@ -56,49 +56,41 @@ export default function Home() {
   const features = [
     {
       href: "/bot",
-      icon: "🤖",
       title: "Hudl Bot",
       desc: "Ask anything about Euro 2024 with AI",
     },
     {
       href: "/match-similarity",
-      icon: "🔍",
       title: "Match Similarity",
       desc: "Find matches with similar patterns",
     },
     {
       href: "/clusters",
-      icon: "🧩",
       title: "Player Clusters",
       desc: "Group players by playing style",
     },
     {
       href: "/players",
-      icon: "👤",
       title: "Player Stats",
       desc: "Complete stats for all players",
     },
     {
       href: "/player-comparison",
-      icon: "🆚",
       title: "Player Comparison",
       desc: "Compare 2-4 players with radar chart",
     },
     {
       href: "/compare",
-      icon: "⚽",
       title: "Compare Teams",
       desc: "Compare two teams head-to-head",
     },
     {
       href: "/lab",
-      icon: "🧪",
       title: "Data Lab",
       desc: "Run Python analysis in the browser",
     },
     {
       href: "/counterfactual",
-      icon: "🔮",
       title: "Counterfactual",
       desc: "Simulate alternative match scenarios",
     },
@@ -162,25 +154,23 @@ behind every match.
             className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto"
           >
             {[
-              { label: "Matches", value: stats.matches, icon: "🏟️" },
+              { label: "Matches", value: stats.matches },
               {
                 label: "Events",
                 value: stats.events > 0 ? stats.events.toLocaleString() : "—",
-                icon: "📊",
               },
-              { label: "Teams", value: stats.teams, icon: "🇪🇺" },
+              { label: "Teams", value: stats.teams },
               {
                 label: "Match 360",
                 value: stats.matches360 > 0 ? stats.matches360 : "—",
-                icon: "🔄",
               },
             ].map((stat, idx) => (
               <motion.div
                 key={idx}
                 whileHover={{ scale: 1.03, y: -4 }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md border border-gray-100 dark:border-gray-700 text-center"
+                className="bg-white dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700 text-center"
               >
-                <div className="text-3xl mb-2">{stat.icon}</div>
+                {(() => { const Icon = statIcons[stat.label]; return Icon ? <Icon className="w-7 h-7 mx-auto mb-2 text-emerald-600 dark:text-emerald-400" strokeWidth={1.75} /> : null; })()}
                 <div className="text-2xl font-bold text-gray-900 dark:text-white">
                   {stat.value}
                 </div>
@@ -220,14 +210,14 @@ behind every match.
             >
               <Link
                 href={feature.href}
-                className="block h-full bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all group"
+                className="block h-full bg-white dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors group"
               >
                 {(() => {
                   const slug = feature.href.replace(/^\//, "");
                   const Icon = featureIcons[slug];
                   return Icon ? (
                     <div className="mb-4 group-hover:scale-110 transition-transform">
-                      <Icon className="w-8 h-8 text-blue-600 dark:text-blue-400" strokeWidth={1.75} />
+                      <Icon className="w-7 h-7 text-emerald-600 dark:text-emerald-400" strokeWidth={1.75} />
                     </div>
                   ) : null;
                 })()}
@@ -249,7 +239,7 @@ behind every match.
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-3xl bg-emerald-600 dark:bg-emerald-700 p-12 text-center"
+          className="relative overflow-hidden rounded-xl bg-emerald-600 dark:bg-emerald-700 p-10 text-center"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Explore?

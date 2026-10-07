@@ -13,6 +13,9 @@ import {
   GitCompare,
   Terminal,
   LayoutGrid,
+  CalendarDays,
+  Activity,
+  RotateCw,
 } from "lucide-react";
 
 export const featureIcons: Record<string, LucideIcon> = {
@@ -36,4 +39,11 @@ export const navIcons: Record<string, LucideIcon> = {
   "/bot": Bot,
   "/lab": Terminal,
   "/counterfactual": Sparkles,
+};
+
+export const statIcons: Record<string, LucideIcon> = {
+  Matches: CalendarDays,
+  Events: Activity,
+  Teams: Users,
+  "Match 360": RotateCw,
 };
