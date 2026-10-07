@@ -414,7 +414,7 @@ Deno.serve(async (request: Request) => {
 
   try {
     const url = new URL(request.url);
-    const path = url.pathname.replace(/^\/functions\/v1\/api/, "") || "/";
+    const path = url.pathname.replace(/^\/(?:functions\/v1\/)?api/, "") || "/";
     const client = getClient();
 
     const matchResponse = await matchRoutes(client, path);
