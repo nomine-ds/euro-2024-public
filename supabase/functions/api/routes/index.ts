@@ -12,7 +12,7 @@ export async function dispatch(
   path: string,
   url: URL,
 ): Promise<Response> {
-  const matchResponse = await matchRoutes(client, path);
+  const matchResponse = await matchRoutes(client, path, url);
   if (matchResponse) return matchResponse;
 
   const eventResponseValue = await eventRoutes(client, path, url);

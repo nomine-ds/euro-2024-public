@@ -6,6 +6,7 @@ import type { EventRow, MatchRow } from "../lib/types.ts";
 export async function matchRoutes(
   client: SupabaseClient,
   path: string,
+  url: URL,
 ): Promise<Response | null> {
   if (path === "/matches" || path === "/matches/with360") {
     let query = client
@@ -77,5 +78,70 @@ export async function matchRoutes(
       ),
     });
   }
+
+  // GET /matches/similar/:id
+  const similar = path.match(/^\/matches\/similar\/(\d+)$/);
+  if (similar) {
+    const matchId = Number(similar[1]);
+    const topN = Math.min(
+      Math.max(Number(url.searchParams.get("top_n") ?? 5), 1),
+      20,
+    );
+
+    const { data: stats, error: statsError } = await client.rpc("match_stats_all");
+    if (statsError) throw new Error(statsError.message);
+
+    const perMatch = new Map<
+      number,
+      { match_id: number; goals: number; shots: number; passes: number; xg: number }
+    >();
+    for (const s of (stats ?? []) as Array<{
+      match_id: number;
+      goals: number;
+      shots: number;
+      passes: number;
+      xg: number;
+    }>) {
+      perMatch.set(s.match_id, {
+        match_id: s.match_id,
+        goals: Number(s.goals),
+        shots: Number(s.shots),
+        passes: Number(s.passes),
+        xg: Number(s.xg),
+      });
+    }
+
+    const target = perMatch.get(matchId);
+    if (!target) {
+      return json({ message: `Match ${matchId} not found.` }, 404);
+    }
+
+    const features = ["goals", "shots", "passes", "xg"] as const;
+
+    const similarities = [...perMatch.values()]
+      .filter((m) => m.match_id !== matchId)
+      .map((m) => {
+        let diff = 0;
+        for (const k of features) {
+          const range = Math.max(Math.abs(target[k]) + Math.abs(m[k]), 1);
+          diff += Math.pow((target[k] - m[k]) / range, 2);
+        }
+        const dist = Math.sqrt(diff);
+        return {
+          match_id: m.match_id,
+          goals: m.goals,
+          shots: m.shots,
+          passes: m.passes,
+          xg: Number(m.xg.toFixed(2)),
+          distance: Number(dist.toFixed(3)),
+          similarity_pct: Number(Math.max(0, (1 - dist) * 100).toFixed(1)),
+        };
+      })
+      .sort((a, b) => b.similarity_pct - a.similarity_pct)
+      .slice(0, topN);
+
+    return json({ match_id: matchId, similar_matches: similarities });
+  }
+
   return null;
 }
