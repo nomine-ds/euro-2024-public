@@ -134,7 +134,7 @@ export default function PlayersPage() {
 
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
-                Urutkan
+                Sort by
               </label>
               <select
                 value={sortKey}

@@ -532,7 +532,7 @@ export default function PassNetworkPage() {
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
             Player positions = average pitch location. Hover a node to
-            melihat nama & koneksi.
+            view names & connections.
           </p>
         </div>
 
@@ -556,7 +556,7 @@ export default function PassNetworkPage() {
                   : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-blue-400"
               }`}
             >
-              Semua
+              All
             </button>
             {teams.map((t) => (
               <button

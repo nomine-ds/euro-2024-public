@@ -488,7 +488,7 @@ export default function PlayerComparisonPage() {
                   <button
                     onClick={() => removePlayer(id)}
                     className="hover:bg-black/10 rounded-full w-5 h-5 flex items-center justify-center"
-                    aria-label={`Hapus ${p.player_name}`}
+                    aria-label={`Remove ${p.player_name}`}
                   >
                     ×
                   </button>

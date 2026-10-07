@@ -16,14 +16,14 @@ const TEMPLATES: Record<string, { name: string; icon: string; code: string }> = 
     name: "Selamat Datang",
     icon: "👋",
     code: `# Selamat datang di Euro 2024 Public Data Lab!
-# Semua kode Python di sini jalan di BROWSER kamu (via Pyodide).
+# All Python code below runs in YOUR BROWSER (via Pyodide).
 
 print("🏆 Euro 2024 Context Zone")
 print("=" * 40)
 
 angka = [1, 2, 3, 4, 5]
 print(f"Sum: {sum(angka)}")
-print(f"Rata-rata: {sum(angka) / len(angka)}")
+print(f"Average: {sum(numbers) / len(numbers)}")
 
 kuadrat = [x ** 2 for x in range(1, 6)]
 print(f"Kuadrat: {kuadrat}")

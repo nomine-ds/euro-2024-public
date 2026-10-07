@@ -15,8 +15,8 @@ const SHORTCUTS = [
   { keys: "g v", desc: "Compare Players" },
   { keys: "g b", desc: "Hudl Bot" },
   { keys: "g l", desc: "Data Lab" },
-  { keys: "?", desc: "Tampilkan bantuan" },
-  { keys: "Esc", desc: "Tutup bantuan" },
+  { keys: "?", desc: "Show help" },
+  { keys: "Esc", desc: "Close help" },
 ];
 
 export default function KeyboardShortcuts() {
