@@ -4,6 +4,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { featureIcons } from "@/lib/icons";
 import { API_BASE } from "@/lib/api";
 
 const containerVariants = {
@@ -221,9 +222,15 @@ behind every match.
                 href={feature.href}
                 className="block h-full bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all group"
               >
-                <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">
-                  {feature.icon}
-                </div>
+                {(() => {
+                  const slug = feature.href.replace(/^\//, "");
+                  const Icon = featureIcons[slug];
+                  return Icon ? (
+                    <div className="mb-4 group-hover:scale-110 transition-transform">
+                      <Icon className="w-8 h-8 text-blue-600 dark:text-blue-400" strokeWidth={1.75} />
+                    </div>
+                  ) : null;
+                })()}
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
                   {feature.title}
                 </h3>
