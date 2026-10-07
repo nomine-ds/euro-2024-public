@@ -9,6 +9,7 @@ import { passNetwork } from "./passnetwork.ts";
 import { exportRoutes } from "./export.ts";
 import { ghostRoutes } from "./ghost.ts";
 import { counterfactualRoutes } from "./counterfactual.ts";
+import { tacticalRoutes } from "./tactical.ts";
 
 export async function dispatch(
   client: SupabaseClient,
@@ -35,6 +36,9 @@ export async function dispatch(
 
   const counterfactualResponse = await counterfactualRoutes(client, path, url);
   if (counterfactualResponse) return counterfactualResponse;
+
+  const tacticalResponse = await tacticalRoutes(client, path);
+  if (tacticalResponse) return tacticalResponse;
 
   const network = path.match(/^\/passnetwork\/(\d+)$/);
   if (network) {

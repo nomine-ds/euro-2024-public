@@ -3,6 +3,7 @@ import { getRows, json, numeric } from "../lib/core.ts";
 import type { SupabaseClient } from "../lib/core.ts";
 import type { EventRow } from "../lib/types.ts";
 import { euclideanDistance, kMeans, standardize } from "../lib/ml.ts";
+
 export async function analyticsRoutes(
   client: SupabaseClient,
   path: string,
