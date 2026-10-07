@@ -67,8 +67,7 @@ export default function ComparePage() {
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      // Hanya ambil 2 entri pertama (tanpa head_to_head)
-      setComparison(data.slice(0, 2));
+      setComparison([data.team_a, data.team_b]);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error";
       setError("Failed to compare: " + msg);
@@ -89,8 +88,8 @@ export default function ComparePage() {
     { key: "xG", label: "xG", icon: "📊" },
     { key: "xA", label: "xA", icon: "🎨" },
     { key: "tackles", label: "Tackles", icon: "🛡️" },
-    { key: "interceptions", label: "Intersep", icon: "✋" },
-    { key: "clearances", label: "Clearance", icon: "🚫" },
+    { key: "interceptions", label: "Interceptions", icon: "✋" },
+    { key: "clearances", label: "Clearances", icon: "🚫" },
   ];
 
   return (
