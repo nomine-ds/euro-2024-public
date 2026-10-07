@@ -75,7 +75,7 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
 
   return (
     <div className="mt-8 border-t border-gray-200 pt-6">
-      <h3 className="text-xl font-bold text-gray-800 mb-4">📊 360 Visualization (Player Positions)</h3>
+      <h3 className="text-xl font-bold text-gray-800 mb-4">360 Visualization (Player Positions)</h3>
       <p className="text-sm text-gray-500 mb-4">
         Click any moment below to see the positions of 22 players on the pitch at that moment.
       </p>
@@ -119,7 +119,7 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
             <div className="w-full max-w-4xl">
               <div className="text-white text-sm mb-2 flex justify-between items-center">
                 <span>
-                  ⚽ Possession Team: {pitchData.possession_team.length} players
+                  Possession Team: {pitchData.possession_team.length} players
                   <span className="ml-2 text-gray-400">
                     (vs {pitchData.opponent_team.length} players)
                   </span>

@@ -182,7 +182,7 @@ export default function PlayerDetailPage() {
               </h1>
               {summary.team_name && (
                 <p className="text-gray-600 dark:text-gray-400 mt-1">
-                  🏟️ {summary.team_name}
+                  {summary.team_name}
                 </p>
               )}
               <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">
@@ -203,7 +203,7 @@ export default function PlayerDetailPage() {
         {/* Stat Cards dengan mini bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <StatCard
-            label="⚽ Goals"
+            label="Goals"
             value={summary.goals}
             avg={avg.goals}
             max={max.goals}
@@ -219,7 +219,7 @@ export default function PlayerDetailPage() {
             barColor="bg-emerald-500"
           />
           <StatCard
-            label="🎪 Shots"
+            label="Shots"
             value={summary.shots}
             avg={avg.shots}
             max={max.shots}
@@ -265,7 +265,7 @@ export default function PlayerDetailPage() {
         {/* Radar Chart */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm mb-6">
           <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
-            📊 Profile vs Player Average
+            Profile vs Player Average
           </h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
@@ -327,9 +327,9 @@ export default function PlayerDetailPage() {
                   <tr>
                     <th className="text-left px-4 py-3 font-medium">Match</th>
                     <th className="text-right px-3 py-3 font-medium">Score</th>
-                    <th className="text-right px-3 py-3 font-medium">⚽</th>
+                    <th className="text-right px-3 py-3 font-medium">Goals</th>
                     <th className="text-right px-3 py-3 font-medium">🎯</th>
-                    <th className="text-right px-3 py-3 font-medium">🎪</th>
+                    <th className="text-right px-3 py-3 font-medium">Shots</th>
                     <th className="text-right px-3 py-3 font-medium">⚡</th>
                     <th className="text-right px-3 py-3 font-medium">xG</th>
                   </tr>
@@ -381,7 +381,7 @@ export default function PlayerDetailPage() {
           </h2>
           <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
             <li>
-              ⚽ {summary.goals} goals from {summary.shots} shots (
+              {summary.goals} goals from {summary.shots} shots (
               {summary.shots > 0
                 ? ((summary.goals / summary.shots) * 100).toFixed(0)
                 : 0}
@@ -391,7 +391,7 @@ export default function PlayerDetailPage() {
               🎯 {summary.assists} assists from {summary.passes} passes.
             </li>
             <li>
-              📊 xG: {summary.xG.toFixed(2)} · xA: {summary.xA.toFixed(2)}
+              xG: {summary.xG.toFixed(2)} · xA: {summary.xA.toFixed(2)}
               {summary.xG > avg.xg && (
                 <span className="ml-2 text-emerald-600 dark:text-emerald-400 text-xs">
                   ↑ above average

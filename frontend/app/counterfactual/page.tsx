@@ -50,7 +50,7 @@ interface SimulationResult {
 }
 
 const ALTERNATIVES = [
-  { value: "pass", label: "🎾 Pass", desc: "Pass to a teammate" },
+  { value: "pass", label: "Pass", desc: "Pass to a teammate" },
   { value: "dribble", label: "🏃 Dribble", desc: "Carry the ball yourself" },
   { value: "cross", label: "📤 Cross", desc: "Cross into the box" },
   { value: "through_ball", label: "⚡ Through Ball", desc: "Through ball into space" },
@@ -263,7 +263,7 @@ export default function CounterfactualPage() {
                       </div>
                       {ev.is_goal && (
                         <span className="text-xs px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full font-medium shrink-0">
-                          ⚽ GOAL
+                          GOAL
                         </span>
                       )}
                     </div>
@@ -349,7 +349,7 @@ export default function CounterfactualPage() {
           <>
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-4 border border-gray-200 dark:border-gray-700 shadow-sm">
               <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
-                📊 Simulation Results
+                Simulation Results
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                 {result.message}
@@ -374,7 +374,7 @@ export default function CounterfactualPage() {
 
                 <div className="bg-emerald-50 dark:bg-emerald-950/20 rounded-lg p-4 border border-emerald-200 dark:border-emerald-800">
                   <div className="text-xs text-emerald-600 dark:text-emerald-400 uppercase font-medium mb-2">
-                    🔮 World B (Alternative)
+                    World B (Alternative)
                   </div>
                   <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">
                     {formatNumber(result.alternative?.mean_xg).toFixed(3)}

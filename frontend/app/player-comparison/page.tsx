@@ -446,7 +446,7 @@ export default function PlayerComparisonPage() {
 
         <div className="mt-2 mb-6">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-            🆚 Player Comparison
+            Player Comparison
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
             Compare 2–4 players with radar chart, bar chart, and similarity score
@@ -536,7 +536,7 @@ export default function PlayerComparisonPage() {
                   {p.player_name}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  {p.team_name || "Unknown"} · ⚽ {p.goals}
+                  {p.team_name || "Unknown"} · {p.goals} goals
                 </div>
               </button>
             ))}
@@ -555,7 +555,7 @@ export default function PlayerComparisonPage() {
             {/* ---- Radar Chart ---- */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm">
               <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
-                📊 Radar Chart (Normalized 0–100)
+                Radar Chart (Normalized 0–100)
               </h2>
               <RadarChartWrapper
                 key={comparisonKey}

@@ -171,14 +171,14 @@ export default function MatchDetailPage({ params }: PageProps) {
 
         {/* Pencetak Gol */}
         <div className="bg-white rounded-2xl shadow-md p-6 mb-6 border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">⚽ Goalscorers</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-4">Goalscorers</h3>
           {goals.length === 0 ? (
             <p className="text-gray-400">No goals recorded.</p>
           ) : (
             <ul className="space-y-2">
               {goals.map((g: any, idx: number) => (
                 <li key={idx} className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
-                  <span className="text-2xl">⚽</span>
+                  
                   <div>
                     <span className="font-semibold text-gray-800">{g.player_name || 'Unknown'}</span>
                     <span className="text-gray-500 text-sm ml-2">({g.team_name})</span>

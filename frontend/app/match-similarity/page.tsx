@@ -93,7 +93,7 @@ export default function MatchSimilarityPage() {
         </Link>
 
         <h1 className="text-3xl font-bold mt-2 mb-2 text-gray-900 dark:text-white">
-          🔍 Match Similarity
+          Match Similarity
         </h1>
         <p className="text-gray-500 dark:text-gray-400 mb-6">
           Find the most similar matches to the one you selected.
@@ -101,7 +101,7 @@ export default function MatchSimilarityPage() {
 
         {/* Debug Info */}
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-4 text-xs text-blue-800 dark:text-blue-300">
-          📊 Total matches loaded: <strong>{matches.length}</strong>
+          Total matches loaded: <strong>{matches.length}</strong>
           {loadingMatches && " (loading...)"}
         </div>
 
@@ -200,25 +200,25 @@ export default function MatchSimilarityPage() {
 
                       <div className="hidden sm:grid grid-cols-4 gap-3 text-xs text-center">
                         <div>
-                          <div className="text-gray-400">⚽</div>
+                          <div className="text-gray-500 text-xs font-medium">Goals</div>
                           <div className="font-medium text-gray-700 dark:text-gray-300">
                             {s.stats?.total_goals ?? "—"}
                           </div>
                         </div>
                         <div>
-                          <div className="text-gray-400">🎪</div>
+                          <div className="text-gray-500 text-xs font-medium">Shots</div>
                           <div className="font-medium text-gray-700 dark:text-gray-300">
                             {s.stats?.total_shots ?? "—"}
                           </div>
                         </div>
                         <div>
-                          <div className="text-gray-400">🎾</div>
+                          <div className="text-gray-500 text-xs font-medium">Passes</div>
                           <div className="font-medium text-gray-700 dark:text-gray-300">
                             {s.stats?.total_passes ?? "—"}
                           </div>
                         </div>
                         <div>
-                          <div className="text-gray-400">📊</div>
+                          <div className="text-gray-500 text-xs font-medium">xG</div>
                           <div className="font-medium text-gray-700 dark:text-gray-300">
                             {typeof s.stats?.total_xg === "number"
                               ? s.stats.total_xg.toFixed(2)

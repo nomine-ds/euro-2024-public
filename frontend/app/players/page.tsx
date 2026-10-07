@@ -143,8 +143,8 @@ export default function PlayersPage() {
               >
                 <option value="goals">Goals</option>
                 <option value="assists">🎯 Assists</option>
-                <option value="shots">🎪 Shots</option>
-                <option value="passes">🎾 Passes</option>
+                <option value="shots">Shots</option>
+                <option value="passes">Passes</option>
                 <option value="xg">xG</option>
                 <option value="xa">🎨 xA</option>
               </select>
@@ -163,8 +163,8 @@ export default function PlayersPage() {
                   <th className="px-4 py-3">Team</th>
                   <th className="px-4 py-3 text-right">Goals</th>
                   <th className="px-4 py-3 text-right">🎯</th>
-                  <th className="px-4 py-3 text-right">🎪</th>
-                  <th className="px-4 py-3 text-right">🎾</th>
+                  <th className="px-4 py-3 text-right">Shots</th>
+                  <th className="px-4 py-3 text-right">Passes</th>
                   <th className="px-4 py-3 text-right">xG</th>
                   <th className="px-4 py-3 text-right">xA</th>
                 </tr>

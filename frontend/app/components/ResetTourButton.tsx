@@ -11,7 +11,7 @@ export default function ResetTourButton() {
       }}
       className="mt-4 block text-xs text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
     >
-      🔄 Lihat Tour Lagi
+      Show Tour Again
     </button>
   );
 }

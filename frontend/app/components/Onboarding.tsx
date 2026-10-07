@@ -28,21 +28,21 @@ const STEPS: Step[] = [
     position: "bottom",
   },
   {
-    title: "👤 Players Page",
+    title: "Players Page",
     description:
       "View complete stats for all Euro 2024 players. Filter by team, position, and sort by your favorite metrics.",
     target: null,
     position: "center",
   },
   {
-    title: "🤖 Hudl Bot",
+    title: "Hudl Bot",
     description:
       "Ask anything about Euro 2024! RAG-based AI bot with 17,000+ events from StatsBomb. Example: 'Who scored in the final?'",
     target: null,
     position: "center",
   },
   {
-    title: "🧪 Public Data Lab",
+    title: "Public Data Lab",
     description:
       "Write and run Python directly in your browser! 10 ready-to-use analysis templates, export PDF/PNG, and share links with friends.",
     target: null,

@@ -75,7 +75,7 @@ export default function ClustersPage() {
         </Link>
 
         <h1 className="text-3xl md:text-4xl font-bold mt-2 mb-2 text-gray-900 dark:text-white">
-          🧩 Player Clustering
+          Player Clustering
         </h1>
         <p className="text-gray-500 dark:text-gray-400 mb-6">
           Players grouped by playing style using K-Means
@@ -131,7 +131,7 @@ export default function ClustersPage() {
                 <div className="grid grid-cols-3 divide-x divide-gray-100 dark:divide-gray-700 border-b border-gray-100 dark:border-gray-700">
                   <div className="p-3 text-center">
                     <div className="text-xs text-gray-500 dark:text-gray-400">
-                      Avg ⚽
+                      Avg Goals
                     </div>
                     <div className="font-bold text-gray-900 dark:text-white text-sm">
                       {(
@@ -153,7 +153,7 @@ export default function ClustersPage() {
                   </div>
                   <div className="p-3 text-center">
                     <div className="text-xs text-gray-500 dark:text-gray-400">
-                      Avg 📊
+                      Avg xG
                     </div>
                     <div className="font-bold text-gray-900 dark:text-white text-sm">
                       {(
@@ -177,7 +177,7 @@ export default function ClustersPage() {
                           </span>
                           <span className="flex gap-2 text-xs shrink-0">
                             <span className="text-blue-600 dark:text-blue-400">
-                              ⚽ {p.goals}
+                              {p.goals} Goals
                             </span>
                             <span className="text-green-600 dark:text-green-400">
                               🎯 {p.assists}

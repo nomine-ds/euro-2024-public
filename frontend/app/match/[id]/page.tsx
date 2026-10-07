@@ -193,7 +193,7 @@ export default function MatchDetailPage() {
             href={`/tactical/${matchId}`}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition"
           >
-            📊 Tactical
+            Tactical
           </Link>
             <Link
     href={`/passnetwork/${matchId}`}
@@ -218,10 +218,10 @@ export default function MatchDetailPage() {
             <div className="flex flex-wrap gap-2">
               {[
                 { key: "all", label: "All" },
-                { key: "goals", label: "⚽ Goals" },
+                { key: "goals", label: "Goals" },
                 { key: "cards", label: "🟨 Cards" },
-                { key: "Shot", label: "🎪 Shots" },
-                { key: "Pass", label: "🎾 Passes" },
+                { key: "Shot", label: "Shots" },
+                { key: "Pass", label: "Passes" },
               ].map((f) => (
                 <button
                   key={f.key}
@@ -260,7 +260,7 @@ export default function MatchDetailPage() {
                       )}
                       {e.is_goal && (
                         <span className="text-xs px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full font-medium">
-                          ⚽ GOAL
+                          GOAL
                         </span>
                       )}
                       {e.card_type && (
@@ -277,7 +277,7 @@ export default function MatchDetailPage() {
                       )}
                       {e.has_360 && (
                         <span className="text-xs px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full font-medium">
-                          📊 360
+                          360
                         </span>
                       )}
                     </div>

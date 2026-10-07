@@ -99,7 +99,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline"
             >
-              <span>📊</span>
+              
               StatsBomb Open Data
             </a>
 

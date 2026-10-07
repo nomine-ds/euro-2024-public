@@ -15,7 +15,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     return (
       <main className="min-h-screen p-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-2xl font-bold text-gray-800">🔍 Pencarian</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Search</h1>
           <p className="text-gray-500 mt-2">Enter a keyword to search matches or players.</p>
         </div>
       </main>
@@ -40,7 +40,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     <main className="min-h-screen p-8 bg-gray-50">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">
-          🔍 Search results for: "{query}"
+          Search results for: "{query}"
         </h1>
         <p className="text-gray-500 mb-6">
           {matchedMatches.length + matchedPlayers.length} results found
@@ -48,7 +48,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
         {matchedMatches.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-700 mb-3">🏟️ Matches</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-3">Matches</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {matchedMatches.map((m: any) => (
                 <a
@@ -70,7 +70,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
         {matchedPlayers.length > 0 && (
           <div>
-            <h2 className="text-xl font-semibold text-gray-700 mb-3">👤 Players</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-3">Players</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {matchedPlayers.slice(0, 20).map((p: any) => (
                 <a
