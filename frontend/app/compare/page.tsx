@@ -17,7 +17,6 @@ interface TeamStats {
   shots: number;
   passes: number;
   xG: number;
-  xA: number;
   tackles: number;
   interceptions: number;
   clearances: number;
@@ -86,7 +85,6 @@ export default function ComparePage() {
     { key: "shots", label: "Shots", icon: "🎪" },
     { key: "passes", label: "Passes", icon: "🎾" },
     { key: "xG", label: "xG", icon: "📊" },
-    { key: "xA", label: "xA", icon: "🎨" },
     { key: "tackles", label: "Tackles", icon: "🛡️" },
     { key: "interceptions", label: "Interceptions", icon: "✋" },
     { key: "clearances", label: "Clearances", icon: "🚫" },
@@ -204,7 +202,7 @@ export default function ComparePage() {
                 const pctB = (valB / maxVal) * 100;
                 const aWins = valA > valB;
                 const bWins = valB > valA;
-                const isDecimal = metric.key === "xG" || metric.key === "xA";
+                const isDecimal = metric.key === "xG";
 
                 return (
                   <div key={metric.key} className="grid grid-cols-3 items-center">

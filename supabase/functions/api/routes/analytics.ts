@@ -49,6 +49,9 @@ export async function analyticsRoutes(
         );
         const shots = events.filter((e) => e.event_type === "Shot");
         const passes = events.filter((e) => e.event_type === "Pass");
+        const tackles = events.filter((e) => e.event_type === "Duel").length;
+        const interceptions = events.filter((e) => e.event_type === "Interception").length;
+        const clearances = events.filter((e) => e.event_type === "Clearance").length;
         return {
           team_id: teamId,
           goals: shots.filter((e) => e.shot_outcome === "Goal").length,
@@ -57,6 +60,9 @@ export async function analyticsRoutes(
           xG: Number(
             shots.reduce((s, e) => s + (Number(e.shot_xg) || 0), 0).toFixed(2),
           ),
+          tackles,
+          interceptions,
+          clearances,
         };
       }),
     );
