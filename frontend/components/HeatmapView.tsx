@@ -56,19 +56,19 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
             positions.push({ x: found.x, y: found.y });
           }
         } catch (e) {
-          console.warn(`Gagal fetch 360 untuk event ${ev.event_id}:`, e);
+          console.warn(`Failed to fetch 360 for event ${ev.event_id}:`, e);
           continue;
         }
       }
 
       if (positions.length === 0) {
-        setError(`Tidak ditemukan data posisi untuk pemain ini di ${eventsWith360.length} momen 360 yang tersedia.`);
+        setError(`No position data found for this player in the ${eventsWith360.length} available 360 moments.`);
       }
 
       setHeatmapData(positions);
     } catch (error) {
-      console.error("Gagal generate heatmap:", error);
-      setError("Gagal memuat heatmap. Coba lagi.");
+      console.error("Failed to generate heatmap:", error);
+      setError("Failed to load heatmap. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -81,8 +81,8 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
           <svg className="w-16 h-16 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
           </svg>
-          <p>{error || "Pilih pemain di atas untuk melihat heatmap pergerakannya."}</p>
-          <p className="text-xs mt-2">Data dari {eventsWith360.length} momen 360 yang tersedia.</p>
+          <p>{error || "Select a player above to view their movement heatmap."}</p>
+          <p className="text-xs mt-2">Data from {eventsWith360.length} available 360 moments.</p>
         </div>
       );
     }
@@ -112,7 +112,7 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
     const cellH = 100 / (gridSize * 0.75);
 
     // Nama pemain yang dipilih
-    const playerName = players.find(p => p.player_id === selectedPlayerId)?.player_name || 'Pemain';
+    const playerName = players.find(p => p.player_id === selectedPlayerId)?.player_name || 'Player';
 
     return (
       <div>
@@ -172,13 +172,13 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
   if (eventsWith360.length === 0) {
     return (
       <div className="mt-8 border-t border-gray-200 pt-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">🔥 Heatmap Pergerakan Pemain</h3>
+        <h3 className="text-xl font-bold text-gray-800 mb-4">🔥 Player Movement Heatmap</h3>
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-800">
-          ⚠️ Tidak ada data 360 (posisi pemain) untuk pertandingan ini. 
-          Data 360 hanya tersedia untuk beberapa momen tertentu di turnamen.
+          ⚠️ No 360 data (player positions) available for this match. 
+          360 data is only available for certain moments during the tournament.
           {events.length > 0 && (
             <div className="mt-2 text-sm">
-              Total event: {events.length}. Tidak ada yang memiliki 360 data.
+              Total events: {events.length}. None have 360 data.
             </div>
           )}
         </div>
@@ -188,14 +188,14 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
 
   return (
     <div className="mt-8 border-t border-gray-200 pt-6">
-      <h3 className="text-xl font-bold text-gray-800 mb-4">🔥 Heatmap Pergerakan Pemain</h3>
+      <h3 className="text-xl font-bold text-gray-800 mb-4">🔥 Player Movement Heatmap</h3>
       <p className="text-sm text-gray-500 mb-4">
-        Pilih pemain untuk melihat area lapangan yang paling sering dia kunjungi (data dari {eventsWith360.length} momen 360).
+        Select a player to see the pitch areas they visited most (data from {eventsWith360.length} 360 moments).
       </p>
 
       <div className="mb-6">
         <label htmlFor="player-select" className="block text-sm font-medium text-gray-700 mb-2">
-          Pilih Pemain:
+          Select Player:
         </label>
         <div className="flex flex-wrap items-center gap-3">
           <select
@@ -207,7 +207,7 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
               if (val) generateHeatmap(parseInt(val, 10));
             }}
           >
-            <option value="">-- Pilih pemain --</option>
+            <option value="">-- Select player --</option>
             {players.map((p) => (
               <option key={p.player_id} value={p.player_id}>
                 {p.player_name} {p.team_name ? `(${p.team_name})` : ""}
@@ -234,8 +234,8 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-white text-center">
               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white mx-auto mb-3"></div>
-              <p>Memuat heatmap...</p>
-              <p className="text-gray-400 text-sm mt-2">Mengumpulkan posisi dari {eventsWith360.length} momen...</p>
+              <p>Loading heatmap...</p>
+              <p className="text-gray-400 text-sm mt-2">Collecting positions from {eventsWith360.length} moments...</p>
             </div>
           </div>
         ) : (
@@ -245,7 +245,7 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
 
       {selectedPlayerId && heatmapData.length > 0 && (
         <div className="mt-3 text-sm text-gray-500">
-          ✅ Menampilkan {heatmapData.length} posisi dari {eventsWith360.length} momen 360.
+          ✅ Showing {heatmapData.length} positions from {eventsWith360.length} 360 moments.
         </div>
       )}
     </div>

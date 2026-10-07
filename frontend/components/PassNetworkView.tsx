@@ -23,13 +23,13 @@ export default function MatchDetailPage({ params }: PageProps) {
     const loadId = async () => {
       const { id } = await params;
       if (!id) {
-        setError("Match ID tidak ditemukan");
+        setError("Match ID not found");
         setLoading(false);
         return;
       }
       const mid = parseInt(id, 10);
       if (isNaN(mid) || mid <= 0) {
-        setError("Match ID tidak valid");
+        setError("Match ID is invalid");
         setLoading(false);
         return;
       }
@@ -54,8 +54,8 @@ export default function MatchDetailPage({ params }: PageProps) {
         setEvents(evts || []);
         setPlayers(plrs || []);
       } catch (err: any) {
-        console.error("❌ Gagal fetch match data:", err);
-        setError("Gagal memuat data pertandingan. Pastikan backend berjalan.");
+        console.error("❌ Failed to fetch match data:", err);
+        setError("Failed to load match data. Make sure the backend is running.");
       } finally {
         setLoading(false);
       }
@@ -69,7 +69,7 @@ export default function MatchDetailPage({ params }: PageProps) {
     try {
       await exportCSV("match_events", matchId);
     } catch (err: any) {
-      alert("Gagal export events: " + err.message);
+      alert("Failed to export events: " + err.message);
     } finally {
       setExporting(false);
     }
@@ -80,7 +80,7 @@ export default function MatchDetailPage({ params }: PageProps) {
       <main className="min-h-screen bg-gray-50 py-8 px-4 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-500">Memuat data pertandingan...</p>
+          <p className="mt-4 text-gray-500">Loading match data...</p>
         </div>
       </main>
     );
@@ -91,7 +91,7 @@ export default function MatchDetailPage({ params }: PageProps) {
       <main className="min-h-screen bg-gray-50 py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
-            <p className="text-red-800">❌ {error || "Data tidak ditemukan"}</p>
+            <p className="text-red-800">❌ {error || "Data not found"}</p>
             <Link href="/" className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
               Kembali ke Beranda
             </Link>
@@ -111,7 +111,7 @@ export default function MatchDetailPage({ params }: PageProps) {
         {/* Header dengan Tombol Export */}
         <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
           <Link href="/" className="text-blue-600 hover:underline inline-block">
-            ← Kembali ke Daftar Pertandingan
+            ← Back to Match List
           </Link>
           <button
             onClick={handleExport}
@@ -152,7 +152,7 @@ export default function MatchDetailPage({ params }: PageProps) {
         {/* Statistik Ringkas */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-            <div className="text-sm text-gray-500">Total Gol</div>
+            <div className="text-sm text-gray-500">Total Goals</div>
             <div className="text-2xl font-bold text-gray-800">{summary.total_goals}</div>
           </div>
           <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
@@ -160,20 +160,20 @@ export default function MatchDetailPage({ params }: PageProps) {
             <div className="text-2xl font-bold text-gray-800">{summary.total_xG}</div>
           </div>
           <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-            <div className="text-sm text-gray-500">Tembakan</div>
+            <div className="text-sm text-gray-500">Shots</div>
             <div className="text-2xl font-bold text-gray-800">{summary.shots}</div>
           </div>
           <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-            <div className="text-sm text-gray-500">Umpan</div>
+            <div className="text-sm text-gray-500">Passes</div>
             <div className="text-2xl font-bold text-gray-800">{summary.passes}</div>
           </div>
         </div>
 
         {/* Pencetak Gol */}
         <div className="bg-white rounded-2xl shadow-md p-6 mb-6 border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">⚽ Pencetak Gol</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-4">⚽ Goalscorers</h3>
           {goals.length === 0 ? (
-            <p className="text-gray-400">Tidak ada gol tercatat.</p>
+            <p className="text-gray-400">No goals recorded.</p>
           ) : (
             <ul className="space-y-2">
               {goals.map((g: any, idx: number) => (
@@ -183,7 +183,7 @@ export default function MatchDetailPage({ params }: PageProps) {
                     <span className="font-semibold text-gray-800">{g.player_name || 'Unknown'}</span>
                     <span className="text-gray-500 text-sm ml-2">({g.team_name})</span>
                     <span className="text-gray-400 text-sm ml-2">
-                      {g.period === 1 ? 'Babak 1' : g.period === 2 ? 'Babak 2' : 'ET'} - Menit {g.timestamp}
+                      {g.period === 1 ? 'Half 1' : g.period === 2 ? 'Half 2' : 'ET'} - Minute {g.timestamp}
                     </span>
                   </div>
                 </li>
@@ -200,10 +200,10 @@ export default function MatchDetailPage({ params }: PageProps) {
               <div key={`goal-${idx}`} className="flex items-start gap-3 p-2 border-b border-gray-50">
                 <span className="text-lg mt-0.5">🥅</span>
                 <div>
-                  <span className="font-semibold text-green-700">GOL!</span>
+                  <span className="font-semibold text-green-700">GOAL!</span>
                   <span className="ml-2 text-gray-800">{g.player_name}</span>
                   <span className="text-gray-500 text-sm ml-2">({g.team_name})</span>
-                  <span className="text-gray-400 text-sm ml-2">Menit {g.timestamp}</span>
+                  <span className="text-gray-400 text-sm ml-2">Minute {g.timestamp}</span>
                 </div>
               </div>
             ))}
@@ -219,7 +219,7 @@ export default function MatchDetailPage({ params }: PageProps) {
                   </span>
                   <span className="ml-2 text-gray-800">{c.player_name}</span>
                   <span className="text-gray-500 text-sm ml-2">({c.team_name})</span>
-                  <span className="text-gray-400 text-sm ml-2">Menit {c.timestamp}</span>
+                  <span className="text-gray-400 text-sm ml-2">Minute {c.timestamp}</span>
                 </div>
               </div>
             ))}
@@ -229,19 +229,19 @@ export default function MatchDetailPage({ params }: PageProps) {
                 <span className="text-lg mt-0.5">🎯</span>
                 <div>
                   <span className="text-gray-800">{s.player_name}</span>
-                  <span className="text-gray-500 text-sm ml-2">Tembakan</span>
+                  <span className="text-gray-500 text-sm ml-2">Shots</span>
                   <span className="text-gray-400 text-sm ml-2">({s.outcome || 'No outcome'})</span>
-                  <span className="text-gray-400 text-sm ml-2">Menit {s.timestamp}</span>
+                  <span className="text-gray-400 text-sm ml-2">Minute {s.timestamp}</span>
                 </div>
               </div>
             ))}
             
             {shots.filter((s: any) => !s.is_goal).length === 0 && goals.length === 0 && cards.length === 0 && (
-              <p className="text-gray-400">Belum ada event penting yang tercatat.</p>
+              <p className="text-gray-400">No notable events recorded yet.</p>
             )}
           </div>
           <div className="text-xs text-gray-400 mt-3">
-            Menampilkan {goals.length} gol, {cards.length} kartu, dan {shots.length} tembakan.
+            Showing {goals.length} goals, {cards.length} cards, and {shots.length} shots.
           </div>
         </div>
 
@@ -250,9 +250,9 @@ export default function MatchDetailPage({ params }: PageProps) {
         <HeatmapView matchId={matchId ?? 0} events={events} players={players} />
         
         <div className="mt-8 border-t border-gray-200 pt-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">👥 Daftar Pemain</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-4">👥 Player List</h3>
           <p className="text-sm text-gray-500 mb-4">
-            Klik nama pemain untuk melihat statistik detailnya (Gol, Assist, xG, xA).
+            Click a player name to view detailed stats (Goals, Assists, xG, xA).
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {players.slice(0, 30).map((p: any) => (
@@ -269,7 +269,7 @@ export default function MatchDetailPage({ params }: PageProps) {
             ))}
           </div>
           {players.length > 30 && (
-            <p className="text-xs text-gray-400 mt-2">Menampilkan 30 dari {players.length} pemain.</p>
+            <p className="text-xs text-gray-400 mt-2">Showing 30 of {players.length} players.</p>
           )}
         </div>
         

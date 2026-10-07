@@ -11,7 +11,7 @@ export default function Navbar() {
 
 const links = [
   { href: "/", label: "Beranda", icon: "🏠" },
-  { href: "/players", label: "Pemain", icon: "👤" },
+  { href: "/players", label: "Players", icon: "👤" },
   { href: "/match-similarity", label: "Similarity", icon: "🔍" },
   { href: "/clusters", label: "Clusters", icon: "🧩" },
   { href: "/compare", label: "Compare", icon: "⚖️" },

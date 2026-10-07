@@ -25,7 +25,7 @@ export default function Error({
       </h1>
 
       <p className="text-sm text-neutral-600 dark:text-neutral-400">
-        {error.message || "Halaman gagal dimuat. Silakan coba lagi."}
+        {error.message || "Failed to load page. Please try again."}
       </p>
 
       {error.digest && (

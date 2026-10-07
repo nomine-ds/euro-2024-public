@@ -260,7 +260,7 @@ export default function MatchDetailPage() {
                       )}
                       {e.is_goal && (
                         <span className="text-xs px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full font-medium">
-                          ⚽ GOL
+                          ⚽ GOAL
                         </span>
                       )}
                       {e.card_type && (

@@ -35,15 +35,15 @@ print("✅ Success! Try other templates on the left.")`,
   api: {
     name: "Fetch from API",
     icon: "🌐",
-    code: `# Ambil data dari backend FastAPI
+    code: `# Fetch data from FastAPI backend
 from pyodide.http import pyfetch
 
 response = await pyfetch(f"${API_BASE}/matches")
 data = await response.json()
 
-print(f"📊 Total pertandingan: {len(data)}")
+print(f"📊 Total matches: {len(data)}")
 print()
-print("5 Pertandingan pertama:")
+print("First 5 matches:")
 print("-" * 50)
 for m in data[:5]:
     print(f"  {m['home_team']:15} vs {m['away_team']:15} ({m.get('date', 'TBD')})")`,
@@ -62,7 +62,7 @@ top_scorers = sorted(players, key=lambda p: p.get('goals', 0), reverse=True)[:10
 
 print("⚽ TOP 10 SCORERS EURO 2024")
 print("=" * 55)
-print(f"{'Rank':<5} {'Pemain':<28} {'Tim':<18} {'Gol':<4}")
+print(f"{'Rank':<5} {'Player':<28} {'Team':<18} {'Goals':<6}")
 print("-" * 55)
 
 for i, p in enumerate(top_scorers, 1):
@@ -71,13 +71,13 @@ for i, p in enumerate(top_scorers, 1):
     print(f"{i:<5} {name:<28} {team:<18} {p['goals']:<4}")
 
 print()
-print(f"Total pemain dianalisis: {len(players)}")`,
+print(f"Total players analyzed: {len(players)}")`,
   },
 
   cluster: {
     name: "Player Clustering",
     icon: "🧩",
-    code: `# Clustering pemain dengan K-Means
+    code: `# Cluster players with K-Means
 from pyodide.http import pyfetch
 
 response = await pyfetch(f"${API_BASE}/players/clustering?n_clusters=4")
@@ -96,16 +96,16 @@ for p in data['players']:
 for label, members in clusters.items():
     print()
     print(f"📊 {label}")
-    print(f"   Total: {len(members)} pemain")
+    print(f"   Total: {len(members)} players")
     top = sorted(members, key=lambda p: p['goals'], reverse=True)[:3]
     for p in top:
-        print(f"   • {p['player_name']} ({p.get('team_name', '?')}) - {p['goals']} gol")`,
+        print(f"   • {p['player_name']} ({p.get('team_name', '?')}) - {p['goals']} goals")`,
   },
 
   compare: {
     name: "Compare Two Teams",
     icon: "⚖️",
-    code: `# Bandingkan dua tim
+    code: `# Compare two teams
 from pyodide.http import pyfetch
 
 teams_resp = await pyfetch(f"${API_BASE}/teams")
@@ -115,7 +115,7 @@ spain = next((t for t in teams if t['team_name'] == 'Spain'), None)
 england = next((t for t in teams if t['team_name'] == 'England'), None)
 
 if not spain or not england:
-    print("❌ Tim tidak ditemukan")
+    print("❌ Team not found")
 else:
     print(f"⚖️ PERBANDINGAN: Spain vs England")
     print("=" * 60)
@@ -128,7 +128,7 @@ else:
         stats_spain = data[0]
         stats_england = data[1]
 
-        metrics = [('Gol', 'goals'), ('Tembakan', 'shots'), ('Umpan', 'passes'),
+        metrics = [('Goals', 'goals'), ('Shots', 'shots'), ('Passes', 'passes'),
                    ('xG', 'xG'), ('xA', 'xA')]
 
         print(f"{'Metric':<12} {'Spain':<12} {'England':<12}")
@@ -138,23 +138,23 @@ else:
   },
 
   cards: {
-    name: "Kartu & Disiplin",
+    name: "Cards & Discipline",
     icon: "🟨",
-    code: `# Analisis kartu kuning & merah
+    code: `# Analyze yellow & red cards
 from pyodide.http import pyfetch
 
 response = await pyfetch(f"${API_BASE}/players/bulk")
 players = await response.json()
 
-# Filter pemain dengan kartu (dari data event)
-print("🟨 ANALISIS KARTU EURO 2024")
+# Filter players with cards (from event data)
+print("🟨 EURO 2024 CARD ANALYSIS")
 print("=" * 50)
 print()
 print("Note: Card data is available at event-level.")
 print("To see cards, query endpoint /events/{match_id}")
 print()
 
-# Contoh: match Germany vs Scotland yang ada kartu merah
+# Example: Germany vs Scotland match with a red card
 url = f"${API_BASE}/events/3930158"
 resp = await pyfetch(url)
 events = await resp.json()
@@ -162,7 +162,7 @@ events = await resp.json()
 cards = [e for e in events if e.get('card_type')]
 
 print(f"📊 Match Germany vs Scotland (3930158):")
-print(f"   Total kartu: {len(cards)}")
+print(f"   Total cards: {len(cards)}")
 for c in cards:
     print(f"   • {c['player_name']} - {c['card_type']} (minute {c.get('timestamp', 0)})")`,
   },
@@ -170,7 +170,7 @@ for c in cards:
   shots: {
     name: "Shot Map Analysis",
     icon: "🎯",
-    code: `# Analisis shot map final Euro 2024
+    code: `# Analyze shot map of Euro 2024 final
 from pyodide.http import pyfetch
 
 url = f"${API_BASE}/events/3943043"
@@ -181,11 +181,11 @@ shots = [e for e in events if e.get('event_type') == 'Shot']
 
 print("🎯 SHOT MAP - FINAL EURO 2024 (Spain vs England)")
 print("=" * 60)
-print(f"Total tembakan: {len(shots)}")
+print(f"Total shots: {len(shots)}")
 print()
 
-print("Posisi tembakan di lapangan (x: 0-120, y: 0-80):")
-print(f"{'Player':<28} {'x':<8} {'y':<8} {'Hasil':<15}")
+print("Shot positions on the pitch (x: 0-120, y: 0-80):")
+print(f"{'Player':<28} {'x':<8} {'y':<8} {'Result':<15}")
 print("-" * 60)
 
 for s in shots[:15]:
@@ -196,13 +196,13 @@ for s in shots[:15]:
     print(f"{name:<28} {x:<8} {y:<8} {outcome:<15}")
 
 print()
-print(f"Total gol: {sum(1 for s in shots if s.get('is_goal'))}")`,
+print(f"Total goals: {sum(1 for s in shots if s.get('is_goal'))}")`,
   },
 
   xg: {
     name: "Player xG Analysis",
     icon: "📊",
-    code: `# Analisis xG per pemain
+    code: `# Analyze xG per player
 from pyodide.http import pyfetch
 
 response = await pyfetch(f"${API_BASE}/players/bulk")
@@ -213,7 +213,7 @@ top_xg = sorted(players, key=lambda p: p.get('xg', 0), reverse=True)[:10]
 
 print("📊 TOP 10 PLAYERS BY xG")
 print("=" * 60)
-print(f"{'Rank':<5} {'Pemain':<28} {'Tim':<18} {'xG':<8}")
+print(f"{'Rank':<5} {'Player':<28} {'Team':<18} {'xG':<8}")
 print("-" * 60)
 
 for i, p in enumerate(top_xg, 1):
@@ -224,7 +224,7 @@ for i, p in enumerate(top_xg, 1):
 
 # Perbandingan xG vs actual goals
 print()
-print("🔍 OVERPERFORMERS (Gol > xG):")
+print("🔍 OVERPERFORMERS (Goals > xG):")
 print("-" * 60)
 over = [p for p in players if p.get('goals', 0) > p.get('xg', 0) and p.get('goals', 0) > 0]
 over_sorted = sorted(over, key=lambda p: p['goals'] - p['xg'], reverse=True)[:5]
@@ -236,10 +236,10 @@ for p in over_sorted:
   momentum: {
     name: "Match Momentum",
     icon: "📈",
-    code: `# Analisis momentum pertandingan (xG rolling)
+    code: `# Analyze match momentum (rolling xG)
 from pyodide.http import pyfetch
 
-# Gunakan match final
+# Use the final match
 url = f"${API_BASE}/tactical/3943043"
 resp = await pyfetch(url)
 data = await resp.json()
@@ -250,10 +250,10 @@ xg = rolling.get('xg_rolling', [])
 
 print("📈 MOMENTUM - FINAL EURO 2024")
 print("=" * 50)
-print(f"Window: {rolling.get('window_minutes', 5)} menit")
+print(f"Window: {rolling.get('window_minutes', 5)} minutes")
 print()
 
-print(f"{'Menit':<10} {'xG':<10} {'Bar':<40}")
+print(f"{'Minute':<10} {'xG':<10} {'Bar':<40}")
 print("-" * 60)
 for i, b in enumerate(bins):
     xg_val = xg[i] if i < len(xg) else 0
@@ -268,15 +268,15 @@ for c in cp:
   },
 
   penalty: {
-    name: "Penalti & Set Piece",
+    name: "Penalties & Set Pieces",
     icon: "🎪",
-    code: `# Analisis penalti dan set piece
+    code: `# Analyze penalties and set pieces
 from pyodide.http import pyfetch
 
 response = await pyfetch(f"${API_BASE}/matches")
 matches = await response.json()
 
-print("🎪 ANALISIS PENALTI & SET PIECE")
+print("🎪 PENALTY & SET PIECE ANALYSIS")
 print("=" * 50)
 print(f"Total match: {len(matches)}")
 print()
@@ -284,7 +284,7 @@ print("Note: For detailed analysis, use endpoint /events/{match_id}")
 print("and filter event_type='Shot' by location in penalty area.")
 print()
 
-# Contoh: cek shot di final
+# Example: check shots in the final
 url = f"${API_BASE}/events/3943043"
 resp = await pyfetch(url)
 events = await resp.json()
@@ -292,7 +292,7 @@ events = await resp.json()
 shots = [e for e in events if e.get('event_type') == 'Shot']
 inside_box = [s for s in shots if s.get('x', 0) > 102 and 18 < s.get('y', 0) < 62]
 
-print(f"📊 Shot di kotak penalti (final):")
+print(f"📊 Shots in the penalty box (final):")
 print(f"   Total: {len(inside_box)} of {len(shots)} shots")
 for s in inside_box[:10]:
     print(f"   • {s['player_name']} ({s['team_name']}) minute {s.get('timestamp', 0)}")`,
@@ -354,7 +354,7 @@ import math
 
         setPyodide(py);
         setLoading(false);
-        toast.success("Python siap digunakan!");
+        toast.success("Python is ready!");
       } catch (err: any) {
         setLoadingMsg(`❌ Failed: ${err.message}`);
         toast.error("Failed to load Python");
@@ -554,7 +554,7 @@ sys.stderr = StringIO()
             </div>
           ) : (
             <div className="flex items-center gap-2 text-green-800 dark:text-green-300">
-              <span>✅ Python siap</span>
+              <span>✅ Python ready</span>
               <span className="text-gray-500">•</span>
               <span className="text-gray-500">API: {API_BASE}</span>
             </div>

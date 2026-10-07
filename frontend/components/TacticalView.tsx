@@ -57,8 +57,8 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
       const data = await fetch360Data(eventId, matchId);
       setPitchData(data);
     } catch (error) {
-      console.error("Gagal fetch 360 data:", error);
-      alert("Gagal memuat data posisi pemain. Coba lagi.");
+      console.error("Failed to fetch 360 data:", error);
+      alert("Failed to load player position data. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -67,17 +67,17 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
   if (eventsWith360.length === 0) {
     return (
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-800">
-        ⚠️ Tidak ada data 360 (posisi pemain) untuk pertandingan ini. 
-        Data 360 hanya tersedia untuk beberapa momen tertentu.
+        ⚠️ No 360 data (player positions) available for this match. 
+        360 data is only available for certain moments.
       </div>
     );
   }
 
   return (
     <div className="mt-8 border-t border-gray-200 pt-6">
-      <h3 className="text-xl font-bold text-gray-800 mb-4">📊 Visualisasi 360 (Posisi Pemain)</h3>
+      <h3 className="text-xl font-bold text-gray-800 mb-4">📊 360 Visualization (Player Positions)</h3>
       <p className="text-sm text-gray-500 mb-4">
-        Klik salah satu momen di bawah ini untuk melihat posisi 22 pemain di lapangan saat momen itu terjadi.
+        Click any moment below to see the positions of 22 players on the pitch at that moment.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
@@ -98,7 +98,7 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
                 >
                   <div className="font-medium">{ev.event_type}</div>
                   <div className="text-xs opacity-75">
-                    Menit {ev.timestamp} - {ev.player_name || "Unknown"}
+                    Minute {ev.timestamp} - {ev.player_name || "Unknown"}
                   </div>
                 </button>
               </li>
@@ -111,7 +111,7 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
           {loading && (
             <div className="text-white text-center">
               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white mx-auto mb-3"></div>
-              <p>Memuat posisi pemain...</p>
+              <p>Loading player positions...</p>
             </div>
           )}
           
@@ -119,13 +119,13 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
             <div className="w-full max-w-4xl">
               <div className="text-white text-sm mb-2 flex justify-between items-center">
                 <span>
-                  ⚽ Tim Penguasa Bola: {pitchData.possession_team.length} pemain
+                  ⚽ Possession Team: {pitchData.possession_team.length} players
                   <span className="ml-2 text-gray-400">
-                    (vs {pitchData.opponent_team.length} pemain)
+                    (vs {pitchData.opponent_team.length} players)
                   </span>
                 </span>
                 <span className="bg-gray-800 px-3 py-1 rounded-full">
-                  ⏱️ Menit {pitchData.timestamp}
+                  ⏱️ Minute {pitchData.timestamp}
                 </span>
               </div>
 
@@ -175,7 +175,7 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
                     strokeWidth="0.3"
                     className="cursor-pointer hover:r-1.6 transition-all"
                   >
-                    <title>{p.player_name} (Tim Penguasa) - Nomor #{p.jersey}</title>
+                    <title>{p.player_name} (Possession Team) - Nomor #{p.jersey}</title>
                   </circle>
                 ))}
 
@@ -190,7 +190,7 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
                     strokeWidth="0.3"
                     className="cursor-pointer hover:r-1.6 transition-all"
                   >
-                    <title>{p.player_name} (Tim Lawan) - Nomor #{p.jersey}</title>
+                    <title>{p.player_name} (Opponent Team) - Nomor #{p.jersey}</title>
                   </circle>
                 ))}
               </svg>
@@ -198,18 +198,18 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
               <div className="flex flex-wrap justify-center gap-4 mt-3 text-xs text-gray-400">
                 <span className="flex items-center">
                   <span className="w-3 h-3 rounded-full bg-blue-500 inline-block mr-1 border border-white"></span>
-                  Tim Penguasa Bola
+                  Possession Team
                 </span>
                 <span className="flex items-center">
                   <span className="w-3 h-3 rounded-full bg-red-500 inline-block mr-1 border border-white"></span>
-                  Tim Lawan
+                  Opponent Team
                 </span>
                 <span className="flex items-center">
                   <span className="w-3 h-3 rounded-full bg-white border border-gray-500 inline-block mr-1"></span>
                   Bola
                 </span>
                 <span className="text-gray-500">
-                  Hover pemain untuk lihat nama & nomor punggung
+                  Hover a player to see name & jersey number
                 </span>
               </div>
             </div>
@@ -220,7 +220,7 @@ export default function TacticalView({ events, matchId }: TacticalViewProps) {
               <svg className="w-16 h-16 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
               </svg>
-              <p>Pilih salah satu momen di samping untuk melihat posisi 22 pemain.</p>
+              <p>Select a moment on the side to view the positions of 22 players.</p>
             </div>
           )}
         </div>

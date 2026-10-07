@@ -23,42 +23,42 @@ const STEPS: Step[] = [
   {
     title: "🏠 Navigasi Utama",
     description:
-      "Gunakan menu di atas untuk berpindah antar halaman: Beranda, Pemain, Similarity, Clusters, Compare, Bot, dan Data Lab.",
+      "Use the menu above to navigate between pages: Home, Players, Similarity, Clusters, Compare, Bot, and Data Lab.",
     target: "nav",
     position: "bottom",
   },
   {
-    title: "👤 Halaman Pemain",
+    title: "👤 Players Page",
     description:
-      "Lihat statistik lengkap semua pemain Euro 2024. Filter berdasarkan tim, posisi, dan urutkan berdasarkan metrik favoritmu.",
+      "View complete statistics for all Euro 2024 players. Filter by team, position, and sort by your favorite metrics.",
     target: null,
     position: "center",
   },
   {
     title: "🤖 Hudl Bot",
     description:
-      "Tanya apa saja tentang Euro 2024! Bot AI berbasis RAG dengan 17.000+ events dari StatsBomb. Contoh: 'Siapa yang mencetak gol di final?'",
+      "Ask anything about Euro 2024! RAG-based AI bot with 17,000+ events from StatsBomb. Example: 'Who scored in the final?'",
     target: null,
     position: "center",
   },
   {
     title: "🧪 Public Data Lab",
     description:
-      "Tulis dan jalankan Python langsung di browser! 10 template analisis siap pakai, export PDF/PNG, dan share link ke teman.",
+      "Write and run Python directly in the browser! 10 ready-to-use analysis templates, export PDF/PNG, and share links with friends.",
     target: null,
     position: "center",
   },
   {
     title: "⚡ Keyboard Shortcuts",
     description:
-      "Tekan ? untuk lihat semua shortcut. Navigasi cepat dengan g + [key]. Contoh: g p = Pemain, g b = Bot, g l = Lab.",
+      "Press ? to see all shortcuts. Quick navigation with g + [key]. Example: g p = Players, g b = Bot, g l = Lab.",
     target: null,
     position: "center",
   },
   {
     title: "🎉 Ready to Explore!",
     description:
-      "Sekarang kamu siap menggunakan semua fitur. Kalau butuh bantuan lagi, klik tombol '?' di footer untuk lihat tour ini kembali.",
+      "You are now ready to use all features. If you need help again, click the '?' button in the footer to see this tour again.",
     target: null,
     position: "center",
   },
@@ -230,7 +230,7 @@ export default function Onboarding() {
               onClick={next}
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition"
             >
-              {isLast ? "Mulai Menjelajah 🚀" : "Lanjut →"}
+              {isLast ? "Start Exploring 🚀" : "Next →"}
             </button>
           </div>
         </div>

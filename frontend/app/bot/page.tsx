@@ -159,7 +159,7 @@ export default function BotPage() {
         <div className="mt-4 flex flex-wrap gap-2">
           {[
             "Who is the top scorer of Euro 2024?",
-            "Ceritakan final Euro 2024",
+            "Tell me about the Euro 2024 final",
             "How many goals did Spain score?",
             "Best player of the tournament?",
           ].map((q, i) => (
