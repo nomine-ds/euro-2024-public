@@ -35,6 +35,7 @@ coverage.xml
 # Data — JANGAN push
 data/raw/
 data/chroma_db/
+all_events.zip
 *.sqlite3
 *.pickle
 

@@ -1,0 +1,4 @@
+project_id = "euro-2024"
+
+[functions.api]
+verify_jwt = false

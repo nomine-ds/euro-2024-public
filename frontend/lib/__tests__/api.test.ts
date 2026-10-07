@@ -113,27 +113,37 @@ describe("API requests", () => {
     await expect(fetchMatches()).resolves.toEqual(matches);
   });
 
-  it("uses the backend origin for server-side API routes", async () => {
+  it("uses the Supabase function URL for server-side API routes", async () => {
     vi.stubGlobal("window", undefined);
     vi.stubEnv("NEXT_PUBLIC_API_BASE", "/api");
-    vi.stubEnv("BACKEND_INTERNAL_URL", "https://backend.test/prefix");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://project.supabase.co");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "sb_publishable_test");
     vi.resetModules();
     const { fetchMatches: fetchServerMatches } = await import("../api");
     fetchMock.mockResolvedValueOnce(jsonResponse([]));
 
     await expect(fetchServerMatches()).resolves.toEqual([]);
-    expect(fetchMock).toHaveBeenCalledWith("https://backend.test/matches");
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://project.supabase.co/functions/v1/api/matches",
+      {
+        headers: expect.any(Headers),
+      },
+    );
+    const headers = fetchMock.mock.calls[0][1]?.headers as Headers;
+    expect(headers.get("apikey")).toBe("sb_publishable_test");
+    expect(headers.get("Authorization")).toBeNull();
   });
 
-  it("requires the backend origin for server-side API routes", async () => {
+  it("requires the Supabase URL and publishable key for server-side API routes", async () => {
     vi.stubGlobal("window", undefined);
     vi.stubEnv("NEXT_PUBLIC_API_BASE", "/api");
-    vi.stubEnv("BACKEND_INTERNAL_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "");
     vi.resetModules();
     const { fetchMatches: fetchServerMatches } = await import("../api");
 
     await expect(fetchServerMatches()).rejects.toThrow(
-      "BACKEND_INTERNAL_URL must be set for server-side API requests.",
+      "NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY must be set for server-side API requests.",
     );
     expect(fetchMock).not.toHaveBeenCalled();
   });

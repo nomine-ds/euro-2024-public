@@ -1,16 +1,31 @@
 // frontend/lib/api.ts
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, "") || "/api";
 
-async function fetcher<T>(url: string): Promise<T> {
+async function apiFetch(url: string): Promise<Response> {
   let requestUrl = url;
+  let init: RequestInit | undefined;
   if (typeof window === "undefined" && url.startsWith("/api/")) {
-    const backendUrl = process.env.BACKEND_INTERNAL_URL;
-    if (!backendUrl) {
-      throw new Error("BACKEND_INTERNAL_URL must be set for server-side API requests.");
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    if (!supabaseUrl || !publishableKey) {
+      throw new Error(
+        "NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY must be set for server-side API requests.",
+      );
     }
-    requestUrl = `${new URL(backendUrl).origin}${url.slice(4)}`;
+    const projectUrl = new URL(supabaseUrl);
+    if (projectUrl.protocol !== "https:" && projectUrl.hostname !== "localhost") {
+      throw new Error("NEXT_PUBLIC_SUPABASE_URL must use HTTPS.");
+    }
+    requestUrl = `${projectUrl.origin}/functions/v1/api/${url.slice(5)}`;
+    const headers = new Headers();
+    headers.set("apikey", publishableKey);
+    init = { headers };
   }
-  const res = await fetch(requestUrl);
+  return init ? fetch(requestUrl, init) : fetch(requestUrl);
+}
+
+async function fetcher<T>(url: string): Promise<T> {
+  const res = await apiFetch(url);
   if (!res.ok) {
     throw new Error(`HTTP ${res.status} - ${res.statusText} (${url})`);
   }
@@ -99,7 +114,7 @@ export async function exportCSV(
   if (matchId) params.append("match_id", String(matchId));
   if (playerId) params.append("player_id", String(playerId));
   const url = `${API_BASE}/export/csv?${params.toString()}`;
-  const res = await fetch(url);
+  const res = await apiFetch(url);
   if (!res.ok) {
     const errText = await res.text();
     throw new Error(`HTTP ${res.status}: ${errText}`);

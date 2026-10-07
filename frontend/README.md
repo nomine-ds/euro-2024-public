@@ -1,10 +1,10 @@
 # Euro 2024 frontend
 
-This Next.js app uses the backend through the same-origin `/api` proxy. During
-local development, set `BACKEND_INTERNAL_URL` in `.env.local` to the FastAPI
-origin. Set the same server-only variable in Vercel for each deployment
-environment. Browser requests continue to use `/api`; do not expose the
-backend origin through a `NEXT_PUBLIC_*` variable.
+This Next.js app uses Supabase Edge Functions through the same-origin `/api`
+proxy. Set `NEXT_PUBLIC_SUPABASE_URL` and
+`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in `.env.local` for development and in
+Vercel for each deployment environment. The publishable key is public by
+design; database writes remain blocked by row-level security.
 
 ## Local development
 
@@ -15,9 +15,9 @@ npm ci
 npm run dev
 ```
 
-The backend must be running separately. Copy `.env.example` to `.env.local`
-before starting the app. See the root README for deployment and data loading
-instructions.
+Copy `.env.example` to `.env.local` before starting the app. Apply the Supabase
+migration and import the StatsBomb data before using the API. See
+[`../docs/SUPABASE_DEPLOYMENT.md`](../docs/SUPABASE_DEPLOYMENT.md) for setup.
 
 ## Checks
 
