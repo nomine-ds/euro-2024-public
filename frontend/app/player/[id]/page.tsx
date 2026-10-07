@@ -4,16 +4,19 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { API_BASE } from "@/lib/api";
-import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  ResponsiveContainer,
-  Legend,
-  Tooltip,
-} from "recharts";
+import dynamic from "next/dynamic";
+
+const PlayerRadarChart = dynamic(
+  () => import("@/components/charts/PlayerRadarChart"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-full w-full flex items-center justify-center">
+        <div className="animate-pulse rounded-md bg-gray-200 dark:bg-gray-700 h-40 w-40" />
+      </div>
+    ),
+  },
+);
 
 interface PlayerSummary {
   player_id: number;
@@ -263,50 +266,15 @@ export default function PlayerDetailPage() {
         </div>
 
         {/* Radar Chart */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 mb-6">
+        <div className="bg-white dark:bg-gray-900 rounded-lg p-5 border border-gray-200 dark:border-gray-800 mb-6">
           <h2 className="font-semibold text-gray-900 dark:text-white mb-4">
             Profile vs Player Average
           </h2>
           <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={radarData}>
-                <PolarGrid stroke="#9ca3af" opacity={0.3} />
-                <PolarAngleAxis
-                  dataKey="metric"
-                  tick={{ fill: "#6b7280", fontSize: 12 }}
-                />
-                <PolarRadiusAxis
-                  angle={90}
-                  domain={[0, 100]}
-                  tick={{ fill: "#9ca3af", fontSize: 10 }}
-                />
-                <Radar
-                  name={summary.player_name}
-                  dataKey="player"
-                  stroke="#3b82f6"
-                  fill="#3b82f6"
-                  fillOpacity={0.5}
-                />
-                <Radar
-                  name="Average"
-                  dataKey="avg"
-                  stroke="#9ca3af"
-                  fill="#9ca3af"
-                  fillOpacity={0.25}
-                />
-                <Legend />
-                <Tooltip
-                  formatter={(value: any) => `${Number(value).toFixed(1)}%`}
-                  contentStyle={{
-                    backgroundColor: "rgba(17, 24, 39, 0.95)",
-                    border: "none",
-                    borderRadius: "8px",
-                    color: "white",
-                    fontSize: "12px",
-                  }}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
+            <PlayerRadarChart
+              data={radarData}
+              playerName={summary.player_name}
+            />
           </div>
           <p className="text-xs text-gray-500 dark:text-gray-500 mt-2 text-center">
             Scale 0–100% of the maximum value among all players.
