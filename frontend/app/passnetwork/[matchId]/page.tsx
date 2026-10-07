@@ -748,8 +748,8 @@ export default function PassNetworkPage() {
                   <th className="text-left px-3 py-2 font-medium">#</th>
                   <th className="text-left px-3 py-2 font-medium">Player</th>
                   <th className="text-left px-3 py-2 font-medium">Team</th>
-                  <th className="text-right px-3 py-2 font-medium">Keluar</th>
-                  <th className="text-right px-3 py-2 font-medium">Masuk</th>
+                  <th className="text-right px-3 py-2 font-medium">Passes Out</th>
+                  <th className="text-right px-3 py-2 font-medium">Passes In</th>
                   <th className="text-right px-3 py-2 font-medium">Total</th>
                 </tr>
               </thead>

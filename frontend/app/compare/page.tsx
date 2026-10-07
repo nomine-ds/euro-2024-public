@@ -178,7 +178,7 @@ export default function ComparePage() {
         {loading && (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="text-gray-500 mt-3 text-sm">Membandingkan...</p>
+            <p className="text-gray-500 mt-3 text-sm">Comparing...</p>
           </div>
         )}
 

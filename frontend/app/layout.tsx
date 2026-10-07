@@ -12,7 +12,7 @@ import Onboarding from "./components/Onboarding";
 const inter = Inter({ subsets: ["latin"] });
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://euro-2024-public.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://euro-2024-public-frontend.vercel.app";
 
 const SITE_NAME = "Euro 2024 Context Zone";
 

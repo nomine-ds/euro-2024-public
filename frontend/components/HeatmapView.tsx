@@ -120,7 +120,7 @@ export default function HeatmapView({ matchId, events, players }: HeatmapViewPro
           <span className="bg-gray-800 px-3 py-1 rounded-full">
             🔥 {playerName} - {heatmapData.length} titik posisi
           </span>
-          <span className="text-gray-400">Area paling sering dikunjungi</span>
+          <span className="text-gray-400">Most visited area</span>
         </div>
         <div className="relative w-full bg-green-800 rounded-lg overflow-hidden" style={{ aspectRatio: "120/80" }}>
           <svg viewBox="0 0 100 75" className="w-full h-full">
