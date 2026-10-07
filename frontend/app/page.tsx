@@ -77,12 +77,30 @@ export default function Home() {
       title: "Player Stats",
       desc: "Complete stats for all players",
     },
-{
-  href: "/player-comparison",
-  icon: "🆚",
-  title: "Player Comparison",
-  desc: "Compare 2-4 players with radar chart",
-},
+    {
+      href: "/player-comparison",
+      icon: "🆚",
+      title: "Player Comparison",
+      desc: "Compare 2-4 players with radar chart",
+    },
+    {
+      href: "/compare",
+      icon: "⚽",
+      title: "Compare Teams",
+      desc: "Compare two teams head-to-head",
+    },
+    {
+      href: "/lab",
+      icon: "🧪",
+      title: "Data Lab",
+      desc: "Run Python analysis in the browser",
+    },
+    {
+      href: "/counterfactual",
+      icon: "🔮",
+      title: "Counterfactual",
+      desc: "Simulate alternative match scenarios",
+    },
 
   ];
 
