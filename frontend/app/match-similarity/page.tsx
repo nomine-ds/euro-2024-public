@@ -92,7 +92,7 @@ export default function MatchSimilarityPage() {
           ← Back
         </Link>
 
-        <h1 className="text-3xl font-bold mt-2 mb-2 text-gray-900 dark:text-white">
+        <h1 className="text-3xl font-semibold tracking-tight mt-2 mb-2 text-gray-900 dark:text-white">
           Match Similarity
         </h1>
         <p className="text-gray-500 dark:text-gray-400 mb-6">

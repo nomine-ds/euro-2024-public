@@ -75,7 +75,7 @@ export default function BotPage() {
 
         <div className="flex items-center gap-3 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
               Hudl Bot
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-300">

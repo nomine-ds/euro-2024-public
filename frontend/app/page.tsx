@@ -110,7 +110,7 @@ export default function Home() {
           <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-200 dark:bg-emerald-900/20 rounded-full blur-3xl opacity-40" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 lg:py-28">
           <motion.div variants={itemVariants} className="text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-sm font-medium mb-6">
               <span className="relative flex h-2 w-2">
@@ -120,7 +120,7 @@ export default function Home() {
               Data 360 is ready
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+            <h1 className="text-5xl md:text-7xl font-semibold tracking-tight mb-6">
               <span className="text-emerald-600 dark:text-emerald-400">
                 Euro 2024
               </span>
@@ -171,7 +171,7 @@ behind every match.
                 className="bg-white dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700 text-center"
               >
                 {(() => { const Icon = statIcons[stat.label]; return Icon ? <Icon className="w-7 h-7 mx-auto mb-2 text-emerald-600 dark:text-emerald-400" strokeWidth={1.75} /> : null; })()}
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                <div className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                   {stat.value}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -183,7 +183,7 @@ behind every match.
         </div>
       </motion.section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -191,7 +191,7 @@ behind every match.
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Explore Data
           </h2>
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -233,7 +233,7 @@ behind every match.
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 md:pb-16">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}

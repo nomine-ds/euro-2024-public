@@ -109,7 +109,7 @@ export default function CognitivePage() {
           ← Back to Home
         </Link>
 
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mb-2">
           🧠 Cognitive Mirror
         </h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
@@ -123,7 +123,7 @@ export default function CognitivePage() {
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
               Avg Decision Quality
             </div>
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
               {s.avg_dq.toFixed(3)}
             </div>
           </div>

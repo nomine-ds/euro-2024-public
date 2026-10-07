@@ -131,7 +131,7 @@ export default function MatchDetailPage() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 mt-4 mb-6 border border-gray-200 dark:border-gray-700">
           <div className="grid grid-cols-3 gap-4 items-center">
             <div className="text-center">
-              <div className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">
+              <div className="text-lg md:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                 {summary.home_team}
               </div>
             </div>
@@ -144,7 +144,7 @@ export default function MatchDetailPage() {
               </div>
             </div>
             <div className="text-center">
-              <div className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">
+              <div className="text-lg md:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                 {summary.away_team}
               </div>
             </div>

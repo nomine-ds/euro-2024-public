@@ -527,7 +527,7 @@ export default function PassNetworkPage() {
         </Link>
 
         <div className="mt-2 mb-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
             🔗 Pass Network
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
@@ -808,7 +808,7 @@ function StatCard({ label, value }: { label: string; value: number }) {
       <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
         {label}
       </div>
-      <div className="text-2xl font-bold text-gray-900 dark:text-white">
+      <div className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
         {value}
       </div>
     </div>

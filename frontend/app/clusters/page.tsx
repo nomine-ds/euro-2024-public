@@ -74,7 +74,7 @@ export default function ClustersPage() {
           ← Back
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-bold mt-2 mb-2 text-gray-900 dark:text-white">
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mt-2 mb-2 text-gray-900 dark:text-white">
           Player Clustering
         </h1>
         <p className="text-gray-500 dark:text-gray-400 mb-6">

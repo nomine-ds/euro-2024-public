@@ -195,7 +195,7 @@ export default function GhostPage() {
         </Link>
 
         <div className="mb-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-1">
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900 dark:text-white mb-1">
             📍 Player Position Density
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm">
@@ -220,7 +220,7 @@ export default function GhostPage() {
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
                 Total appearances
               </div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              <div className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                 {insights.total_appearances}
               </div>
             </div>
