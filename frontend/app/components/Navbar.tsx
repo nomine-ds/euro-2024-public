@@ -32,7 +32,6 @@ export default function Navbar() {
   const moreRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Close "More" dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
@@ -43,7 +42,6 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close mobile drawer on escape key + body scroll lock
   useEffect(() => {
     if (!mobileOpen) return;
     const handleEsc = (e: KeyboardEvent) => {
@@ -57,7 +55,6 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
-  // Cmd+K to open search
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -72,7 +69,6 @@ export default function Navbar() {
     return () => document.removeEventListener("keydown", handleKeydown);
   }, []);
 
-  // Focus search input when opened
   useEffect(() => {
     if (searchOpen) {
       setTimeout(() => searchInputRef.current?.focus(), 50);
@@ -178,7 +174,7 @@ export default function Navbar() {
               >
                 <Search className="w-4 h-4" strokeWidth={2} />
                 <kbd className="hidden lg:inline text-[10px] font-mono px-1.5 py-0.5 rounded border border-gray-300 dark:border-gray-600">
-                  ⌘K
+                  Cmd+K
                 </kbd>
               </button>
             </div>
@@ -206,20 +202,17 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile drawer with backdrop */}
       <div
         className={`md:hidden fixed inset-0 z-[60] transition-opacity duration-200 ${
           mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         aria-hidden={!mobileOpen}
       >
-        {/* Backdrop */}
         <div
           className="absolute inset-0 bg-black/40"
           onClick={() => setMobileOpen(false)}
         />
 
-        {/* Drawer */}
         <aside
           className={`absolute top-0 right-0 h-full w-72 max-w-[85vw] bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800 flex flex-col transition-transform duration-300 ease-out ${
             mobileOpen ? "translate-x-0" : "translate-x-full"
@@ -286,7 +279,6 @@ export default function Navbar() {
         </aside>
       </div>
 
-      {/* Global Search Overlay */}
       <div
         className={`fixed inset-0 z-[70] flex items-start justify-center pt-24 px-4 transition-opacity duration-150 ${
           searchOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
