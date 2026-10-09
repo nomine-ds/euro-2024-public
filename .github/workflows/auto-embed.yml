@@ -1,0 +1,51 @@
+name: Auto Embed Euro 2024
+
+on:
+  schedule:
+    # Jalan tiap 30 menit (UTC). GitHub bisa delay 5-15 menit.
+    # Format cron: minute hour day month weekday
+    - cron: "*/30 * * * *"
+  workflow_dispatch:  # Bisa trigger manual dari GitHub UI
+
+jobs:
+  embed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check progress before
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "=== Progress sebelum embed ==="
+          curl -s "$SUPABASE_URL/rest/v1/event_embeddings?select=metadata->>stage&limit=1" \
+            -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+            -H "Prefer: count=exact" \
+            -I | grep -i content-range || echo "skip"
+
+      - name: Embed Round of 16
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python scripts/embed_events_to_supabase.py --mode key --stage "Round of 16" --skip-existing
+
+      - name: Embed Group Stage
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python scripts/embed_events_to_supabase.py --mode key --stage "Group Stage" --skip-existing
