@@ -24,8 +24,10 @@ describe("Supabase API proxy", () => {
     expect(fetchMock).toHaveBeenCalledWith(
       new URL("https://project.supabase.co/functions/v1/api/matches?limit=10"),
       {
+        method: "GET",
         headers: {
           apikey: "sb_publishable_test",
+          "Content-Type": "application/json",
         },
         cache: "no-store",
       },
