@@ -160,12 +160,6 @@ function mojibakeScore(text: string): number {
   return score;
 }
 
-/**
- * Robust mojibake fixer.
- *
- * Coba kombinasi Latin-1, Windows-1252, MacRoman → UTF-8,
- * berlapis sampai 3 level, pilih skor terbaik.
- */
 function fixEncoding(text: string): string {
   if (!text || typeof text !== "string") return text;
   if (!/[^\x00-\x7F]/.test(text)) return text;
@@ -222,15 +216,29 @@ function fixEncoding(text: string): string {
 // QUERY ANALYSIS
 // ============================================================
 
+// PENTING: Urutan penting.
+// - Yang lebih spesifik dulu (semi, semi-final)
+// - "pemenang/juara/winner/champion" → Final (turnamen ditentukan di final)
+// - "final" di akhir supaya tidak "menelan" "semi-final"
 const STAGES: Record<string, string> = {
+  // Round of 16
   "round of 16": "Round of 16",
   "16 besar": "Round of 16",
+  // Semi-finals (HARUS sebelum "final")
   semi: "Semi-finals",
   semifinal: "Semi-finals",
   "semi-final": "Semi-finals",
+  // Quarter-finals
   perempat: "Quarter-finals",
   quarter: "Quarter-finals",
+  // Pemenang turnamen = ditentukan di Final
+  pemenang: "Final",
+  juara: "Final",
+  winner: "Final",
+  champion: "Final",
+  // Final (ditaruh setelah "semi" & "pemenang")
   final: "Final",
+  // Group Stage
   grup: "Group Stage",
   group: "Group Stage",
 };
@@ -440,6 +448,8 @@ ATURAN WAJIB:
 7. Sebutkan SEMUA kejadian penting (gol, kartu, substitusi) yang ada di data.
 8. Format jawaban dengan bullet point agar mudah dibaca.
 9. PENTING: Copy PERSIS nama pemain dari DATA, termasuk karakter aksen (é, í, ñ, ü, á, ó, ö). JANGAN ubah encoding karakter.
+10. PENTING: FOKUS pada stage yang diminta pertanyaan. Jika pertanyaan tentang "pemenang/juara Euro 2024", jawab HANYA dari stage "Final". JANGAN campur event dari stage lain (Semi-finals, Quarter-finals, dst.).
+11. PENTING: Sebutkan SEMUA gol yang tercatat di stage yang diminta (dalam DATA di bawah), bukan hanya gol kemenangan.
 
 DATA:
 ${contextText}
