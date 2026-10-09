@@ -3,15 +3,19 @@ import { json } from "../lib/core.ts";
 import type { SupabaseClient } from "../lib/core.ts";
 
 const GEMINI_EMBED_MODEL = "gemini-embedding-001";
-const GEMINI_LLM_MODEL = "gemini-3.6-flash";
+const GEMINI_LLM_MODELS = [
+  "gemini-3.8-flash",
+  "gemini-3.5-flash",
+  "gemini-3.1-flash-lite",
+  "gemini-flash-latest",
+] as const;
+const GEMINI_LLM_MODEL = GEMINI_LLM_MODELS[0];
 const EMBED_DIM = 768;
 const TOP_K = 8;
 const MAX_CONTEXT_CHARS = 3000;
 
 const EMBED_URL =
   `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_EMBED_MODEL}:embedContent`;
-const LLM_URL =
-  `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_LLM_MODEL}:generateContent`;
 
 type EmbedResponse = {
   embedding?: { values?: number[] };
@@ -224,24 +228,44 @@ JAWABAN (sebutkan SEMUA item yang relevan dari data):`;
     },
   };
 
-  const resp = await fetch(LLM_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-goog-api-key": geminiKey,
-    },
-    body: JSON.stringify(reqBody),
-  });
+  const errors: string[] = [];
 
-  if (!resp.ok) {
-    const err = await resp.text();
-    throw new Error(`LLM failed (${resp.status}): ${err}`);
+  for (const model of GEMINI_LLM_MODELS) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+    try {
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": geminiKey,
+        },
+        body: JSON.stringify(reqBody),
+      });
+
+      if (!resp.ok) {
+        const errText = await resp.text();
+        errors.push(`[${model}] ${resp.status}: ${errText.slice(0, 120)}`);
+
+        if (resp.status === 503 || resp.status === 429) continue;
+        throw new Error(`LLM failed (${resp.status}) [${model}]: ${errText}`);
+      }
+
+      const data = (await resp.json()) as LlmResponse;
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) {
+        errors.push(`[${model}] empty response`);
+        continue;
+      }
+
+      console.log(`LLM success with model: ${model}`);
+      return text.trim();
+    } catch (err) {
+      errors.push(`[${model}] ${err instanceof Error ? err.message : String(err)}`);
+      continue;
+    }
   }
 
-  const data = (await resp.json()) as LlmResponse;
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) return "Maaf, saya tidak bisa menghasilkan jawaban.";
-  return text.trim();
+  throw new Error(`All LLM models failed:\n${errors.join("\n")}`);
 }
 
 export async function botChatHandler(
@@ -285,7 +309,7 @@ export async function botChatHandler(
     return json(
       {
         answer: "Maaf, terjadi kesalahan saat memproses pertanyaan. Coba lagi nanti.",
-        context:[],
+        context: [],
       },
       200,
     );
