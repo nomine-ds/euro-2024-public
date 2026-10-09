@@ -1,10 +1,12 @@
 export const dynamic = "force-dynamic";
 
-function errorResponse(message: string, status: number) {
+function errorResponse(message: string, status: number): Response {
   return Response.json({ message }, { status });
 }
 
-function validateSupabaseConfig() {
+function validateSupabaseConfig():
+  | { projectUrl: URL; publishableKey: string }
+  | { error: Response } {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!supabaseUrl || !publishableKey) {
@@ -30,7 +32,7 @@ function validateSupabaseConfig() {
   return { projectUrl, publishableKey };
 }
 
-async function proxyRequest(request: Request) {
+async function proxyRequest(request: Request): Promise<Response> {
   const config = validateSupabaseConfig();
   if ("error" in config) return config.error;
 
@@ -70,27 +72,27 @@ async function proxyRequest(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<Response> {
   return proxyRequest(request);
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<Response> {
   return proxyRequest(request);
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: Request): Promise<Response> {
   return proxyRequest(request);
 }
 
-export async function PATCH(request: Request) {
+export async function PATCH(request: Request): Promise<Response> {
   return proxyRequest(request);
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: Request): Promise<Response> {
   return proxyRequest(request);
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(): Promise<Response> {
   return new Response(null, {
     status: 204,
     headers: {
