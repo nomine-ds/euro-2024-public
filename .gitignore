@@ -1,4 +1,4 @@
-# Python
+﻿# Python
 venv/
 .venv/
 __pycache__/
@@ -15,7 +15,6 @@ frontend/out/
 frontend/.vercel
 frontend/coverage/
 *.tsbuildinfo
-
 # Python build and coverage output
 build/
 dist/
@@ -24,44 +23,37 @@ dist/
 .coverage.*
 htmlcov/
 coverage.xml
-
 # Environment & secrets
 .env
 .env.*
 !.env.example
 *.pem
 *.key
-
-# Data — JANGAN push
+# Data â€” JANGAN push
 data/raw/
 data/chroma_db/
 all_events.zip
 *.sqlite3
 *.pickle
-
 # Backup noise
 *.bak
 *_bak
 app/main.py.*_bak
-
 # Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-
 # Audit capture files
 *-before.txt
 *-after.txt
 lint-*.txt
 ruff-*.txt
 typecheck-*.txt
-
 # OS files
 .DS_Store
 Thumbs.db
-
 # Supabase CLI temp
 supabase/.temp/
 .vercel

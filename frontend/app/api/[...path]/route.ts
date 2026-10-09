@@ -11,7 +11,10 @@ function validateSupabaseConfig():
   const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!supabaseUrl || !publishableKey) {
     return {
-      error: errorResponse("Supabase environment variables are not configured.", 503),
+      error: errorResponse(
+        "Supabase environment variables are not configured.",
+        503,
+      ),
     };
   }
 
@@ -25,7 +28,10 @@ function validateSupabaseConfig():
     projectUrl.password
   ) {
     return {
-      error: errorResponse("NEXT_PUBLIC_SUPABASE_URL must be a Supabase HTTPS origin.", 500),
+      error: errorResponse(
+        "NEXT_PUBLIC_SUPABASE_URL must be a Supabase HTTPS origin.",
+        500,
+      ),
     };
   }
 
@@ -48,7 +54,8 @@ async function proxyRequest(request: Request): Promise<Response> {
     method: request.method,
     headers: {
       apikey: publishableKey,
-      "Content-Type": request.headers.get("Content-Type") || "application/json",
+      "Content-Type":
+        request.headers.get("Content-Type") || "application/json",
     },
     cache: "no-store",
   };
@@ -59,10 +66,18 @@ async function proxyRequest(request: Request): Promise<Response> {
 
   try {
     const response = await fetch(target, init);
+
+    // Paksa charset=utf-8 biar tidak decode sebagai Latin-1 (mojibake)
+    const upstreamType =
+      response.headers.get("Content-Type") || "application/json";
+    const contentTypeWithCharset = upstreamType.includes("charset")
+      ? upstreamType
+      : `${upstreamType}; charset=utf-8`;
+
     return new Response(response.body, {
       status: response.status,
       headers: {
-        "Content-Type": response.headers.get("Content-Type") || "application/json",
+        "Content-Type": contentTypeWithCharset,
         "Cache-Control": "no-store",
       },
     });
